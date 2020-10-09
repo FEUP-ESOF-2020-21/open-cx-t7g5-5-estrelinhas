@@ -1,6 +1,6 @@
 # open-cx-t7g5-5-estrelinhas Development Report
 
-Welcome to the documentation pages of the (to be defined) of **openCX**!
+Welcome to the documentation pages of the Meetix of **openCX**!
 
 * Business modeling 
   * [Product Vision](#Product-Vision)
@@ -36,8 +36,14 @@ Rita Peixoto
 
 ## Product Vision
 
-One of the major problems caused by this pandemic is social interaction at conferences. So let's connect throught our app, add your interests and efficiently connect with people with identical interests and network online.
+Let's connect throught our app, add your interests and efficiently connect with people with identical interests and network online.
 
 ---
+## Elevator Pitch
+
+---
+## Requirements
+
+### Use Case Diagram
 
 
