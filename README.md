@@ -46,7 +46,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 ### Use Case Diagram
 
-![Use case diagram](./img/uml.png "Use case diagram")
+![Use case diagram](./img/uml.png)
 
 ---
 
@@ -56,14 +56,17 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 As a conference attendee, I want to be able to join a conference, creating my conference profile and choosing the topics I’m interested in.
 
+_User interface mockups_
+
+![User story #1 mockup1](./img/mockup1-1.jpg)
+![User story #1 mockup2](./img/mockup1-2.jpg)
+
 _Acceptance Tests_
 
 ```gherkin
 Scenario: Joining a conference
 Given I’m trying to join a conference
 When I click on the conference event
-Then the app shows me the information about it
-When I click its ‘Join’ button
 Then the system opens a page for me to create my conference profile
 When I complete this form 
 Then the system allows me to choose the topics of the conference I’m interested in
@@ -80,7 +83,11 @@ Effort: L
 ---
 #### **Story #2**
 
-As a conference attendee, I want to be able to open a person’s profile to like the profile and/or see its information. 
+As a conference attendee, I want to be able to open a person’s profile to like the profile and/or see its information.
+
+_User interface mockups_
+
+![User story #2 mockup](./img/mockup2.jpg)
 
 _Acceptance Tests_
 
@@ -106,6 +113,10 @@ Effort: M
 
 As a conference attendee, I want to be able to see the top 20 profiles who have the most interests in common with me.
 
+_User interface mockups_
+
+![User story #3 mockup](./img/mockup3.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: See top 20 profiles
@@ -126,6 +137,10 @@ Effort: XL
 
 As a conference attendee, I want to be able to see the profiles that have matched with me.
 
+_User interface mockups_
+
+![User story #4 mockup](./img/mockup4.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: See profiles that I've matched with
@@ -145,6 +160,10 @@ Effort: M
 #### **Story #5**
 
 As a conference attendee, I want to be able to search and view active conferences.
+
+_User interface mockups_
+
+![User story #5 mockup](./img/mockup5.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -169,6 +188,10 @@ Effort: S
 
 As a conference staff, I want to be able to create a conference, set its active dates, photo and insert the interests list.
 
+_User interface mockups_
+
+![User story #6 mockup](./img/mockup6.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Creating a conference
@@ -189,6 +212,10 @@ Effort: L
 #### **Story #7**
 
 As a conference attendee, I want to be able to see the profiles that have liked mine.
+
+_User interface mockups_
+
+![User story #7 mockup](./img/mockup7.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -252,6 +279,10 @@ Effort: M
 
 As a user, I want to be able to leave a conference that I have joined.
 
+_User interface mockups_
+
+![User story #10 mockup](./img/mockup10.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Leaving a conference
@@ -286,7 +317,11 @@ Effort: S
 ---
 #### **Story #12**
 
-As a user, I create an account in Meetix, so that I have access to all the available features. 
+As a user, I create an account in Meetix, so that I have access to all the available features.
+
+_User interface mockups_
+
+![User story #12 mockup](./img/mockup12.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -361,6 +396,10 @@ Effort: M
 
 As a conference attendee, I want to be able to see all the profiles and search/filter them.
 
+_User interface mockups_
+
+![User story #15 mockup](./img/mockup15.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Search profiles
@@ -413,6 +452,10 @@ Effort: M
 #### **Story #17**
 
 As a conference attendee, I want to be able to see the conferences I have joined and switch between them.
+
+_User interface mockups_
+
+![User story #17 mockup](./img/mockup17.jpg)
 
 _Acceptance Tests_
 ```gherkin
