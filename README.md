@@ -33,6 +33,7 @@ Mariana Truta
 Rita Peixoto
 
 ---
+# Business modeling
 
 ## Product Vision
 
@@ -42,17 +43,17 @@ Let's connect throught our app, add your interests and efficiently connect with 
 ## Elevator Pitch
 
 ---
-## Requirements
+# Requirements
 
-### Use Case Diagram
+## Use Case Diagram
 
 ![Use case diagram](./img/uml.png "Use case diagram")
 
 ---
 
-### User Stories
+## User Stories
 
-#### **Story #1**
+### **Story 1: Join conference**
 
 As a conference attendee, I want to be able to join a conference, creating my conference profile and choosing the topics I’m interested in.
 
@@ -78,7 +79,7 @@ Value: Must have
 Effort: L
 
 ---
-#### **Story #2**
+### **Story 2: View/Like profile**
 
 As a conference attendee, I want to be able to open a person’s profile to like the profile and/or see its information. 
 
@@ -102,7 +103,7 @@ Value: Must have
 Effort: M
 
 ---
-#### **Story #3**
+### **Story 3: Top 20**
 
 As a conference attendee, I want to be able to see the top 20 profiles who have the most interests in common with me.
 
@@ -111,7 +112,7 @@ _Acceptance Tests_
 Scenario: See top 20 profiles
 Given I’m logged-in and I have joined a conference,
 When I click on the “Top 20” button located at bottom of the screen
-Then the app shows me the top 20 profiles for this conference who I have the most interests in common 
+Then the app shows me the top 20 profiles for this conference with whom I have the most interests in common 
 When I click on a profile,
 Then the system sends me to the person’s profile
 ```
@@ -122,7 +123,7 @@ Value: Must have
 Effort: XL
 
 ---
-#### **Story #4**
+### **Story 4: See matches**
 
 As a conference attendee, I want to be able to see the profiles that have matched with me.
 
@@ -142,7 +143,7 @@ Value: Must Have
 Effort: M
 
 ---
-#### **Story #5**
+### **Story 5: View/Search conferences**
 
 As a conference attendee, I want to be able to search and view active conferences.
 
@@ -165,7 +166,7 @@ Value: Must Have
 Effort: S
 
 ---
-#### **Story #6**
+### **Story 6: Create conference**
 
 As a conference staff, I want to be able to create a conference, set its active dates, photo and insert the interests list.
 
@@ -186,7 +187,7 @@ Value: Should Have
 Effort: L
 
 ---
-#### **Story #7**
+### **Story 7: See likes**
 
 As a conference attendee, I want to be able to see the profiles that have liked mine.
 
@@ -206,7 +207,7 @@ Value: Should Have
 Effort: M
 
 ---
-#### **Story #8**
+### **Story 8: Edit profile**
 
 As a conference attendee, I want to be able to edit my conference profile, changing my interests or any information displayed in my profile.
 
@@ -228,7 +229,7 @@ Value: Should Have
 Effort: M
 
 ---
-#### **Story #9**
+### **Story 9: Edit conference**
 
 As conference staff, I want to be able to edit the conference I have created and change dates and interests.
 
@@ -248,7 +249,7 @@ Value: Should Have
 Effort: M
 
 ---
-#### **Story #10**
+### **Story 10: Leave conference**
 
 As a user, I want to be able to leave a conference that I have joined.
 
@@ -266,7 +267,7 @@ Value: Should Have
 Effort: S
 
 ---
-#### **Story #11**
+### **Story 11: Delete conference**
 
 As conference staff, I want to be able to delete the conference I have created.
 
@@ -284,7 +285,7 @@ Value: Should Have
 Effort: S
 
 ---
-#### **Story #12**
+### **Story 12: Create account**
 
 As a user, I create an account in Meetix, so that I have access to all the available features. 
 
@@ -312,7 +313,7 @@ Value: Should Have
 Effort: M
 
 ---
-#### **Story #13**
+### **Story 13: Login**
 
 As a user, I want to be able to login to the app.
 
@@ -335,7 +336,7 @@ Value: Should Have
 Effort: S
 
 ---
-#### **Story #14**
+### **Story 14: Delete/Edit account**
 
 As a user, I want to be able to delete or edit my account (change email/password).
 
@@ -357,7 +358,7 @@ Value: Could Have
 Effort: M
 
 ---
-#### **Story #15**
+### **Story 15: See all profiles**
 
 As a conference attendee, I want to be able to see all the profiles and search/filter them.
 
@@ -388,7 +389,7 @@ Value: Could Have
 Effort: L/XL
 
 ---
-#### **Story #16**
+### **Story 16: Create profile**
 
 As a conference staff, I want to create a profile for the conference I have just created.
 
@@ -410,7 +411,7 @@ Value: Could Have
 Effort: M
 
 ---
-#### **Story #17**
+### **Story 17: See joined conferences**
 
 As a conference attendee, I want to be able to see the conferences I have joined and switch between them.
 
@@ -430,3 +431,33 @@ Value: Could Have
 Effort: XL
 
 ---
+## Domain model
+
+---
+# Architecture and Design
+
+The architecture of a software system encompasses the set of key decisions about its overall organization.
+
+We will be talking about the logical architecture, a high-level view of the code structure, and the physical architecture, which will show the connection between each machine and the used technologies.
+
+## Logical architecture
+
+---
+## Physical architecture
+
+---
+## Prototype
+
+To help on validating all the architectural, design and technological decisions made, we implemented a vertical prototype, a thin vertical slice of the system.
+
+The prototype's role in our development proccess was about testing if the tool Flutter was adequate to do what we aimed to do and also about advancing the development of the app itself.
+
+For the prototype the main story was #4 which states that 'As a conference attendee, I want to be able to see the profiles that have matched with me'. The other ones serve as base for the app.
+
+# Implementation
+
+# Test
+
+# Configuration and change management
+
+# Project management
