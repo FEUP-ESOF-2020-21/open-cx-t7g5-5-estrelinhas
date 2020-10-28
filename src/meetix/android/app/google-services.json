@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "460170648520",
+    "firebase_url": "https://meetix-a19e5.firebaseio.com",
+    "project_id": "meetix-a19e5",
+    "storage_bucket": "meetix-a19e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460170648520:android:a7a3be290e70e08333fefd",
+        "android_client_info": {
+          "package_name": "com.fivestars.meetix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "460170648520-jcom77g4qh72hskq7pnvsur6kgn0ikfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS07C9zADHSVNDjtl48FdRVIsR1ZrdkvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "460170648520-jcom77g4qh72hskq7pnvsur6kgn0ikfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
