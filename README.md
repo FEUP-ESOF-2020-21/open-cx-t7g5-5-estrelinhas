@@ -59,8 +59,8 @@ As a conference attendee, I want to be able to join a conference, creating my co
 
 _User interface mockups_
 
-![User story #1 mockup1](./img/mockup1-1.jpg)
-![User story #1 mockup2](./img/mockup1-2.jpg)
+![User story #1 mockup1](./img/mockup-profile1.jpg)
+![User story #1 mockup2](./img/mockup-profile2.jpg)
 
 _Acceptance Tests_
 
@@ -88,7 +88,7 @@ As a conference attendee, I want to be able to open a person’s profile to like
 
 _User interface mockups_
 
-![User story #2 mockup](./img/mockup2.jpg)
+![User story #2 mockup](./img/mockup-see_profile.jpg)
 
 _Acceptance Tests_
 
@@ -116,7 +116,7 @@ As a conference attendee, I want to be able to see the top 20 profiles who have 
 
 _User interface mockups_
 
-![User story #3 mockup](./img/mockup3.jpg)
+![User story #3 mockup](./img/mockup-top20.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -140,7 +140,7 @@ As a conference attendee, I want to be able to see the profiles that have matche
 
 _User interface mockups_
 
-![User story #4 mockup](./img/mockup4.jpg)
+![User story #4 mockup](./img/mockup-match.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -164,7 +164,9 @@ As a conference attendee, I want to be able to search and view active conference
 
 _User interface mockups_
 
-![User story #5 mockup](./img/mockup5.jpg)
+![User story #5 mockup](./img/mockup-welcome.jpg)
+![User story #5 mockup](./img/mockup-search_conf.jpg)
+
 
 _Acceptance Tests_
 ```gherkin
@@ -191,7 +193,8 @@ As a conference staff, I want to be able to create a conference, set its active 
 
 _User interface mockups_
 
-![User story #6 mockup](./img/mockup6.jpg)
+![User story #6 mockup](./img/mockup-welcome.jpg)
+![User story #6 mockup](./img/mockup-create_conf.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -216,7 +219,7 @@ As a conference attendee, I want to be able to see the profiles that have liked 
 
 _User interface mockups_
 
-![User story #7 mockup](./img/mockup7.jpg)
+![User story #7 mockup](./img/mockup-liked_you.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -238,13 +241,15 @@ Effort: M
 
 As a conference attendee, I want to be able to edit my conference profile, changing my interests or any information displayed in my profile.
 
+_User interface mockups_
+
+![User story #8 mockup](./img/mockup-sidebar_attendee.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Editing my profile’s information
-Given I’m logged-in and I have joined a conference
-When I’m in the workspace of the conference event
-Then there is a button to see my profile
-When I click on “Your profile” button
+Given I’m logged-in, I have joined a conference and opened the sidebar menu
+When I click on “Your profile” button of the sidebar
 Then the app shows me my profile
 When I click on the edit button
 Then I can edit my information
@@ -260,10 +265,14 @@ Effort: M
 
 As conference staff, I want to be able to edit the conference I have created and change dates and interests.
 
+_User interface mockups_
+
+![User story #9 mockup](./img/mockup-sidebar_admin.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Edit conference
-Given I’m logged-in, I’ve joined a conference and opened the sidebar menu.
+Given I’m logged-in, I’ve joined a conference and opened the sidebar menu
 When I click on the “Edit conference” button of the sidebar
 Then the app shows a form to edit conference details.
 When I click the save button
@@ -282,12 +291,12 @@ As a user, I want to be able to leave a conference that I have joined.
 
 _User interface mockups_
 
-![User story #10 mockup](./img/mockup10.jpg)
+![User story #10 mockup](./img/mockup-sidebar_attendee.jpg)
 
 _Acceptance Tests_
 ```gherkin
 Scenario: Leaving a conference
-Given I’m logged-in and I have a joined a conference
+Given I’m logged-in, I have a joined a conference and opened the sidebar menu
 When I press the “Leave conference” button of the sidebar
 Then the app deletes my registration and profile for this conference and takes me to another conference's workspace or to the Welcome screen, in case there is none.
 ```
@@ -302,11 +311,15 @@ Effort: S
 
 As conference staff, I want to be able to delete the conference I have created.
 
+_User interface mockups_
+
+![User story #11 mockup](./img/mockup-sidebar_admin.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Deleting a conference
 Given I’m logged-in, I’ve joined a conference and opened the sidebar menu.
-When I press the “Delete conference” button 
+When I press the “Delete conference” button of the sidebar
 Then the app deletes the conference’s information.
 ```
 _Value/Effort_
@@ -322,23 +335,27 @@ As a user, I create an account in Meetix, so that I have access to all the avail
 
 _User interface mockups_
 
-![User story #12 mockup](./img/mockup12.jpg)
+![User story #12 mockup](./img/mockup-init.jpg)
+![User story #12 mockup](./img/mockup-register.jpg)
 
 _Acceptance Tests_
 ```gherkin
 Scenario: Trying to create an account
+When I click on the "Register" button of the init menu
 Given my email is already associated with an account
-When I try to press the button create, 
+When I try to press the button register, 
 Then I expect to not be able to create the account with a message warning me why
 
 Scenario: Trying to create an account
+When I click on the "Register" button of the init menu
 Given my email is not valid
-When I try to press the button create, 
+When I try to press the button register, 
 Then I expect to not be able to create the account with a message warning me why
 
 Scenario: Trying to create an account
+When I click on the "Register" button of the init menu
 Given my email is valid and has not been used in this app
-When I try to press the button create,
+When I try to press the button register,
 Then I expect to be able to create an account
 ```
 _Value/Effort_
@@ -352,14 +369,21 @@ Effort: M
 
 As a user, I want to be able to login to the app.
 
+_User interface mockups_
+
+![User story #13 mockup](./img/mockup-init.jpg)
+![User story #13 mockup](./img/mockup-login.jpg)
+
 _Acceptance Tests_
 ```gherkin
 Scenario: Login
+When I click on the "Login" button of the init menu
 Given a correct email and password combination
 When I press the “Login” button, 
 Then I expect to be able to login the account
 
 Scenario: Login
+When I click on the "Login" button of the init menu
 Given either one of my email or password isn’t valid
 When I press the “Login” button, 
 Then I expect to not be able to login the account, with a message warning me why
@@ -374,6 +398,11 @@ Effort: S
 ### **Story 14: Delete/Edit account**
 
 As a user, I want to be able to delete or edit my account (change email/password).
+
+_User interface mockups_
+
+![User story #14 mockup](./img/mockup-welcome.jpg)
+![User story #14 mockup](./img/mockup-settings.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -399,7 +428,7 @@ As a conference attendee, I want to be able to see all the profiles and search/f
 
 _User interface mockups_
 
-![User story #15 mockup](./img/mockup15.jpg)
+![User story #15 mockup](./img/mockup-all_profiles.jpg)
 
 _Acceptance Tests_
 ```gherkin
@@ -456,7 +485,8 @@ As a conference attendee, I want to be able to see the conferences I have joined
 
 _User interface mockups_
 
-![User story #17 mockup](./img/mockup17.jpg)
+![User story #17 mockup](./img/mockup-sidebar_attendee.jpg)
+![User story #17 mockup](./img/mockup-sidebar_confs.jpg)
 
 _Acceptance Tests_
 ```gherkin
