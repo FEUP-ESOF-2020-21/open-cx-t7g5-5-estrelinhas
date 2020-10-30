@@ -515,6 +515,8 @@ The following topics refer to the logical and physical architecture, which will 
 
 ## Logical architecture
 
+![Logical architecture](./img/logical_architecture.png)
+
 We decided to use the MVC architecture pattern which splits the code in three parts keeping the view, model and controller independent of each other.
 
 - The **Model** only contains the data such as the information about the conferences, user data, etc. 
@@ -525,6 +527,8 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 
 ---
 ## Physical architecture
+
+![Physical architecture](./img/physical_architecture.png)
 
 Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice, since it was recommended by the professors and is one of the most prominent mobile development frameworks.
 
