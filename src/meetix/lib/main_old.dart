@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
+
         // Check for errors
         if (snapshot.hasError) {
           return Container(
