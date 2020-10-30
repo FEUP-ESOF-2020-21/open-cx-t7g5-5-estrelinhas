@@ -1,21 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'model/ConferenceRecord.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(startApp());
 }
 
-final dummySnapshot = [
-  {"name": "Filip", "votes": 15},
-  {"name": "Abraham", "votes": 14},
-  {"name": "Richard", "votes": 11},
-  {"name": "Ike", "votes": 10},
-  {"name": "Justin", "votes": 1},
-];
-
-class MyApp extends StatelessWidget {
+class startApp extends StatelessWidget {
   // Create the initialization Future outside of `build`:
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
@@ -34,7 +27,7 @@ class MyApp extends StatelessWidget {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return BabyNames();
+          return MeetixApp();
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
@@ -46,11 +39,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class BabyNames extends StatelessWidget {
+class MeetixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Baby Names',
+      title: 'Meetix',
       home: MyHomePage(),
     );
   }
@@ -91,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Record.fromSnapshot(data);
+    final record = ConferenceRecord.fromSnapshot(data);
 
     return Padding(
       key: ValueKey(record.name),
@@ -109,22 +102,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
-
-class Record {
-  final String name;
-  final int num_attendees;
-  final DocumentReference reference;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['num_attendees'] != null),
-        name = map['name'],
-        num_attendees = map['num_attendees'];
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-
-  @override
-  String toString() => "Record<$name:$num_attendees>";
 }
