@@ -29,6 +29,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
   }
 
   Widget _buildBody(BuildContext context) {
+    // Gets stream from Firestore with the conference info
     return StreamBuilder<QuerySnapshot>(
       stream: widget._firestore.getConferences(),
       builder: (context, snapshot) {
@@ -39,40 +40,52 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemCount: conferences.length,
+      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
+      itemBuilder: (context, index) => conferences[index],
     );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Conference.fromSnapshot(data);
+    final _conference = Conference.fromSnapshot(data);
 
-    return Padding(
-      key: ValueKey(record.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ListTile(
-          title: Text(record.name),
-          leading: FutureBuilder(
-            future: FirebaseStorage.instance.ref("conferences/fcf20/fcf20.png").getDownloadURL(),
-            builder: (context, url) {
-              if (!url.hasData) { return LinearProgressIndicator(); }
-              return Image.network(url.data);
-            },
-          ),
-          trailing: Text(record.num_attendees.toString()),
-          onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, record.reference.id))); },
+    return InkWell(
+      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, _conference.reference.id))); },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            // Displays conference icon, if null, displays initial
+            (_conference.img != null)?
+              FutureBuilder(
+                future: widget._storage.getImgURL(_conference.img),
+                builder: (context, url) {
+                  if (url.hasError) {
+                    return Icon(Icons.error);
+                  } else if (url.hasData) {
+                    return CircleAvatar(backgroundImage: NetworkImage(url.data));
+                  } else {
+                    return SizedBox(width: 40, height: 40, child: CircularProgressIndicator());
+                  }
+                },
+              ) :
+              CircleAvatar(
+                child: Text(_conference.name[0]),
+                backgroundColor: Theme.of(context).primaryColorLight,
+              ),
+            SizedBox(width: 16.0,),
+            Text(_conference.name,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Expanded(child: SizedBox()),
+            Icon(Icons.arrow_forward_ios_rounded,
+              color: Colors.grey,),
+          ],
         ),
       ),
     );
-  }
-
-  void _toConference() {
-
   }
 }

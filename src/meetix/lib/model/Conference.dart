@@ -2,16 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Conference {
   final String name;
+  final String img;
   final int num_attendees;
   final DocumentReference reference;
-
-  Conference(this.name, this.num_attendees, this.reference);
 
   Conference.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['name'] != null),
         assert(map['num_attendees'] != null),
         name = map['name'],
-        num_attendees = map['num_attendees'];
+        num_attendees = map['num_attendees'],
+        img = map['img'];
 
   Conference.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
