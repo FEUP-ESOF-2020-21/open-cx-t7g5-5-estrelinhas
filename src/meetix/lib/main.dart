@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FirestoreController.dart';
+import 'package:meetix/controller/StorageController.dart';
 import 'view/ConferenceListPage.dart';
 
 void main() {
@@ -41,12 +42,14 @@ class startApp extends StatelessWidget {
 
 class MeetixApp extends StatelessWidget {
   final FirestoreController firestore = FirestoreController();
+  final StorageController storage = StorageController();
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Meetix',
-      home: ConferenceListPage(firestore),
+      home: ConferenceListPage(firestore, storage),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
 
 import '../model/Conference.dart';
@@ -7,8 +9,9 @@ import '../controller/FirestoreController.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
+  final StorageController _storage;
 
-  ConferenceListPage(this._firestore);
+  ConferenceListPage(this._firestore, this._storage);
 
   @override
   _ConferenceListPageState createState() {
@@ -55,6 +58,13 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
         ),
         child: ListTile(
           title: Text(record.name),
+          leading: FutureBuilder(
+            future: FirebaseStorage.instance.ref("conferences/fcf20/fcf20.png").getDownloadURL(),
+            builder: (context, url) {
+              if (!url.hasData) { return LinearProgressIndicator(); }
+              return Image.network(url.data);
+            },
+          ),
           trailing: Text(record.num_attendees.toString()),
           onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, record.reference.id))); },
         ),
