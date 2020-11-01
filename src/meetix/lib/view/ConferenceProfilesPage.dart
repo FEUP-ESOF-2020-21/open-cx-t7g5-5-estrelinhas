@@ -1,33 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/model/Profile.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 
-class ConferenceListPage extends StatefulWidget {
+class ConferenceProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
+  final String _conferenceID;
 
-  ConferenceListPage(this._firestore);
+  ConferenceProfilesPage(this._firestore, this._conferenceID);
 
   @override
-  _ConferenceListPageState createState() {
-    return _ConferenceListPageState();
+  _ConferenceProfilesPageState createState() {
+    return _ConferenceProfilesPageState();
   }
 }
 
-class _ConferenceListPageState extends State<ConferenceListPage> {
+class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
+  Conference _conference;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Meetix Conferences')),
-      body: _buildBody(context),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection("conference").doc(widget._conferenceID).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildPage(snapshot.data);
+      },
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildPage(DocumentSnapshot data) {
+    return Scaffold(
+      appBar: AppBar(title: Text(data.data()["name"])),
+      body: _buildBody(context, data),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, DocumentSnapshot data) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferences(),
+      stream: data.reference.collection("profiles").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
         return _buildList(context, snapshot.data.docs);
@@ -43,10 +55,10 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Conference.fromSnapshot(data);
+    final profile = Profile.fromSnapshot(data);
 
     return Padding(
-      key: ValueKey(record.name),
+      key: ValueKey(profile.name),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
@@ -54,15 +66,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: ListTile(
-          title: Text(record.name),
-          trailing: Text(record.num_attendees.toString()),
-          onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, record.reference.id))); },
+          title: Text(profile.name),
         ),
       ),
     );
-  }
-
-  void _toConference() {
-
   }
 }
