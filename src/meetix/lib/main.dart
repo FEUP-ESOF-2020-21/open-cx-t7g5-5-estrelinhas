@@ -48,6 +48,7 @@ class MeetixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Meetix',
       home: ConferenceListPage(firestore, storage),
     );
