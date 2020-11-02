@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/MyWidgets.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
@@ -53,29 +54,17 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     final _conference = Conference.fromSnapshot(data);
 
     return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, _conference.reference.id))); },
+      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, _conference))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
             // Displays conference icon, if null, displays initial
-            (_conference.img != null)?
-              FutureBuilder(
-                future: widget._storage.getImgURL(_conference.img),
-                builder: (context, url) {
-                  if (url.hasError) {
-                    return Icon(Icons.error);
-                  } else if (url.hasData) {
-                    return CircleAvatar(backgroundImage: NetworkImage(url.data));
-                  } else {
-                    return SizedBox(width: 40, height: 40, child: CircularProgressIndicator());
-                  }
-                },
-              ) :
-              CircleAvatar(
-                child: Text(_conference.name[0]),
-                backgroundColor: Theme.of(context).primaryColorLight,
-              ),
+            CustomAvatar(
+              imgURL: _conference.img,
+              source: widget._storage,
+              initials: _conference.name[0],
+            ),
             SizedBox(width: 16.0,),
             Text(_conference.name,
               style: Theme.of(context).textTheme.headline6,

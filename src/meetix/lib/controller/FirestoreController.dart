@@ -8,24 +8,10 @@ class FirestoreController {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> getConferences() {
-    Stream<QuerySnapshot> snapshot = firestore.collection("conference").snapshots();
-
-    return snapshot;
+    return firestore.collection("conference").snapshots();
   }
 
-  Future<Conference> getConferenceByID(String id) async {
-    Conference conf;
-    print("getttt");
-    Future<DocumentSnapshot> docSnap = firestore.collection("conference").doc(id).snapshots().single;
-
-
-    StreamBuilder<DocumentSnapshot>(
-      stream: firestore.collection("conference").doc(id).snapshots(),
-      builder: (context, snapshot) {
-        conf = Conference.fromSnapshot(snapshot.data);
-        return;
-      },
-    );
-    return conf;
+  Stream<QuerySnapshot> getConferenceProfiles(Conference conference) {
+    return conference.reference.collection("profiles").snapshots();
   }
 }

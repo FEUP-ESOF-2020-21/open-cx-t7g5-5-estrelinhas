@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
+import 'MyWidgets.dart';
 
 class ConferenceProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
-  final String _conferenceID;
+  final StorageController _storage;
+  final Conference _conference;
 
-  ConferenceProfilesPage(this._firestore, this._conferenceID);
+  ConferenceProfilesPage(this._firestore, this._storage, this._conference);
 
   @override
   _ConferenceProfilesPageState createState() {
@@ -18,55 +21,59 @@ class ConferenceProfilesPage extends StatefulWidget {
 }
 
 class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
-  Conference _conference;
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection("conference").doc(widget._conferenceID).snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildPage(snapshot.data);
-      },
-    );
-  }
-
-  Widget _buildPage(DocumentSnapshot data) {
     return Scaffold(
-      appBar: AppBar(title: Text(data.data()["name"])),
-      body: _buildBody(context, data),
+      appBar: AppBar(title: Text(widget._conference.name)),
+      body: _buildBody(context, widget._conference),
     );
   }
 
-  Widget _buildBody(BuildContext context, DocumentSnapshot data) {
+  Widget _buildBody(BuildContext context, Conference conference) {
     return StreamBuilder<QuerySnapshot>(
-      stream: data.reference.collection("profiles").snapshots(),
+      stream: widget._firestore.getConferenceProfiles(conference),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
+        if (snapshot.hasData) {
+          return _buildList(context, snapshot.data.docs);
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
       },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    List<Widget> profiles =  snapshot.map((data) => _buildListItem(context, data)).toList();
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemCount: profiles.length,
+      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
+      itemBuilder: (context, index) => profiles[index],
     );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final profile = Profile.fromSnapshot(data);
 
-    return Padding(
-      key: ValueKey(profile.name),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: ListTile(
-          title: Text(profile.name),
+    return InkWell(
+      onTap: (){},
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            CustomAvatar(
+              imgURL: profile.img,
+              source: widget._storage,
+              initials: profile.name[0],
+              radius: 60,
+            ),
+            SizedBox(width: 20.0,),
+            NameOrgDisplay(profile: profile,),
+            Expanded(child: SizedBox(),),
+            Icon(Icons.connect_without_contact_rounded, color: Colors.grey, size: 40,),
+          ],
         ),
       ),
     );
