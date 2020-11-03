@@ -54,13 +54,13 @@ class NameOrgDisplay extends StatelessWidget {
   }
 }
 
-class avatarWithBorder extends StatelessWidget {
+class AvatarWithBorder extends StatelessWidget {
   ImageProvider image;
   double radius, border;
   Icon icon;
   Color borderColor, backgroundColor;
 
-  avatarWithBorder({this.image, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor});
+  AvatarWithBorder({this.image, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor});
 
   @override
   Widget build(BuildContext context) {

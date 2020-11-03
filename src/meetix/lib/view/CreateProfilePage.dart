@@ -119,7 +119,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Center(
       child: Stack(
         children: [
-          avatarWithBorder(
+          AvatarWithBorder(
             radius: 65,
             image: NetworkImage("https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"),
             borderColor: Theme.of(context).scaffoldBackgroundColor,
@@ -128,7 +128,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           Positioned(
             bottom: 0,
             right: 0,
-            child: avatarWithBorder(
+            child: AvatarWithBorder(
               border: 4,
               icon: Icon(Icons.edit, color: Colors.white,),
               borderColor: Theme.of(context).scaffoldBackgroundColor,
