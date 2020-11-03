@@ -4,6 +4,7 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/model/Profile.dart';
+import 'package:meetix/view/MyWidgets.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
@@ -32,59 +33,9 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           },
           child: ListView(
             children: [
-              SizedBox(
-                height: 15,
-              ),
-              //TODO isto num widget
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg",
-                              ))),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Colors.blue,
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 35,
-              ),
+              SizedBox(height: 15,),
+              addPicture(),
+              SizedBox(height: 35,),
               buildTextField("Full Name", "Your Name"),
               buildTextField("Occupation", "Student"),
               buildTextField("Location", "Porto, Portugal"),
@@ -107,19 +58,45 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            labelStyle: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold
+          contentPadding: EdgeInsets.only(bottom: 3),
+          labelText: labelText,
+          labelStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeholder,
+          hintStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w100,
+            color: Colors.black,
+          )
+        ),
+      ),
+    );
+  }
+
+  Widget addPicture() {
+    return Center(
+      child: Stack(
+        children: [
+          avatarWithBorder(
+            radius: 65,
+            image: NetworkImage("https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"),
+            borderColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Colors.blue,
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: avatarWithBorder(
+              border: 4,
+              icon: Icon(Icons.edit, color: Colors.white,),
+              borderColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: Theme.of(context).accentColor,
             ),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w100,
-              color: Colors.black,
-            )),
+          ),
+        ],
       ),
     );
   }

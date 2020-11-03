@@ -52,6 +52,43 @@ class NameOrgDisplay extends StatelessWidget {
       ],
     );
   }
+}
 
+class avatarWithBorder extends StatelessWidget {
+  ImageProvider image;
+  double radius, border;
+  Icon icon;
+  Color borderColor, backgroundColor;
+
+  avatarWithBorder({this.image, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              spreadRadius: 2,
+              blurRadius: 10,
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0, 10)
+          ),
+        ],
+        shape: BoxShape.circle,
+      ),
+      child: CircleAvatar(
+        backgroundColor: this.borderColor,
+        radius: this.radius,
+        child: (this.image != null)? CircleAvatar(
+            radius: this.radius - this.border,
+            backgroundImage: this.image,
+        ) : CircleAvatar(
+          radius: this.radius - this.border,
+          backgroundColor: this.backgroundColor,
+          child: (this.icon != null)? this.icon : Icon(Icons.error),
+        ),
+      ),
+    );
+  }
 
 }
