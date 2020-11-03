@@ -26,7 +26,6 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Scaffold(
       appBar: AppBar(title: Text("Profile for " + widget._conference.name)),
       body: Container(
-        padding: EdgeInsets.only(left: 16, top: 25, right: 16),
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -36,6 +35,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               SizedBox(
                 height: 15,
               ),
+              //TODO isto num widget
               Center(
                 child: Stack(
                   children: [
@@ -90,9 +90,6 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               buildTextField("Location", "Porto, Portugal"),
               buildTextField("E-mail", "example@email.com"),
               buildTextField("Phone Number", "+351999999999"),
-              SizedBox(
-                height: 35,
-              ),
             ],
           ),
         ),
@@ -105,10 +102,9 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder) {
+  Widget buildTextField(String labelText, String placeholder) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
+      padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
         decoration: InputDecoration(
             contentPadding: EdgeInsets.only(bottom: 3),
