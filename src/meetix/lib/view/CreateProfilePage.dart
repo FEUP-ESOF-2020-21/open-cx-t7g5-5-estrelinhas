@@ -21,6 +21,18 @@ class CreateProfilePage extends StatefulWidget {
 }
 
 class _CreateProfilePageState extends State<CreateProfilePage> {
+  TextEditingController nameController = TextEditingController();
+  bool _nameValid = true;
+
+  submitForm() {
+    setState(() {
+      (nameController.text.isEmpty || nameController.text.length < 3)? _nameValid = false : _nameValid = true;
+
+      if (_nameValid) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +48,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               SizedBox(height: 15,),
               addPicture(),
               SizedBox(height: 35,),
-              buildTextField("Full Name", "Your Name"),
+              buildNameField("Full Name", "Your Name", controller: nameController),
               buildTextField("Occupation", "Student"),
               buildTextField("Location", "Porto, Portugal"),
               buildTextField("E-mail", "example@email.com"),
@@ -46,17 +58,18 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference))); },
+        onPressed: () {submitForm();},
         icon: Icon(Icons.save, color: Colors.white,),
         label: Text("Save"),
       ),
     );
   }
 
-  Widget buildTextField(String labelText, String placeholder) {
+  Widget buildNameField(String labelText, String placeholder, {TextEditingController controller}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(bottom: 3),
           labelText: labelText,
@@ -70,7 +83,32 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             fontSize: 18,
             fontWeight: FontWeight.w100,
             color: Colors.black,
-          )
+          ),
+          errorText: _nameValid? null : "Name too short!",
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String labelText, String placeholder, {TextEditingController controller}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(bottom: 3),
+          labelText: labelText,
+          labelStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeholder,
+          hintStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w100,
+            color: Colors.black,
+          ),
         ),
       ),
     );
