@@ -29,6 +29,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       (nameController.text.isEmpty || nameController.text.length < 3)? _nameValid = false : _nameValid = true;
 
       if (_nameValid) {
+        widget._conference.reference.collection("profiles").add({'name':nameController.text});
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
       }
     });
