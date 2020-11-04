@@ -30,12 +30,14 @@ class _SignInPageState extends State<SignInPage> {
       children: [
         TextField(
           controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: "Email"
           ),
         ),
         TextField(
           controller: _passwordController,
+          keyboardType: TextInputType.visiblePassword,
           decoration: InputDecoration(
             labelText: "Password",
           ),
