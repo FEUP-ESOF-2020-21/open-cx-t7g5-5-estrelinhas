@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
+import 'SignUpPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -31,18 +35,31 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
 
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
-    return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferences(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
-      },
+    return Column(
+      children: [
+        StreamBuilder<QuerySnapshot>(
+          stream: widget._firestore.getConferences(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return LinearProgressIndicator();
+            return _buildList(context, snapshot.data.docs);
+          },
+        ),
+        Text("Signed in as " + context.watch<AuthController>().currentUser.email),
+        RaisedButton(
+          onPressed: (){
+            context.read<AuthController>().signOut();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
+          },
+          child: Text("Sign out"),
+        ),
+      ],
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
     return ListView.separated(
+      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: conferences.length,
       separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
@@ -54,7 +71,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     final _conference = Conference.fromSnapshot(data);
 
     return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, _conference))); },
+      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, _conference))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
