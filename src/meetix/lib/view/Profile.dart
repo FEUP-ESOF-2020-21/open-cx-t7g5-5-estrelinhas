@@ -1,15 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
-import 'package:meetix/view/MyWidgets.dart';
-import 'package:meetix/model/Profile.dart';
-
-import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
-
-
 
 class Profile extends StatefulWidget {
   final FirestoreController _firestore;
@@ -40,17 +31,16 @@ class _ProfileState extends State<Profile> {
               color:Colors.white,
             ),
               onPressed:(){
-                Navigator.pop(context);
+                Navigator.pop(context);//atençao isto tem que ser mudado
               }
-
             )
           ]
       ),
+
       body: _buildBody(context),
+
       floatingActionButton: FloatingActionButton.extended(
-
         icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
-
         label: Text("Like"),
       ),
     );
@@ -65,107 +55,56 @@ class _ProfileState extends State<Profile> {
         return _buildAva(context, snapshot.data.docs);
       },
     );*/
-    return ListView(
-      children:[
-        _buildAva(context),
-        _buildNameField(context),
-        _buildInfoList(context),
-
-      ]
-    );
-  }
-  Widget _buildNameField(BuildContext context) {
-    return  Padding(
-      padding: const EdgeInsets.only(top: 50.0),
-        child: Center(
-        child: Column(
-          children:[
-          Text("JOANA SILVA",
-          style: Theme.of(context).textTheme.headline6,
-          ),
+    return
+          Column(
+            children: <Widget>[
+              SizedBox(height:10.0),
+              _buildAva(context),
+              _buildInfoList(context),
             ]
+          );
 
-        ),
-        )
-    );
   }
 
   Widget _buildInfoList(BuildContext context) {
-    return  InkWell(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 50.0),
-          child:Column(
-                children:[
-                  Text("Ocupation",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text("Location",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ]
-
-            ),
-
-
-    )
-    );
+    return  Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: ListView(
+            shrinkWrap: true,
+            children:[
+              SizedBox(height:50.0),
+              Text("Ocupation",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(height:40.0),
+              Text("Location",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+             ]
+          ),
+      );
   }
 
 
  Widget _buildAva(BuildContext context){
     return Padding(
-        padding: const EdgeInsets.only(top: 35.0),
+        padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
         child: Center(
-          child:Stack(
+          child:Column(
             children:[
               CircleAvatar(
                 radius: 65,
                 //image: NetworkImage("https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"),
                 backgroundColor: Colors.blue,
               ),
+              SizedBox(height: 20.0),
+              Text("JOANA SILVA",
+                style:TextStyle(color:Colors.grey)
+              ),
             ],
-          ),
-        )
-    );
-
-  }
-
-
-/*  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
-    return ListView.separated(
-      padding: EdgeInsets.zero,
-      itemCount: conferences.length,
-      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
-      itemBuilder: (context, index) => conferences[index],
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final _conference = Conference.fromSnapshot(data);
-
-    return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, _conference))); },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Displays conference icon, if null, displays initial
-            CustomAvatar(
-              imgURL: _conference.img,
-              source: widget._storage,
-              initials: _conference.name[0],
-            ),
-            SizedBox(width: 16.0,),
-            Text(_conference.name,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Expanded(child: SizedBox()),
-            Icon(Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,),
-          ],
+          )
         ),
-      ),
     );
-  }*/
+  }
+
 }
