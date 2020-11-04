@@ -525,6 +525,10 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 
 - The **Controller** is the brain of the app. It determinates how data in the Model is changed accordingly to the actions reported by the View.
 
+### Package diagram
+
+![Package diagram](./img/package-diagram.png)
+
 ---
 ## Physical architecture
 
