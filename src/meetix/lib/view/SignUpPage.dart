@@ -4,24 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
-import 'package:meetix/view/SignUpPage.dart';
+import 'package:meetix/view/SignInPage.dart';
 import 'package:provider/provider.dart';
 
+import 'ConferenceListPage.dart';
 
-class SignInPage extends StatefulWidget {
+
+class SignUpPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
 
-  SignInPage(this._firestore, this._storage);
+  SignUpPage(this._firestore, this._storage);
 
   @override
   State<StatefulWidget> createState() {
-    return _SignInPageState();
+    return _SignUpPageState();
   }
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -32,19 +34,26 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("Sign In"),),
-      body: _signInForm(),
+      appBar: AppBar(title: Text("Sign Up for Meetix"),),
+      body: _signUpForm(),
     );
   }
 
-  Widget _signInForm() {
+  Widget _signUpForm() {
     return Column(
       children: [
+        TextField(
+          controller: _nameController,
+          keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+              labelText: "Name"
+          ),
+        ),
         TextField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: "Email"
+              labelText: "Email"
           ),
         ),
         TextField(
@@ -57,18 +66,19 @@ class _SignInPageState extends State<SignInPage> {
         ),
         RaisedButton(
           onPressed: (){
-            context.read<AuthController>().signIn(
+            context.read<AuthController>().signUp(
               email: _emailController.text.trim(),
-              password: _passwordController.text.trim()
+              password: _passwordController.text.trim(),
+              displayName: _nameController.text.trim(),
             );
           },
-          child: Text("Sign In"),
+          child: Text("Sign Up"),
         ),
         RaisedButton(
           onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage(widget._firestore, widget._storage)));
           },
-          child: Text("Sign Up"),
+          child: Text("Sign In"),
         )
       ],
     );

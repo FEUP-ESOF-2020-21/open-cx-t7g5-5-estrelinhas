@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
+import 'SignUpPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -43,8 +44,12 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             return _buildList(context, snapshot.data.docs);
           },
         ),
+        Text("Signed in as " + context.watch<AuthController>().currentUser.email),
         RaisedButton(
-          onPressed: (){context.read<AuthController>().signOut();},
+          onPressed: (){
+            context.read<AuthController>().signOut();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
+          },
           child: Text("Sign out"),
         ),
       ],
