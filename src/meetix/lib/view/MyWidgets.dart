@@ -41,15 +41,19 @@ class ProfileOccupationDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(profile.name, style: Theme.of(context).textTheme.headline6,),
-        if (profile.occupation != null) ...[
-          SizedBox(height: 8.0,),
-          Text(profile.occupation),
-        ],
-      ],
+    return Expanded(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(profile.name, style: Theme.of(context).textTheme.headline6,),
+            if (profile.occupation != null) ...[
+              SizedBox(height: 8.0,),
+              Text(profile.occupation),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

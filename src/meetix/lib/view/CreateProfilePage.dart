@@ -71,10 +71,26 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     return Scaffold(
       appBar: AppBar(title: Text("Profile for " + widget._conference.name)),
       body: _buildBody(context),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {submitForm();},
-        icon: Icon(Icons.save, color: Colors.white,),
-        label: Text("Save"),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+                },
+                child: Text("Skip", style: TextStyle(color: Colors.grey),)
+              ),
+              SizedBox(width: 20,),
+              RaisedButton(
+                onPressed: (){submitForm();},
+                child: Text("Next", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
