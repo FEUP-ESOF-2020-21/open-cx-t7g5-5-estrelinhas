@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 
 import '../model/Conference.dart';
@@ -54,7 +55,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     final _conference = Conference.fromSnapshot(data);
 
     return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, _conference))); },
+      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, _conference))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
