@@ -34,10 +34,10 @@ class CustomAvatar extends StatelessWidget {
   }
 }
 
-class NameOrgDisplay extends StatelessWidget {
+class ProfileOccupationDisplay extends StatelessWidget {
   @required final Profile profile;
 
-  NameOrgDisplay({this.profile});
+  ProfileOccupationDisplay({this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +45,9 @@ class NameOrgDisplay extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(profile.name, style: Theme.of(context).textTheme.headline6,),
-        if (profile.organization != null) ...[
+        if (profile.occupation != null) ...[
           SizedBox(height: 8.0,),
-          Text(profile.organization),
+          Text(profile.occupation),
         ],
       ],
     );

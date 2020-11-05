@@ -70,7 +70,7 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
               radius: 60,
             ),
             SizedBox(width: 20.0,),
-            NameOrgDisplay(profile: profile,),
+            ProfileOccupationDisplay(profile: profile,),
             Expanded(child: SizedBox(),),
             Icon(Icons.connect_without_contact_rounded, color: Colors.grey, size: 40,),
           ],

@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
@@ -161,9 +159,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
     if(permissionStatus.isGranted){
       image = await _picker.getImage(source: ImageSource.gallery);
-      var file = File(image.path);
-
       if(image != null){
+        var file = File(image.path);
 
         var downloadURL = await widget._storage.uploadFile(profileImgPath, file);
 
