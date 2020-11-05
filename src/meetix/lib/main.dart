@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'view/ConferenceListPage.dart';
-import 'view/Profile.dart';
+import 'view/PeopleProfilePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +51,7 @@ class MeetixApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Meetix',
-      home: Profile(firestore, storage),
+      home: ConferenceListPage(firestore, storage),
       //ConferenceListPage(firestore, storage),
     );
   }
