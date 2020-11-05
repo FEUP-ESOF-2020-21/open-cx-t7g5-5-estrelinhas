@@ -38,31 +38,41 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _signInForm() {
-    return Column(
-      children: [
-        TextField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            labelText: "Email"
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              labelText: "Email"
+            ),
           ),
-        ),
-        TextField(
-          controller: _passwordController,
-          keyboardType: TextInputType.visiblePassword,
-          decoration: InputDecoration(
-            labelText: "Password",
+          TextField(
+            controller: _passwordController,
+            keyboardType: TextInputType.visiblePassword,
+            decoration: InputDecoration(
+              labelText: "Password",
+            ),
+            obscureText: true,
           ),
-          obscureText: true,
-        ),
-        SignInButton(email: _emailController, password: _passwordController,),
-        RaisedButton(
-          onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
-          },
-          child: Text("Sign Up"),
-        )
-      ],
+          SizedBox(height: 20.0,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SignInButton(email: _emailController, password: _passwordController,),
+              SizedBox(width: 60.0),
+              RaisedButton(
+                onPressed: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
+                },
+                child: Text("Sign Up"),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -81,7 +91,8 @@ class SignInButton extends StatelessWidget {
             password: password.text.trim()
         ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
       },
-      child: Text("Sign In"),
+      child: Text("Sign In", style: TextStyle(color: Colors.white),),
+      color: Theme.of(context).accentColor,
     );
   }
 }

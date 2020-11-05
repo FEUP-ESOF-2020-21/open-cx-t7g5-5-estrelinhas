@@ -40,38 +40,48 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _signUpForm() {
-    return Column(
-      children: [
-        TextField(
-          controller: _nameController,
-          keyboardType: TextInputType.name,
-          decoration: InputDecoration(
-              labelText: "Name"
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _nameController,
+            keyboardType: TextInputType.name,
+            decoration: InputDecoration(
+                labelText: "Name"
+            ),
           ),
-        ),
-        TextField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-              labelText: "Email"
+          TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                labelText: "Email"
+            ),
           ),
-        ),
-        TextField(
-          controller: _passwordController,
-          keyboardType: TextInputType.visiblePassword,
-          decoration: InputDecoration(
-            labelText: "Password",
+          TextField(
+            controller: _passwordController,
+            keyboardType: TextInputType.visiblePassword,
+            decoration: InputDecoration(
+              labelText: "Password",
+            ),
+            obscureText: true,
           ),
-          obscureText: true,
-        ),
-        SignUpButton(email: _emailController, password: _passwordController, displayName: _nameController,),
-        RaisedButton(
-          onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage(widget._firestore, widget._storage)));
-          },
-          child: Text("Sign In"),
-        )
-      ],
+          SizedBox(height: 20,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SignUpButton(email: _emailController, password: _passwordController, displayName: _nameController,),
+              SizedBox(width: 60.0,),
+              RaisedButton(
+                onPressed: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage(widget._firestore, widget._storage)));
+                },
+                child: Text("Sign In"),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -91,7 +101,8 @@ class SignUpButton extends StatelessWidget {
           displayName: displayName.text.trim()
         ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
       },
-      child: Text("Sign Up"),
+      child: Text("Sign Up", style: TextStyle(color: Colors.white),),
+      color: Theme.of(context).accentColor,
     );
   }
 }
