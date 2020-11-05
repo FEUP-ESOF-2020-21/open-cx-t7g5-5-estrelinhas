@@ -4,19 +4,19 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import '../controller/FirestoreController.dart';
 
-class PeopleProfilePage extends StatefulWidget {
+class ViewProfileDetailsPage extends StatefulWidget {
   final Profile _profile;
   final StorageController _storage;
 
-  PeopleProfilePage(this._profile, this._storage);
+  ViewProfileDetailsPage(this._profile, this._storage);
 
   @override
-  _PeopleProfilePageState createState() {
-    return _PeopleProfilePageState();
+  _ViewProfileDetailsPageState createState() {
+    return _ViewProfileDetailsPageState();
   }
 }
 
-class _PeopleProfilePageState extends State<PeopleProfilePage> {
+class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +40,7 @@ class _PeopleProfilePageState extends State<PeopleProfilePage> {
       body: _buildBody(context),
 
       floatingActionButton: FloatingActionButton.extended(
+        onPressed: (){},
         icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
         label: Text("Like"),
       ),
@@ -52,11 +53,19 @@ class _PeopleProfilePageState extends State<PeopleProfilePage> {
           children: <Widget>[
             SizedBox(height:10.0),
             _buildAva(context),
-            _buildInfo(context, "Occupation", widget._profile.occupation),
-            _buildInfo(context, "Location", widget._profile.location),
-            _buildInfo(context, "E-mail", widget._profile.email),
-            _buildInfo(context, "Phone number", widget._profile.phone),
-          ]
+            if (widget._profile.occupation != null) ...[
+              _buildInfo(context, "Occupation", widget._profile.occupation),
+            ],
+            if (widget._profile.location != null) ...[
+              _buildInfo(context, "Location", widget._profile.location),
+            ],
+            if (widget._profile.email != null) ...[
+              _buildInfo(context, "E-mail", widget._profile.email),
+            ],
+            if (widget._profile.phone != null) ...[
+              _buildInfo(context, "Phone number", widget._profile.phone),
+            ],
+    ]
       );
   }
 
@@ -68,10 +77,12 @@ class _PeopleProfilePageState extends State<PeopleProfilePage> {
           children:[
             SizedBox(height:50.0),
             Text(labelText,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.overline,
+              textScaleFactor: 1.5,
             ),
             Text(infoText,
               style: Theme.of(context).textTheme.bodyText1,
+              textScaleFactor: 1.8,
             ),
           ]
       ),
@@ -93,7 +104,9 @@ class _PeopleProfilePageState extends State<PeopleProfilePage> {
               ),
               SizedBox(height: 20.0),
               Text(widget._profile.name,
-                  style:TextStyle(color:Colors.grey)
+                style: Theme.of(context).textTheme.headline5,
+                textScaleFactor: 1.5,
+                textAlign: TextAlign.center,
               ),
             ],
           )

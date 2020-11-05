@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'view/ConferenceListPage.dart';
-import 'view/PeopleProfilePage.dart';
+import 'view/ViewProfileDetailsPage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
