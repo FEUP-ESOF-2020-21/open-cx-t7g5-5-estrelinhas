@@ -22,15 +22,15 @@ Please contact us!
 
 Thank you!
 
-Ana Teresa Cruz
+Ana Teresa Cruz | up201806460@fe.up.pt
 
-André Nascimento
+André Nascimento  | up201806461@fe.up.pt
 
-António Bezerra
+António Bezerra | up201806854@fe.up.pt
 
-Mariana Truta
+Mariana Truta | up201806543@fe.up.pt
 
-Rita Peixoto
+Rita Peixoto  | up201806257@fe.up.pt
 
 ---
 # Business modeling
@@ -49,6 +49,138 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 ![Use case diagram](./img/uml.png)
 
+### Register account
+
+- **Actor:** Attendee and Conference Staff
+
+- **Description:** In order to use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply in choosing an e-mail and password for future logins.
+
+- **Preconditions and Postconditions:** The only precondition is to have the app installed on the device. Since this use case assumes the user has no account prior to this step, the program is left in a state where it requires the user to create an account.
+
+- **Normal Flow:** 
+	1. User provides an email.
+	2. User provides a password.
+
+- **Alternative Flows and Exceptions:**
+  Email not linked to an existing account.
+  Email must comply with the format email@example.com.
+  If any of these conditions aren’t met, the user won’t be able to create an account and the register button won’t be available.
+
+### Login
+
+- **Actor:** Attendee and Conference Staff
+
+- **Description:** In order to use the app, all users must login before adhering to any conference and setting up a personal profile for that conference. This process consists simply in inputting the correct email and password combination to access the user's account.
+
+- **Preconditions and Postconditions:** The only precondition is to have already an account in the app. Afterward, the app is completly available for the user.
+
+- **Normal Flow:** 
+	1. User provides an email.
+	2. User provides a password.
+
+- **Alternative Flows and Exceptions:**
+  Email and password combination correct.
+  If this condition isn't met, the user won’t be able to login the app.
+  
+### Create conference
+
+- **Actor:** Conference Staff
+
+- **Description:** In order to an attendee join a conference, this has to already exists and be available in the app. The process of creating a conference consists on inputting the data for that conference.
+
+- **Preconditions and Postconditions:** The only precondition is to be logged in the app. When the creation of the conference is done successfully then it appears on the available conferences to the other users.
+
+- **Normal Flow:** 
+	1. Staff provides a name.
+	2. Staff provides the start and end date.
+	3. Staff provides a photo.
+	4. Staff provides the topics list.
+
+- **Alternative Flows and Exceptions:**
+
+### Join conference
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### Edit conference profile
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### See top20 conference profiles
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### Navigate conference profiles
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### Open conference profile
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### Like conference profile
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
+
+### See conference matches
+
+- **Actor:** Attendee
+
+- **Description:** 
+
+- **Preconditions and Postconditions:** 
+
+- **Normal Flow:** 
+
+- **Alternative Flows and Exceptions:**
 ---
 
 ## User Stories
