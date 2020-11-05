@@ -33,7 +33,7 @@ class _SignInPageState extends State<SignInPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text("Sign In"),),
-      body: Builder(builder: (BuildContext context) { return _signInForm(); },),
+      body: _signInForm(),
     );
   }
 

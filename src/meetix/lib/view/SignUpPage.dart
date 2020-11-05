@@ -64,16 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           obscureText: true,
         ),
-        RaisedButton(
-          onPressed: (){
-            context.read<AuthController>().signUp(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-              displayName: _nameController.text.trim(),
-            );
-          },
-          child: Text("Sign Up"),
-        ),
+        SignUpButton(email: _emailController, password: _passwordController, displayName: _nameController,),
         RaisedButton(
           onPressed: (){
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage(widget._firestore, widget._storage)));
@@ -81,6 +72,26 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Text("Sign In"),
         )
       ],
+    );
+  }
+}
+
+class SignUpButton extends StatelessWidget {
+  final TextEditingController email, password, displayName;
+
+  SignUpButton({this.email, this.password, this.displayName});
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: (){
+        context.read<AuthController>().signUp(
+          email: email.text.trim(),
+          password: password.text.trim(),
+          displayName: displayName.text.trim()
+        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
+      },
+      child: Text("Sign Up"),
     );
   }
 }

@@ -16,14 +16,6 @@ class AuthController {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return "Signed In";
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'wrong-password')
-        return "Wrong password!";
-      if (e.code == 'invalid-email')
-        return "Invalid email";
-      if (e.code == 'user-not-found')
-        return "User not found";
-      if (e.code == 'unknown')
-        return "Missing e-mail or password";
       return e.message;
     }
   }
