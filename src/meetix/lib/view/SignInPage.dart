@@ -33,7 +33,7 @@ class _SignInPageState extends State<SignInPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text("Sign In"),),
-      body: _signInForm(),
+      body: Builder(builder: (BuildContext context) { return _signInForm(); },),
     );
   }
 
@@ -55,15 +55,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
           obscureText: true,
         ),
-        RaisedButton(
-          onPressed: (){
-            context.read<AuthController>().signIn(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim()
-            );
-          },
-          child: Text("Sign In"),
-        ),
+        SignInButton(email: _emailController, password: _passwordController,),
         RaisedButton(
           onPressed: (){
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
@@ -71,6 +63,25 @@ class _SignInPageState extends State<SignInPage> {
           child: Text("Sign Up"),
         )
       ],
+    );
+  }
+}
+
+class SignInButton extends StatelessWidget {
+  final TextEditingController email, password;
+
+  SignInButton({this.email, this.password});
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: (){
+        context.read<AuthController>().signIn(
+            email: email.text.trim(),
+            password: password.text.trim()
+        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
+      },
+      child: Text("Sign In"),
     );
   }
 }
