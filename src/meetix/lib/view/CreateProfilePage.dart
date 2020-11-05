@@ -70,25 +70,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Profile for " + widget._conference.name)),
-      body: Container(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: [
-              SizedBox(height: 15,),
-              showPicture(),
-              SizedBox(height: 35,),
-              buildTextField("Full Name", "Your Name", _nameController, _nameValid),
-              buildTextField("Occupation", "Student", _occupationController, _occValid),
-              buildTextField("Location", "Porto, Portugal", _locationController, _locationValid),
-              buildTextField("E-mail", "example@email.com", _emailController, _emailValid),
-              buildTextField("Phone Number", "+351999999999", _phoneController, _phoneValid),
-            ],
-          ),
-        ),
-      ),
+      body: _buildBody(context),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {submitForm();},
         icon: Icon(Icons.save, color: Colors.white,),
@@ -97,7 +79,29 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     );
   }
 
-  Widget buildTextField(String labelText, String placeholder, TextEditingController controller, bool isValid) {
+  Widget _buildBody(BuildContext context) {
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ListView(
+          children: [
+            SizedBox(height: 15),
+            _showPicture(),
+            SizedBox(height: 35),
+            _buildTextField("Full Name", "Your Name", _nameController, _nameValid),
+            _buildTextField("Occupation", "Student", _occupationController, _occValid),
+            _buildTextField("Location", "Porto, Portugal", _locationController, _locationValid),
+            _buildTextField("E-mail", "example@email.com", _emailController, _emailValid),
+            _buildTextField("Phone Number", "+351999999999", _phoneController, _phoneValid),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String labelText, String placeholder, TextEditingController controller, bool isValid) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
@@ -106,8 +110,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           contentPadding: EdgeInsets.only(bottom: 3),
           labelText: labelText,
           labelStyle: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold
+            fontSize: 24,
+            fontWeight: FontWeight.bold
           ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: placeholder,
@@ -122,7 +126,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     );
   }
 
-  Widget showPicture() {
+  Widget _showPicture() {
     return GestureDetector(
       onTap: () {uploadImage();},
       child: Center(
