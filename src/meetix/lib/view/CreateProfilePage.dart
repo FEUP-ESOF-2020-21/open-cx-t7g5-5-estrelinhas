@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:meetix/controller/AuthController.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
@@ -41,7 +43,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     super.initState();
 
     //TODO add user id to path
-    profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/profile_img';
+    profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
   }
 
   submitForm() {
@@ -54,7 +56,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
 
       if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {
-        widget._conference.reference.collection("profiles").add({'name':_nameController.text,
+        widget._conference.reference.collection("profiles").add({'uid':context.read<AuthController>().currentUser.uid,
+                                                                  'name':_nameController.text,
                                                                   'occupation':_occupationController.text,
                                                                   'location':_locationController.text,
                                                                   'email':_emailController.text,
