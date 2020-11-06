@@ -72,8 +72,8 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   Widget _buildInfo(BuildContext context, String labelText, String infoText) {
     return  Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: ListView(
-          shrinkWrap: true,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children:[
             SizedBox(height:50.0),
             Text(labelText,
