@@ -34,22 +34,26 @@ class CustomAvatar extends StatelessWidget {
   }
 }
 
-class NameOrgDisplay extends StatelessWidget {
+class ProfileOccupationDisplay extends StatelessWidget {
   @required final Profile profile;
 
-  NameOrgDisplay({this.profile});
+  ProfileOccupationDisplay({this.profile});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(profile.name, style: Theme.of(context).textTheme.headline6,),
-        if (profile.organization != null) ...[
-          SizedBox(height: 8.0,),
-          Text(profile.organization),
-        ],
-      ],
+    return Expanded(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(profile.name, style: Theme.of(context).textTheme.headline6,),
+            if (profile.occupation != null) ...[
+              SizedBox(height: 8.0,),
+              Text(profile.occupation),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
