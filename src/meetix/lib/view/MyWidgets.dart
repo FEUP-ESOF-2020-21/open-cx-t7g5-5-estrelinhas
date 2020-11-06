@@ -7,9 +7,9 @@ class CustomAvatar extends StatelessWidget {
   @required final String imgURL;
   @required final StorageController source;
   String initials;
-  double radius = 20;
+  double radius;
 
-  CustomAvatar({this.imgURL, this.source, this.initials, this.radius});
+  CustomAvatar({this.imgURL, this.source, this.initials = '', this.radius = 20});
 
   @override
   Widget build(BuildContext context) {
