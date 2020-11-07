@@ -96,11 +96,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 	3. Staff provides a photo.
 	4. Staff provides the topics list.
 
-- **Alternative Flows and Exceptions:**
-
 ### Join conference
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** In order to fully use the app, an attendee must join a conference. This process consists on clicking an available conference on the menu search conferences, creating the profile for that conference and selecting of the topics list his interests.
 
@@ -111,11 +109,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
   2. The attendee provides the data for the conference profile.
   3. The attendee selects the interests of the provided list.
 
-- **Alternative Flows and Exceptions:**
-
 ### Edit conference profile
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** If he wishes so, the attendee can change the information displayed on his conference profile, with possibility to add, remove or change any attributes on his profile.
 
@@ -123,7 +119,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Normal Flow:** 
 
-  1.User selects his in a conference workspace, on it’s profile page and clicks the edit button.
+  1. User selects his in a conference workspace, on it’s profile page and clicks the edit button.
   2. A form with the current information and possibilities to add new information or remove information will open.
   3. The attendee will edit his profile according to his will.
   4. The attendee hits save and his profile will appear updated and his information will be updated throughout the all app.
@@ -136,7 +132,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 ### See top20 conference profiles
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** The attendee can view the top20 profiles that match the most with his conference profile.
 
@@ -149,12 +145,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
   3. The attendee is able to see each one of those profiles and like them.
 
-
-- **Alternative Flows and Exceptions:**
-
 ### Navigate conference profiles
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** After the attendee creates the profile for the conference, it is possible to search and filter other profiles for the same conference.
 
@@ -164,11 +157,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
   1. In the conference workspace, the attendee clicks on the “all” button to see all the profiles for that conference.
   2. The attendee can search for specific profiles or add filters to the list.
 
-- **Alternative Flows and Exceptions:**
-
 ### Open conference profile
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** When in a list of profiles of the conference, or when searching for profiles, it’s possible for the attendee to open someone’s profile.
 
@@ -180,12 +171,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
   2. The profile opens up and the attendee can view it.
 
-
-- **Alternative Flows and Exceptions:**
-
 ### Like conference profile
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** In order to use the app functionality, the attendee must like the profiles they would like to connect with.
 
@@ -197,11 +185,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
   2. Clicks on the like button.
 
-- **Alternative Flows and Exceptions:**
-
 ### See conference matches
 
-- **Actor:** Attendee
+- **Actor:** User
 
 - **Description:** After liking someone's profile, that person can “like back”, creating a match. The attendee can view the profiles that matched theirs. 
 
@@ -211,8 +197,6 @@ Let's connect throught our app, add your interests and efficiently connect with 
   1. The attendee must be in a conference workspace and clicks on the “matches” page.
   2. Their matches will be displayed.
 
-
-- **Alternative Flows and Exceptions:**
 ---
 
 ## User Stories
