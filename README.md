@@ -51,7 +51,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 ### Register account
 
-- **Actor:** Attendee and Conference Staff
+- **Actor:** User
 
 - **Description:** In order to use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply in choosing an e-mail and password for future logins.
 
@@ -68,7 +68,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 ### Login
 
-- **Actor:** Attendee and Conference Staff
+- **Actor:** User
 
 - **Description:** In order to use the app, all users must login before adhering to any. This process consists simply in inputting the correct email and password combination to access the user's account.
 
@@ -86,7 +86,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Conference Staff
 
-- **Description:** In order to an attendee join a conference, this has to already exists and be available in the app. The process of creating a conference consists on inputting the data for that conference.
+- **Description:** In order to an attendee join a conference, the conference must already exists and be available in the app. The process of creating a conference consists on inputting the data for that conference.
 
 - **Preconditions and Postconditions:** The only precondition is to be logged in the app. When the creation of the conference is done successfully then it appears on the available conferences to the other users.
 
@@ -145,9 +145,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 - **Normal Flow:** 
   1. When in a conference workspace, the attendee should go to the see top 20 page.
 
-  2. A list with the top 20 profile that match the most with the attendee will appear.
+  2. A list with the top 20 profiles that match the most with the attendee will appear.
 
-  3. The attendee is able to see each one of those profiles and like the them.
+  3. The attendee is able to see each one of those profiles and like them.
 
 
 - **Alternative Flows and Exceptions:**
@@ -156,11 +156,13 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** After the attendee creates the profile for the conference, it is possible to search and filter other profiles for the same conference.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** The attendee must have a profile for the conference.
 
 - **Normal Flow:** 
+  1. In the conference workspace, the attendee clicks on the “all” button to see all the profiles for that conference.
+  2. The attendee can search for specific profiles or add filters to the list.
 
 - **Alternative Flows and Exceptions:**
 
@@ -185,9 +187,9 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** In order to use the app functionality, the attendee must like the profiles he would like to connect with.
+- **Description:** In order to use the app functionality, the attendee must like the profiles they would like to connect with.
 
-- **Preconditions and Postconditions:** The attendee must be in someone’s profile. After this, the other attendee will be able to see that this attendee liked his 
+- **Preconditions and Postconditions:** The attendee must be in someone’s profile. After this, the other attendee will be able to see that this attendee liked their profile.
 
 - **Normal Flow:** 
 
@@ -201,11 +203,14 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** After liking someone's profile, that person can “like back”, creating a match. The attendee can view the profiles that matched theirs. 
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** To be able to have matches the attendee must have liked profiles before.
 
 - **Normal Flow:** 
+  1. The attendee must be in a conference workspace and clicks on the “matches” page.
+  2. Their matches will be displayed.
+
 
 - **Alternative Flows and Exceptions:**
 ---
