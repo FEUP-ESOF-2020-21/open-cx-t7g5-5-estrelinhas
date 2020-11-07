@@ -70,7 +70,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee and Conference Staff
 
-- **Description:** In order to use the app, all users must login before adhering to any conference and setting up a personal profile for that conference. This process consists simply in inputting the correct email and password combination to access the user's account.
+- **Description:** In order to use the app, all users must login before adhering to any. This process consists simply in inputting the correct email and password combination to access the user's account.
 
 - **Preconditions and Postconditions:** The only precondition is to have already an account in the app. Afterward, the app is completly available for the user.
 
@@ -102,11 +102,14 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** In order ot fully use the app, an attendee must join a conference. This process consists on clicking an available conference on the menu search conferences, creating the profile for that conference and selecting of the topics list his interests.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** The only precondition is to be logged in the app. Then the attendee has full acess to all available features such as joining a conference. After joining and creating the profile the attendee can enter the conference workspace.
 
 - **Normal Flow:** 
+  1. The attendee selects a conference.
+  2. The attendee provides the data for the conference profile.
+  3. The attendee selects the interests of the provided list.
 
 - **Alternative Flows and Exceptions:**
 
