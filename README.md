@@ -102,7 +102,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** In order ot fully use the app, an attendee must join a conference. This process consists on clicking an available conference on the menu search conferences, creating the profile for that conference and selecting of the topics list his interests.
+- **Description:** In order to fully use the app, an attendee must join a conference. This process consists on clicking an available conference on the menu search conferences, creating the profile for that conference and selecting of the topics list his interests.
 
 - **Preconditions and Postconditions:** The only precondition is to be logged in the app. Then the attendee has full acess to all available features such as joining a conference. After joining and creating the profile the attendee can enter the conference workspace.
 
@@ -117,23 +117,35 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** The attendee can want to change the information displayed on his conference profile, with possibility to add, remove or change any attributes on his profile.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** To edit a profile, the attendee must be in the conference workspace and in it’s profile choose the edit button. Now that the profile was updated the attendee experience will be adjusted to it’s new information.
 
 - **Normal Flow:** 
+  1.User selects his in a conference workspace, on it’s profile page and clicks the edit button.
+  2. A form with the current information and possibilities to add new information or remove information will open.
+  3. The attendee will edit his profile according to his will.
+  4. The attendee hits save and his profile will appear updated and his information will be updated throughout the all app.
+
 
 - **Alternative Flows and Exceptions:**
+  If the user does not wish to update can click the cancel button.
+  The  inserted information needs to be valid to be saved.
+
 
 ### See top20 conference profiles
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** The attendee can view the top20 profiles that match the most with his conference profile.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** The attendee must have a profile with information, in order to match other attendees interests, with minimum information to be contacted.
 
 - **Normal Flow:** 
+  1. When in a conference workspace, the attendee should go to the see top 20 page.
+  2. A list with the top 20 profile that match the most with the attendee will appear.
+  3. The attendee is able to see each one of those profiles and like the them.
+
 
 - **Alternative Flows and Exceptions:**
 
@@ -153,11 +165,14 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** When in a list of profiles of the conference, or when searching for profiles, it’s possible for the attendee to open someone’s profile.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** The attendee must be in a conference workspace searching/viewing list of profiles. After opening the profile, the attendee is able to see the display of the profile with the corresponding information.
 
 - **Normal Flow:** 
+  1. Out of a list of profiles, the attendee clicks on one of the profile’s.
+  2. The profile opens up and the attendee can view it.
+
 
 - **Alternative Flows and Exceptions:**
 
@@ -165,11 +180,13 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** Attendee
 
-- **Description:** 
+- **Description:** In order to use the app functionality, the attendee must like the profiles he would like to connect with.
 
-- **Preconditions and Postconditions:** 
+- **Preconditions and Postconditions:** The attendee must be in someone’s profile. After this, the other attendee will be able to see that this attendee liked his 
 
 - **Normal Flow:** 
+  1. The attendee enters someone’s profile.
+  2. Clicks on the like button.
 
 - **Alternative Flows and Exceptions:**
 
