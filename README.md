@@ -53,46 +53,46 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** User
 
-- **Description:** In order to use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply in choosing an e-mail and password for future logins.
+- **Description:** In order to use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply of choosing an e-mail and password for future logins.
 
 - **Preconditions and Postconditions:** The only precondition is to have the app installed on the device. Since this use case assumes the user has no account prior to this step, the program is left in a state where it requires the user to create an account.
 
 - **Normal Flow:** 
-	1. User provides an email.
+	1. User provides an e-mail.
 	2. User provides a password.
 
 - **Alternative Flows and Exceptions:**
-  Email not linked to an existing account.
-  Email must comply with the format email@example.com.
-  If any of these conditions aren’t met, the user won’t be able to create an account and the register button won’t be available.
+  E-mail not linked to an existing account.
+  E-mail must comply with the format email@example.com.
+  If any of these conditions aren’t met, the user will not be able to create an account and the register button won’t be available.
 
 ### Login
 
 - **Actor:** User
 
-- **Description:** In order to use the app, all users must login before adhering to any. This process consists simply in inputting the correct email and password combination to access the user's account.
+- **Description:** In order to use the app, all users must login before adhering to any conference. This process consists simply of inputting the correct e-mail and password combination to access the user's account.
 
 - **Preconditions and Postconditions:** The only precondition is to have already an account in the app. Afterward, the app is completly available for the user.
 
 - **Normal Flow:** 
-	1. User provides an email.
+	1. User provides an e-mail.
 	2. User provides a password.
 
 - **Alternative Flows and Exceptions:**
-  Email and password combination correct.
-  If this condition isn't met, the user won’t be able to login the app.
+  E-mail and password combination correct.
+  If this condition isn't met, the user will not be able to login the app.
   
 ### Create conference
 
 - **Actor:** Conference Staff
 
-- **Description:** In order to an attendee join a conference, the conference must already exists and be available in the app. The process of creating a conference consists on inputting the data for that conference.
+- **Description:** In order to an attendee join a conference, the conference must already exists and be available in the app. The process of creating a conference consists of inputting the data for that conference.
 
-- **Preconditions and Postconditions:** The only precondition is to be logged in the app. When the creation of the conference is done successfully then it appears on the available conferences to the other users.
+- **Preconditions and Postconditions:** The only precondition is to be logged in the app. When the creation of the conference is done successfully, then it appears on the available conferences to the other users.
 
 - **Normal Flow:** 
 	1. Staff provides a name.
-	2. Staff provides the start and end date.
+	2. Staff provides the start and end dates.
 	3. Staff provides a photo.
 	4. Staff provides the topics list.
 
@@ -100,84 +100,83 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** User
 
-- **Description:** In order to fully use the app, an attendee must join a conference. This process consists on clicking an available conference on the menu search conferences, creating the profile for that conference and selecting of the topics list his interests.
+- **Description:** In order to fully use the app, an user must join a conference. This process consists on clicking on available conferences on the menu search conferences, creating the profile for that conference and selecting of the topics list their interests.
 
-- **Preconditions and Postconditions:** The only precondition is to be logged in the app. Then the attendee has full acess to all available features such as joining a conference. After joining and creating the profile the attendee can enter the conference workspace.
+- **Preconditions and Postconditions:** The only precondition is to be logged in the app. Then the user has full acess to all available features such as joining a conference. After joining and creating the profile, the user can enter the conference workspace.
 
 - **Normal Flow:** 
-  1. The attendee selects a conference.
-  2. The attendee provides the data for the conference profile.
-  3. The attendee selects the interests of the provided list.
+  1. The user selects a conference.
+  2. The user provides the data for the conference profile.
+  3. The user selects the interests of the provided list.
 
 ### Edit conference profile
 
 - **Actor:** User
 
-- **Description:** If he wishes so, the attendee can change the information displayed on his conference profile, with possibility to add, remove or change any attributes on his profile.
+- **Description:** If they wish so, the user can change the information displayed on their conference profile, with possibility to add, remove or change any attributes on their profile.
 
-- **Preconditions and Postconditions:** To edit a profile, the attendee must be in the conference workspace and in it’s profile choose the edit button. Now that the profile was updated the attendee experience will be adjusted to it’s new information.
+- **Preconditions and Postconditions:** To edit a profile, the user must be in the conference workspace and in their profile choose the edit button. Now that the profile was updated the user experience will be adjusted to their new information.
 
 - **Normal Flow:** 
 
-  1. User selects his in a conference workspace, on it’s profile page and clicks the edit button.
+  1. User opens the conference workspace and on their profile page, clicks the edit button.
   2. A form with the current information and possibilities to add new information or remove information will open.
-  3. The attendee will edit his profile according to his will.
-  4. The attendee hits save and his profile will appear updated and his information will be updated throughout the all app.
+  3. The user will edit their profile according to their will.
+  4. The user hits save and their information will appear updated throughout the all app.
 
 
 - **Alternative Flows and Exceptions:**
   If the user does not wish to update can click the cancel button.
   The  inserted information needs to be valid to be saved.
 
-
 ### See top20 conference profiles
 
 - **Actor:** User
 
-- **Description:** The attendee can view the top20 profiles that match the most with his conference profile.
+- **Description:** The user can view the top20 profiles that match the most with their conference profile.
 
-- **Preconditions and Postconditions:** The attendee must have a profile with information, in order to match other attendees interests, with minimum information to be contacted.
+- **Preconditions and Postconditions:** The user must have a profile with minimum information to be contacted in order to match other user interests.
 
 - **Normal Flow:** 
-  1. When in a conference workspace, the attendee should go to the see top 20 page.
+  1. When in a conference workspace, the user should go to the see top 20 page.
 
-  2. A list with the top 20 profiles that match the most with the attendee will appear.
+  2. A list with the top 20 profiles that match the most with the user will appear.
 
-  3. The attendee is able to see each one of those profiles and like them.
+  3. The user is able to see each one of those profiles and like them.
 
 ### Navigate conference profiles
 
 - **Actor:** User
 
-- **Description:** After the attendee creates the profile for the conference, it is possible to search and filter other profiles for the same conference.
+- **Description:** After the user creates the profile for the conference, it is possible to search and filter other profiles for the same conference.
 
-- **Preconditions and Postconditions:** The attendee must have a profile for the conference.
+- **Preconditions and Postconditions:** The user must have a profile for the conference.
 
 - **Normal Flow:** 
-  1. In the conference workspace, the attendee clicks on the “all” button to see all the profiles for that conference.
-  2. The attendee can search for specific profiles or add filters to the list.
+  1. In the conference workspace, the user clicks on the “all” button to see all the profiles for that conference.
+  2. The user can search for specific profiles or add filters to the list.
 
 ### Open conference profile
 
 - **Actor:** User
 
-- **Description:** When in a list of profiles of the conference, or when searching for profiles, it’s possible for the attendee to open someone’s profile.
+- **Description:** When in a list of profiles of the conference or when searching for profiles, it’s possible for the user to open someone’s profile.
 
-- **Preconditions and Postconditions:** The attendee must be in a conference workspace searching/viewing list of profiles. After opening the profile, the attendee is able to see the display of the profile with the corresponding information.
+- **Preconditions and Postconditions:** The user must be in a conference workspace searching/viewing list of profiles. After opening the profile, the user is able to see the display of the profile with the corresponding information.
 
 - **Normal Flow:** 
 
-  1. Out of a list of profiles, the attendee clicks on one of the profile’s.
+  1. Out of a list of profiles, the user clicks on one of the profiles.
 
-  2. The profile opens up and the attendee can view it.
+  2. The profile opens up and the user can view it.
 
 ### Like conference profile
 
 - **Actor:** User
 
-- **Description:** In order to use the app functionality, the attendee must like the profiles they would like to connect with.
+- **Description:** In order to match with other profiles, the user must like the profiles they would like to connect with.
 
-- **Preconditions and Postconditions:** The attendee must be in someone’s profile. After this, the other attendee will be able to see that this attendee liked their profile.
+- **Preconditions and Postconditions:** The user must be in someone’s profile. After this, the other user will be able to see that this user liked their profile.
 
 - **Normal Flow:** 
 
@@ -189,12 +188,12 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 - **Actor:** User
 
-- **Description:** After liking someone's profile, that person can “like back”, creating a match. The attendee can view the profiles that matched theirs. 
+- **Description:** After liking someone's profile, that user can “like back”, creating a match. The user can view the profiles that matched theirs. 
 
-- **Preconditions and Postconditions:** To be able to have matches the attendee must have liked profiles before.
+- **Preconditions and Postconditions:** To be able to have matches the user must have liked profiles before.
 
 - **Normal Flow:** 
-  1. The attendee must be in a conference workspace and clicks on the “matches” page.
+  1. The user must be in a conference workspace and click on the “matches” page.
   2. Their matches will be displayed.
 
 ---
@@ -232,7 +231,7 @@ Effort: L
 ---
 ### **Story 2: View/Like profile**
 
-As a conference attendee, I want to be able to open a person’s profile to like the profile and/or see its information.
+As an user, I want to be able to open a person’s profile to like the profile and/or see its information.
 
 _User interface mockups_
 
@@ -260,7 +259,7 @@ Effort: M
 ---
 ### **Story 3: Top 20**
 
-As a conference attendee, I want to be able to see the top 20 profiles who have the most interests in common with me.
+As an user, I want to be able to see the top 20 profiles who have the most interests in common with me.
 
 _User interface mockups_
 
@@ -284,7 +283,7 @@ Effort: XL
 ---
 ### **Story 4: See matches**
 
-As a conference attendee, I want to be able to see the profiles that have matched with me.
+As an user, I want to be able to see the profiles that have matched with me.
 
 _User interface mockups_
 
@@ -363,7 +362,7 @@ Effort: L
 ---
 ### **Story 7: See likes**
 
-As a conference attendee, I want to be able to see the profiles that have liked mine.
+As an user, I want to be able to see the profiles that have liked mine.
 
 _User interface mockups_
 
@@ -387,7 +386,7 @@ Effort: M
 ---
 ### **Story 8: Edit profile**
 
-As a conference attendee, I want to be able to edit my conference profile, changing my interests or any information displayed in my profile.
+As an user, I want to be able to edit my conference profile, changing my interests or any information displayed in my profile.
 
 _User interface mockups_
 
@@ -435,7 +434,7 @@ Effort: M
 ---
 ### **Story 10: Leave conference**
 
-As a user, I want to be able to leave a conference that I have joined.
+As an user, I want to be able to leave a conference that I have joined.
 
 _User interface mockups_
 
@@ -479,7 +478,7 @@ Effort: S
 ---
 ### **Story 12: Create account**
 
-As a user, I create an account in Meetix, so that I have access to all the available features.
+As an user, I create an account in Meetix, so that I have access to all the available features.
 
 _User interface mockups_
 
@@ -515,7 +514,7 @@ Effort: M
 ---
 ### **Story 13: Login**
 
-As a user, I want to be able to login to the app.
+As an user, I want to be able to login to the app.
 
 _User interface mockups_
 
@@ -545,7 +544,7 @@ Effort: S
 ---
 ### **Story 14: Delete/Edit account**
 
-As a user, I want to be able to delete or edit my account (change email/password).
+As an user, I want to be able to delete or edit my account (change email/password).
 
 _User interface mockups_
 
@@ -572,7 +571,7 @@ Effort: M
 ---
 ### **Story 15: See all profiles**
 
-As a conference attendee, I want to be able to see all the profiles and search/filter them.
+As an user, I want to be able to see all the profiles and search/filter them.
 
 _User interface mockups_
 
@@ -607,7 +606,7 @@ Effort: L/XL
 ---
 ### **Story 16: Create profile**
 
-As a conference staff, I want to create a profile for the conference I have just created.
+As a conference staff, I want to be able to create a profile for the conference I have just created.
 
 _Acceptance Tests_
 ```gherkin
