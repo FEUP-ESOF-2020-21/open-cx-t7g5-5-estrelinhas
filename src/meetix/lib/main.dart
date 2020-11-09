@@ -7,6 +7,7 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/SignInPage.dart';
 import 'package:meetix/view/SignUpPage.dart';
 import 'view/ConferenceListPage.dart';
+import 'view/ViewProfileDetailsPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -49,6 +50,7 @@ class MeetixApp extends StatelessWidget {
   final FirestoreController firestore = FirestoreController();
   final StorageController storage = StorageController();
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -68,3 +70,4 @@ class MeetixApp extends StatelessWidget {
     );
   }
 }
+
