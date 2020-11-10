@@ -34,6 +34,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   bool _locationValid = true;
   bool _emailValid = true;
   bool _phoneValid = true;
+  bool _selected = false;
 
   String profileImg = "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg";
   String profileImgPath;
@@ -114,6 +115,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             _buildTextField("Location", "Porto, Portugal", _locationController, _locationValid),
             _buildTextField("E-mail", "example@email.com", _emailController, _emailValid),
             _buildTextField("Phone Number", "+351999999999", _phoneController, _phoneValid),
+            _selectInterests(),
           ],
         ),
       ),
@@ -199,5 +201,53 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     else {
       print('Grant permission and try again!');
     }
+  }
+
+  onChangeSelect(){
+    setState(() {
+      _selected = !_selected;
+      print(_selected);
+    });
+  }
+  
+  Widget _selectInterests() {
+    List<String> interests = ["IOT", "PROGRAMMING"];
+    String selectedInt;
+
+    return Container(
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: Colors.grey),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child:
+              DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<String>(
+                      isDense: true,
+                      hint: new Text("Select Interests"),
+                      value: selectedInt,
+                      onChanged: (newValue){
+                        setState(() {
+                          selectedInt = newValue;
+                        });
+                      },
+                      items: interests.map((String interest){
+                        return DropdownMenuItem<String>(
+                          child: Text(interest),
+                          value: interest,
+                        );
+                      }).toList(),
+                    ),
+                  )
+              ),
+            ),
+          ],
+        ),
+    );
   }
 }
