@@ -65,6 +65,10 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
             if (widget._profile.phone != null) ...[
               _buildInfo(context, "Phone number", widget._profile.phone),
             ],
+            if (widget._profile.interests != null) ...[
+              _buildInterests(context, widget._profile.interests),
+            ],
+            SizedBox(height:20.0),
     ]
       );
   }
@@ -87,6 +91,38 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
           ]
       ),
     );
+  }
+
+  Widget _buildInterests(BuildContext context, List<String> interests){
+    return  Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            SizedBox(height:50.0),
+            Text("Interests",
+              style: Theme.of(context).textTheme.overline,
+              textScaleFactor: 1.5,
+            ),
+            _buildInterestsWrap(interests),
+          ]
+      ),
+    );
+  }
+
+  Widget _buildInterestsWrap(List<String> interests) {
+    List<Widget> chips = List();
+
+    interests.forEach((element) {
+      chips.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: Chip(
+          label: Text(element),
+        ),
+      ));
+    });
+
+    return Wrap(children: chips);
   }
 
 
