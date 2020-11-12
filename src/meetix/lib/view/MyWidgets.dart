@@ -18,7 +18,7 @@ class CustomAvatar extends StatelessWidget {
       future: source.getImgURL(imgURL),
       builder: (context, url) {
         if (url.hasError) {
-          return Icon(Icons.error);
+          return CircleAvatar(backgroundImage: NetworkImage("https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"), radius: radius);
         } else if (url.hasData) {
           return CircleAvatar(backgroundImage: NetworkImage(url.data), radius: radius,);
         } else {
