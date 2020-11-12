@@ -78,29 +78,28 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return
-      ListView(
-          children: <Widget>[
-            SizedBox(height:10.0),
-            _buildAva(context),
-            if (widget._profile.occupation != null) ...[
-              _buildInfo(context, "Occupation", widget._profile.occupation),
-            ],
-            if (widget._profile.location != null) ...[
-              _buildInfo(context, "Location", widget._profile.location),
-            ],
-            if (widget._profile.email != null) ...[
-              _buildInfo(context, "E-mail", widget._profile.email),
-            ],
-            if (widget._profile.phone != null) ...[
-              _buildInfo(context, "Phone number", widget._profile.phone),
-            ],
-    ]
-      );
+    return ListView(
+        children: <Widget>[
+          SizedBox(height:10.0),
+          _buildAva(context),
+          if (widget._profile.occupation != null) ...[
+            _buildInfo(context, "Occupation", widget._profile.occupation),
+          ],
+          if (widget._profile.location != null) ...[
+            _buildInfo(context, "Location", widget._profile.location),
+          ],
+          if (widget._profile.email != null) ...[
+            _buildInfo(context, "E-mail", widget._profile.email),
+          ],
+          if (widget._profile.phone != null) ...[
+            _buildInfo(context, "Phone number", widget._profile.phone),
+          ],
+        ]
+    );
   }
 
   Widget _buildInfo(BuildContext context, String labelText, String infoText) {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
