@@ -24,10 +24,14 @@ class ViewProfileDetailsPage extends StatefulWidget {
 
 class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   bool _liked = false;
+  bool _ownProfile = false;
 
   @override
   void initState() {
-    widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).get().then((value) => updateLiked(value.data()['liked'].contains(widget._profile.uid)));
+    if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
+      _ownProfile = true;
+    else
+      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).get().then((value) => updateLiked(value.data()['liked'].contains(widget._profile.uid)));
     super.initState();
   }
 
@@ -38,12 +42,24 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   }
 
   void likeProfile() {
-    List<String> like = [widget._profile.uid];
-    updateLiked(!_liked);
-    if (_liked)
-      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
-    else
-      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
+    if (_ownProfile) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!")));
+    } else {
+      List<String> like = [widget._profile.uid];
+      updateLiked(!_liked);
+      if (_liked)
+        widget._conference.reference.collection("likes").doc(context
+            .read<AuthController>()
+            .currentUser
+            .uid).set(
+            {"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
+      else
+        widget._conference.reference.collection("likes").doc(context
+            .read<AuthController>()
+            .currentUser
+            .uid).set(
+            {"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
+    }
   }
 
   @override
@@ -68,11 +84,19 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       body: _buildBody(context),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: likeProfile,
-        icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
-        label: (_liked)? Text("Liked") : Text("Like"),
-        backgroundColor: (_liked)? Colors.green : Colors.blue,
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton.extended(
+            onPressed: (!_ownProfile)? likeProfile : (){
+              Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!"),),);
+            },
+            icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
+            label: (_liked) ? Text("Liked") : Text("Like"),
+            backgroundColor: (_ownProfile) ? Colors.grey :
+                             (_liked) ? Colors.green : Colors.blue,
+          );
+        }
       ),
     );
   }
@@ -142,4 +166,12 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       ),
     );
   }
+}
+
+class LikeButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+  }
+
 }
