@@ -59,7 +59,7 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     final profile = Profile.fromSnapshot(data);
 
     return InkWell(
-      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(profile, widget._storage))); },
+      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(widget._conference, profile, widget._storage))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

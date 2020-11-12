@@ -1,14 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:provider/provider.dart';
 import '../controller/FirestoreController.dart';
 
 class ViewProfileDetailsPage extends StatefulWidget {
+  final Conference _conference;
   final Profile _profile;
   final StorageController _storage;
 
-  ViewProfileDetailsPage(this._profile, this._storage);
+  ViewProfileDetailsPage(this._conference, this._profile, this._storage);
 
   @override
   _ViewProfileDetailsPageState createState() {
@@ -40,7 +46,10 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       body: _buildBody(context),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){},
+        onPressed: (){
+          List<String> like = [widget._profile.uid];
+          widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
+        },
         icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
         label: Text("Like"),
       ),
