@@ -104,26 +104,12 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
               style: Theme.of(context).textTheme.overline,
               textScaleFactor: 1.5,
             ),
-            _buildInterestsWrap(interests),
+            InterestsWrap(interests),
           ]
       ),
     );
   }
 
-  Widget _buildInterestsWrap(List<String> interests) {
-    List<Widget> chips = List();
-
-    interests.forEach((element) {
-      chips.add(Container(
-        padding: const EdgeInsets.all(2.0),
-        child: Chip(
-          label: Text(element),
-        ),
-      ));
-    });
-
-    return Wrap(children: chips);
-  }
 
 
   Widget _buildAva(BuildContext context){

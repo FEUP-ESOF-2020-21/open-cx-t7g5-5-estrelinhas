@@ -142,3 +142,25 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
     );
   }
 }
+
+class InterestsWrap extends StatelessWidget{
+  @required final List<String> interests;
+
+  InterestsWrap(this.interests);
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> chips = List();
+    if(interests != null) {
+      interests.forEach((element) {
+        chips.add(Container(
+          padding: const EdgeInsets.all(2.0),
+          child: Chip(
+            label: Text(element),
+          ),
+        ));
+      });
+    }
+    return Wrap(children: chips);
+  }
+
+}

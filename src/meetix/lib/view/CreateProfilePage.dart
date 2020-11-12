@@ -29,14 +29,14 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
 
-  List<String> _selectedInterests;
+  List<String> _selectedInterests = List<String>();
 
   bool _nameValid = true;
   bool _occValid = true;
   bool _locationValid = true;
   bool _emailValid = true;
   bool _phoneValid = true;
-
+  bool _hasInterests = false;
   String profileImg = "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg";
   String profileImgPath;
 
@@ -55,9 +55,9 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       (_locationController.text.isEmpty)? _locationValid = false : _locationValid = true;
       (_emailController.text.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = false : _emailValid = true;
       (_phoneController.text.isEmpty || !RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = false : _phoneValid = true;
+      (_selectedInterests==null )? _hasInterests = false : _hasInterests = true;
 
-
-      if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {
+      if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests) {
         widget._conference.reference.collection("profiles").add({'uid':context.read<AuthController>().currentUser.uid,
                                                                   'name':_nameController.text,
                                                                   'occupation':_occupationController.text,
@@ -67,6 +67,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                                                                   'img':profileImgPath,
                                                                   'interests':_selectedInterests
         });
+
+
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
       }
     });
@@ -207,15 +209,27 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   }
   
   Widget _selectInterests() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        RaisedButton(
-        child: Text("Select Interests"),
-        onPressed: () => _showInterestsDialog(widget._conference.interests),
-        ),
-      ],
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal:10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          if(_selectedInterests != null )
+            InterestsWrap(_selectedInterests)
+          else
+            if(!_hasInterests)
+                Text(
+                  "No interests selected!",
+                  style: TextStyle(color: Colors.red),
+                ),
+          RaisedButton(
+          child: Text("Select Interests"),
+          onPressed: () => _showInterestsDialog(widget._conference.interests),
+          ),
+        ],
+      ),
     );
   }
 
@@ -225,6 +239,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+
         //Here we will build the content of the dialog
         return AlertDialog(
           title: Text("Interests"),
@@ -240,6 +255,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               onPressed: () {
                 setState(() {
                   _selectedInterests = _currentSelection;
+                  (_selectedInterests == null)? _hasInterests = false : _hasInterests = true;
                   print(_selectedInterests);
                 });
                 Navigator.of(context).pop();
