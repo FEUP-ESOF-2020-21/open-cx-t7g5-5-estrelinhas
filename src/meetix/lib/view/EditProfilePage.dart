@@ -171,7 +171,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           children: [
             AvatarWithBorder(
               radius: 65,
-              image: NetworkImage(profileImg),
+              imgURL: widget._profile.img,
+              source: widget._storage,
               borderColor: Theme.of(context).scaffoldBackgroundColor,
               backgroundColor: Colors.blue,
             ),
@@ -203,12 +204,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if(image != null){
         var file = File(image.path);
 
-        var downloadURL = await widget._storage.uploadFile(profileImgPath, file);
+        await widget._storage.uploadFile(profileImgPath, file);
 
-        setState(() {
-          profileImg = downloadURL!=null ? downloadURL : profileImg ;
-          print(profileImg);
-        });
+        setState(() {});
       }
       else {
         print('No path Received');

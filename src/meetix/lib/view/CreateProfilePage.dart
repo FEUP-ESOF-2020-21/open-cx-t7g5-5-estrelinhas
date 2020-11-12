@@ -37,16 +37,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   bool _emailValid = true;
   bool _phoneValid = true;
   bool _hasInterests = false;
-  String profileImg = "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg";
-  String profileImgPath;
-
-  @override
-  initState(){
-    super.initState();
-
-    //TODO add user id to path
-    profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
-  }
+  String profileImgPath = 'default-avatar.jpg';
 
   submitForm() {
     setState(() {
@@ -160,7 +151,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
           children: [
             AvatarWithBorder(
               radius: 65,
-              image: NetworkImage(profileImg),
+              imgURL: profileImgPath,
+              source: widget._storage,
               borderColor: Theme.of(context).scaffoldBackgroundColor,
               backgroundColor: Colors.blue,
             ),
@@ -190,14 +182,13 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
     if(permissionStatus.isGranted){
       image = await _picker.getImage(source: ImageSource.gallery);
       if(image != null){
+        profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
+
         var file = File(image.path);
 
-        var downloadURL = await widget._storage.uploadFile(profileImgPath, file);
+        await widget._storage.uploadFile(profileImgPath, file);
 
-        setState(() {
-          profileImg = downloadURL!=null ? downloadURL : profileImg ;
-          print(profileImg);
-        });
+        setState(() {});
       }
       else {
         print('No path Received');

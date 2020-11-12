@@ -20,7 +20,7 @@ class CustomAvatar extends StatelessWidget {
         if (url.hasError) {
           return CircleAvatar(backgroundImage: NetworkImage("https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"), radius: radius);
         } else if (url.hasData) {
-          return CircleAvatar(backgroundImage: NetworkImage(url.data), radius: radius,);
+          return CircleAvatar(backgroundImage: NetworkImage(url.data), radius: radius);
         } else {
           return SizedBox(width: radius*2, height: radius*2, child: CircularProgressIndicator());
         }
@@ -59,12 +59,13 @@ class ProfileOccupationDisplay extends StatelessWidget {
 }
 
 class AvatarWithBorder extends StatelessWidget {
-  ImageProvider image;
+  String imgURL;
   double radius, border;
   Icon icon;
   Color borderColor, backgroundColor;
+  StorageController source;
 
-  AvatarWithBorder({this.image, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor});
+  AvatarWithBorder({this.imgURL, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor, this.source});
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +84,10 @@ class AvatarWithBorder extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: this.borderColor,
         radius: this.radius,
-        child: (this.image != null)? CircleAvatar(
+        child: (this.imgURL != null && this.source != null)? CustomAvatar(
+            imgURL: this.imgURL,
             radius: this.radius - this.border,
-            backgroundImage: this.image,
+            source: this.source,
         ) : CircleAvatar(
           radius: this.radius - this.border,
           backgroundColor: this.backgroundColor,
