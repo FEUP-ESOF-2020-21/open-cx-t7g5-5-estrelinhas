@@ -23,6 +23,29 @@ class ViewProfileDetailsPage extends StatefulWidget {
 }
 
 class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
+  bool _liked = false;
+
+  @override
+  void initState() {
+    widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).get().then((value) => updateLiked(value.data()['liked'].contains(widget._profile.uid)));
+    super.initState();
+  }
+
+  void updateLiked(bool val) {
+    setState(() {
+      _liked = val;
+    });
+  }
+
+  void likeProfile() {
+    List<String> like = [widget._profile.uid];
+    updateLiked(!_liked);
+    if (_liked)
+      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
+    else
+      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,12 +69,10 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       body: _buildBody(context),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){
-          List<String> like = [widget._profile.uid];
-          widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).set({"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
-        },
+        onPressed: likeProfile,
         icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
-        label: Text("Like"),
+        label: (_liked)? Text("Liked") : Text("Like"),
+        backgroundColor: (_liked)? Colors.green : Colors.blue,
       ),
     );
   }
