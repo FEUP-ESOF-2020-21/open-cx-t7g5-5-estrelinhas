@@ -71,7 +71,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     final _conference = Conference.fromSnapshot(data);
 
     return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, _conference))); },
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference)));
+      },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -92,6 +94,25 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget openConference(BuildContext context, Conference conference) {
+    return FutureBuilder(
+      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0) {
+            return ConferenceProfilesPage(widget._firestore, widget._storage, conference, hasProfile: true,);
+          } else {
+            return CreateProfilePage(widget._firestore, widget._storage, conference);
+          }
+        } else if (snapshot.hasError) {
+          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
+        } else {
+          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
+        }
+      },
     );
   }
 }

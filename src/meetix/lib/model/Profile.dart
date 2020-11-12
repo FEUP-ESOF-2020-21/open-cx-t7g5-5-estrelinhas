@@ -8,7 +8,7 @@ class Profile {
   final String location;
   final String email;
   final String phone;
-
+  final String uid;
 
   Profile.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['name'] != null),
@@ -17,7 +17,9 @@ class Profile {
         occupation = map['occupation'],
         location = map['location'],
         email = map['email'],
-        phone = map['phone'];
+        phone = map['phone'],
+        uid = map['uid'];
+
 
   Profile.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
