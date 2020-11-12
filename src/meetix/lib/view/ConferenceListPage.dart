@@ -103,7 +103,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0) {
-            return ConferenceProfilesPage(widget._firestore, widget._storage, conference);
+            return ConferenceProfilesPage(widget._firestore, widget._storage, conference, hasProfile: true,);
           } else {
             return CreateProfilePage(widget._firestore, widget._storage, conference);
           }

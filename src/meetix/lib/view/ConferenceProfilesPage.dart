@@ -12,8 +12,9 @@ class ConferenceProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
+  final bool hasProfile;
 
-  ConferenceProfilesPage(this._firestore, this._storage, this._conference);
+  ConferenceProfilesPage(this._firestore, this._storage, this._conference, {this.hasProfile = false});
 
   @override
   _ConferenceProfilesPageState createState() {
@@ -59,7 +60,7 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     final profile = Profile.fromSnapshot(data);
 
     return InkWell(
-      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(widget._conference, profile, widget._storage))); },
+      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(widget._conference, profile, widget._storage, hasProfile: widget.hasProfile,))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

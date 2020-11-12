@@ -13,8 +13,9 @@ class ViewProfileDetailsPage extends StatefulWidget {
   final Conference _conference;
   final Profile _profile;
   final StorageController _storage;
+  final bool hasProfile;
 
-  ViewProfileDetailsPage(this._conference, this._profile, this._storage);
+  ViewProfileDetailsPage(this._conference, this._profile, this._storage, {this.hasProfile = false});
 
   @override
   _ViewProfileDetailsPageState createState() {
@@ -42,7 +43,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   }
 
   void likeProfile() {
-    if (_ownProfile) {
+    if (!widget.hasProfile) {
       Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!")));
     } else {
       List<String> like = [widget._profile.uid];
@@ -66,7 +67,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget._profile.name + " Profile"),
+          title: Text(widget._profile.name + "'s Profile"),
           centerTitle: true,
           backgroundColor: Colors.blue,
           elevation: 2 ,
@@ -87,13 +88,16 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       floatingActionButton: Builder(
         builder: (BuildContext context) {
           return FloatingActionButton.extended(
-            onPressed: (!_ownProfile)? likeProfile : (){
+            onPressed: (widget.hasProfile)? ((!_ownProfile)? likeProfile : (){
               Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
               Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!"),),);
+            }) : (){
+              Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+              Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
             },
             icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
             label: (_liked) ? Text("Liked") : Text("Like"),
-            backgroundColor: (_ownProfile) ? Colors.grey :
+            backgroundColor: (_ownProfile || !widget.hasProfile) ? Colors.grey :
                              (_liked) ? Colors.green : Colors.blue,
           );
         }
@@ -166,12 +170,4 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       ),
     );
   }
-}
-
-class LikeButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-
-  }
-
 }
