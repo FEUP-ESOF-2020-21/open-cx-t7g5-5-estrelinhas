@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/model/Profile.dart';
@@ -31,23 +32,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
 
-  List<String> _selectedInterests = List<String>();
+  List<String> _selectedInterests;
 
   bool _nameValid = true;
   bool _occValid = true;
   bool _locationValid = true;
   bool _emailValid = true;
   bool _phoneValid = true;
-  bool _hasInterests = false;
-  String profileImg = "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg";
+  bool _hasInterests = true;
+
   String profileImgPath;
   Map updates = Map<String,dynamic>();
   @override
   initState(){
     super.initState();
 
-    //TODO add user id to path
     profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
+    _selectedInterests = widget._profile.interests;
+    print(widget._profile.name);
+    print(widget._profile.interests);
+    print(_selectedInterests);
   }
 
   submitForm() {
@@ -57,9 +61,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       (_locationController.text.isEmpty || _locationController.text.length >= 3)? _locationValid = true : _locationValid = false;
       (_emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = true : _emailValid = false;
       (_phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = true : _phoneValid = false;
-      //(_selectedInterests == null )? _hasInterests = false : _hasInterests = true;
+      (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
 
-      if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid){
+      if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests){
         if(_nameController.text.isNotEmpty)
           updates['name'] = _nameController.text;
         if(_occupationController.text.isNotEmpty)
@@ -70,12 +74,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
           updates['email'] = _emailController.text;
         if(_phoneController.text.isNotEmpty)
           updates['phone'] = _phoneController.text;
+        if(!listEquals(widget._profile.interests, _selectedInterests))
+          updates['interests'] = _selectedInterests;
+
         widget._profile.reference.update(updates);
 
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
-
       }
-
     });
   }
 
@@ -218,15 +223,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _selectInterests() {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal:10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          if(_selectedInterests != null )
-            InterestsWrap(_selectedInterests)
+          if(_selectedInterests.isNotEmpty) InterestsWrap(_selectedInterests)
           else
             if(!_hasInterests)
               Text(
@@ -243,7 +246,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   _showInterestsDialog(List<String> interests) {
-    List<String> _currentSelection;
+    List<String> _currentSelection = List<String>();
 
     showDialog(
         context: context,
@@ -264,8 +267,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onPressed: () {
                   setState(() {
                     _selectedInterests = _currentSelection;
-                    (_selectedInterests == null)? _hasInterests = false : _hasInterests = true;
-                    print(_selectedInterests);
+                    (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
                   });
                   Navigator.of(context).pop();
                 },
