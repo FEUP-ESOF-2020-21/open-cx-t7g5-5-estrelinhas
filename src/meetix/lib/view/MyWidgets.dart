@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:meetix/controller/AuthController.dart';
 
 
 class CustomAvatar extends StatelessWidget {
@@ -100,7 +105,7 @@ class AvatarWithBorder extends StatelessWidget {
   }
 }
 
-// with love, from https://github.com/ponnamkarthik/MultiSelectChoiceChip/blob/master/lib/main.dart
+// with love, from https://stackoverflow.com/questions/58499358/alert-box-with-multi-select-chip-in-flutter
 class MultiSelectChip extends StatefulWidget {
   final List<String> list;
   final Function(List<String>) onSelectionChanged;
@@ -112,7 +117,6 @@ class MultiSelectChip extends StatefulWidget {
 }
 
 class _MultiSelectChipState extends State<MultiSelectChip> {
-  // String selectedChoice = "";
   List<String> selectedChoices = List();
 
   _buildChoiceList() {
@@ -151,6 +155,7 @@ class InterestsWrap extends StatelessWidget{
   @required final List<String> interests;
 
   InterestsWrap(this.interests);
+
   @override
   Widget build(BuildContext context) {
     List<Widget> chips = List();
@@ -166,32 +171,33 @@ class InterestsWrap extends StatelessWidget{
     }
     return Wrap(children: chips);
   }
-
 }
 
 class TextFieldWidget extends StatefulWidget{
-  final String labelText;
-  final String placeholder;
-  final TextEditingController controller;
+  @required final String labelText;
+  @required final String hintText;
+  @required final TextEditingController controller;
   final bool isValid;
-  final bool hint;
-  TextFieldWidget(this.labelText, this.placeholder, this.controller, this.isValid, this.hint);
+  final FontWeight hintWeight;
+  final TextInputType textInputType;
+
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text});
+
   @override
   _TextFieldState createState() => _TextFieldState();
-
-
 }
 
 class _TextFieldState extends State<TextFieldWidget>{
   FontWeight weight;
   @override
   Widget build(BuildContext context) {
-    if(widget.hint) weight=FontWeight.w100;
-    else  weight=FontWeight.w400;
+    /*if(widget.hint) weight=FontWeight.w100;
+    else  weight=FontWeight.w400;*/
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
         controller: widget.controller,
+        keyboardType: widget.textInputType,
         style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w400,
@@ -206,10 +212,10 @@ class _TextFieldState extends State<TextFieldWidget>{
               color: Colors.black
           ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: widget.placeholder,
+          hintText: widget.hintText,
           hintStyle: TextStyle(
             fontSize: 18,
-            fontWeight: weight,
+            fontWeight: widget.hintWeight,
             color: Colors.black,
           ),
           errorText: widget.isValid ? null : "Invalid Information",
@@ -219,6 +225,147 @@ class _TextFieldState extends State<TextFieldWidget>{
   }
 }
 
+class SelectInterests extends StatefulWidget{
+  @required final Conference conference;
+  @required List<String> selectedInterests;
+  @required bool hasInterests;
+  @required final Function(List<String>) onInterestsChanged;
+
+  SelectInterests({this.conference, this.selectedInterests, this.hasInterests, this.onInterestsChanged});
+
+  @override
+  _SelectInterestsState createState() => _SelectInterestsState();
+}
+
+class _SelectInterestsState extends State<SelectInterests> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal:10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests)
+          else
+            if(!widget.hasInterests)
+              Text(
+                "No interests selected!",
+                style: TextStyle(color: Colors.red),
+              ),
+          RaisedButton(
+            child: Text("Select Interests"),
+            onPressed: () => _showInterestsDialog(widget.conference.interests),
+          ),
+        ],
+      ),
+    );
+  }
 
 
+  _showInterestsDialog(List<String> interests) {
+    List<String> _currentSelection = List<String>();
 
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+
+        //Here we will build the content of the dialog
+        return AlertDialog(
+          title: Text("Interests"),
+          content: MultiSelectChip(
+            interests,
+            onSelectionChanged: (selectedList) {
+              _currentSelection = selectedList;
+            },
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Submit"),
+              onPressed: () {
+                setState(() {
+                  widget.selectedInterests = _currentSelection;
+                  widget.onInterestsChanged(widget.selectedInterests);
+                  (widget.selectedInterests.isEmpty)? widget.hasInterests = false : widget.hasInterests = true;
+                });
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      });
+  }
+}
+
+class ShowAvatarEdit extends StatefulWidget{
+  @required final StorageController storage;
+  @required final Conference conference;
+  String profileImgPath;
+  @required final Function(String) onPathChanged;
+
+  ShowAvatarEdit({this.storage, this.conference, this.profileImgPath='default-avatar.jpg', this.onPathChanged});
+
+  @override
+  _ShowAvatarEditState createState() => _ShowAvatarEditState();
+
+
+}
+
+class _ShowAvatarEditState extends State<ShowAvatarEdit>{
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {uploadImage();},
+      child: Center(
+        child: Stack(
+          children: [
+            AvatarWithBorder(
+              radius: 65,
+              imgURL: widget.profileImgPath,
+              source: widget.storage,
+              borderColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: Colors.blue,
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: AvatarWithBorder(
+                border: 4,
+                icon: Icon(Icons.edit, color: Colors.white,),
+                borderColor: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).accentColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  uploadImage() async {
+    final _picker = ImagePicker();
+    PickedFile image;
+
+    await Permission.photos.request();
+    var permissionStatus = await Permission.photos.status;
+
+    if(permissionStatus.isGranted){
+      image = await _picker.getImage(source: ImageSource.gallery);
+      if(image != null){
+        widget.profileImgPath = 'conferences/' + widget.conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
+        widget.onPathChanged(widget.profileImgPath);
+
+        var file = File(image.path);
+
+        await widget.storage.uploadFile(widget.profileImgPath, file);
+
+        setState(() {});
+      }
+      else {
+        print('No path Received');
+      }
+    }
+    else {
+      print('Grant permission and try again!');
+    }
+  }
+}
