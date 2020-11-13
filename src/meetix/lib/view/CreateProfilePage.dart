@@ -64,7 +64,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                                                                   'phone':_phoneController.text,
                                                                   'img':profileImgPath
         });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: true,)));
       }
     });
   }
