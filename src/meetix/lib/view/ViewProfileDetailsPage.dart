@@ -4,10 +4,8 @@ import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
-import '../controller/FirestoreController.dart';
 
 class ViewProfileDetailsPage extends StatefulWidget {
   final Conference _conference;
@@ -69,18 +67,6 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       appBar: AppBar(
           title: Text(widget._profile.name + "'s Profile"),
           centerTitle: true,
-          backgroundColor: Colors.blue,
-          elevation: 2 ,
-          actions: [
-            IconButton(
-                icon:Icon(
-                  Icons.cancel_outlined,
-                  size: 30,
-                  color:Colors.white,
-                ),
-                onPressed:(){Navigator.pop(context);}//atençao isto tem que ser mudado
-            )
-          ]
       ),
 
       body: _buildBody(context),

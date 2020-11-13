@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/view/ConferencePage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +64,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                                                                   'phone':_phoneController.text,
                                                                   'img':profileImgPath
         });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference)));
       }
     });
   }
@@ -82,7 +82,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             children: [
               TextButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference)));
                 },
                 child: Text("Skip", style: TextStyle(color: Colors.grey),)
               ),

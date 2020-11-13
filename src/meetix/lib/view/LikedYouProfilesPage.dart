@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 import 'MyWidgets.dart';
-import 'SignUpPage.dart';
 
 class LikedYouProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -34,12 +32,12 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
-
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getLikedYouProfiles(conference, context.watch<AuthController>().currentUser.uid),
+      stream: widget._firestore.getLikedYouProfiles(
+          conference, context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if(snapshot.data.size > 0)
+          if (snapshot.data.size > 0)
             return _buildList(context, snapshot.data.docs);
           else {
             return Center(child: Text("No profiles have liked you :("));
@@ -53,9 +51,10 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
     );
   }
 
-  Widget _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) {
+  Widget _buildList(
+      BuildContext context, List<QueryDocumentSnapshot> snapshot) {
     List<Widget> profiles =
-    snapshot.map((data) => _buildProfile(context, data)).toList();
+        snapshot.map((data) => _buildProfile(context, data)).toList();
     return ListView.separated(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
@@ -68,18 +67,17 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
     );
   }
 
-  Widget _buildProfile(BuildContext context, DocumentSnapshot data){
+  Widget _buildProfile(BuildContext context, DocumentSnapshot data) {
     return StreamBuilder<QuerySnapshot>(
       stream: widget._firestore.getProfileById(widget._conference, data.id),
       builder: (context, snapshot) {
-        if(snapshot.hasData) {
+        if (snapshot.hasData) {
           if (snapshot.data.size > 0)
             return _buildListItem(context, snapshot.data.docs.first);
           else {
             return Center(child: Text("This profile does not exist!"));
           }
-        }
-        else if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
           return Center(child: CircularProgressIndicator());
@@ -97,11 +95,11 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => ViewProfileDetailsPage(
-                  widget._conference,
-                  profile,
-                  widget._storage,
-                  hasProfile: widget.hasProfile,
-                )));
+                      widget._conference,
+                      profile,
+                      widget._storage,
+                      hasProfile: widget.hasProfile,
+                    )));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

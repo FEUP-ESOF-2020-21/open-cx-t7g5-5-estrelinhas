@@ -2,65 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 import 'MyWidgets.dart';
-import 'SignUpPage.dart';
 
-class ConferenceProfilesPage extends StatefulWidget {
+class AllProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
   final bool hasProfile;
 
-  ConferenceProfilesPage(this._firestore, this._storage, this._conference,
+  AllProfilesPage(this._firestore, this._storage, this._conference,
       {this.hasProfile = false});
 
   @override
-  _ConferenceProfilesPageState createState() {
-    return _ConferenceProfilesPageState();
+  _AllProfilesPageState createState() {
+    return _AllProfilesPageState();
   }
 }
 
-class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
-  int _currentTab = 0;
-
+class _AllProfilesPageState extends State<AllProfilesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(widget._conference.name),
-      ),
-      body: IndexedStack(
-        index: _currentTab,
-        children: [
-          _buildBody(context, widget._conference),
-          LikedYouProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: widget.hasProfile,),
-        ],
-      ),
-      // body: _buildBody(context, widget._conference),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentTab,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profiles"
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: "Liked You"
-          )
-        ],
-        onTap: (index) {
-          setState(() {
-            _currentTab = index;
-          });
-        },
-      ),
-    );
+    return _buildBody(context, widget._conference);
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
