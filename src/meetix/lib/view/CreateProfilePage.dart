@@ -106,39 +106,14 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             SizedBox(height: 15),
             _showPicture(),
             SizedBox(height: 35),
-            _buildTextField("Full Name", "Your Name", _nameController, _nameValid),
-            _buildTextField("Occupation", "Student", _occupationController, _occValid),
-            _buildTextField("Location", "Porto, Portugal", _locationController, _locationValid),
-            _buildTextField("E-mail", "example@email.com", _emailController, _emailValid),
-            _buildTextField("Phone Number", "+351999999999", _phoneController, _phoneValid),
+            TextFieldWidget("Full Name", "Your Name", _nameController, _nameValid, true),
+            TextFieldWidget("Occupation", "Student", _occupationController, _occValid, true),
+            TextFieldWidget("Location", "Porto, Portugal", _locationController, _locationValid, true),
+            TextFieldWidget("E-mail", "example@email.com", _emailController, _emailValid, true),
+            TextFieldWidget("Phone Number", "+351999999999", _phoneController, _phoneValid, true),
             _selectInterests(),
             SizedBox(height:20.0),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String labelText, String placeholder, TextEditingController controller, bool isValid) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(bottom: 3),
-          labelText: labelText,
-          labelStyle: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeholder,
-          hintStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w100,
-            color: Colors.black,
-          ),
-          errorText: isValid ? null : "Invalid Information",
         ),
       ),
     );
@@ -199,7 +174,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       print('Grant permission and try again!');
     }
   }
-  
+
   Widget _selectInterests() {
 
     return Padding(

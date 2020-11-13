@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
 
+
+
 class CustomAvatar extends StatelessWidget {
   @required final String imgURL;
   @required final StorageController source;
@@ -166,3 +168,57 @@ class InterestsWrap extends StatelessWidget{
   }
 
 }
+
+class TextFieldWidget extends StatefulWidget{
+  final String labelText;
+  final String placeholder;
+  final TextEditingController controller;
+  final bool isValid;
+  final bool hint;
+  TextFieldWidget(this.labelText, this.placeholder, this.controller, this.isValid, this.hint);
+  @override
+  _TextFieldState createState() => _TextFieldState();
+
+
+}
+
+class _TextFieldState extends State<TextFieldWidget>{
+  FontWeight weight;
+  @override
+  Widget build(BuildContext context) {
+    if(widget.hint) weight=FontWeight.w100;
+    else  weight=FontWeight.w400;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
+      child: TextField(
+        controller: widget.controller,
+        style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            color: Colors.black
+        ),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(bottom: 3),
+          labelText: widget.labelText,
+          labelStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: widget.placeholder,
+          hintStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: weight,
+            color: Colors.black,
+          ),
+          errorText: widget.isValid ? null : "Invalid Information",
+        ),
+      ),
+    );
+  }
+}
+
+
+
+

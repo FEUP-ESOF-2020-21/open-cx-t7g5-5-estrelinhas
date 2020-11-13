@@ -62,7 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       (_emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = true : _emailValid = false;
       (_phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = true : _phoneValid = false;
       (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
-
+      print(_selectedInterests);
       if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests){
         if(_nameController.text.isNotEmpty)
           updates['name'] = _nameController.text;
@@ -124,11 +124,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
             SizedBox(height: 15),
             _showPicture(),
             SizedBox(height: 35),
-            _buildTextField("Full Name", widget._profile.name, _nameController, _nameValid),
-            _buildTextField("Occupation", widget._profile.occupation, _occupationController, _occValid),
-            _buildTextField("Location", widget._profile.location, _locationController, _locationValid),
-            _buildTextField("E-mail", widget._profile.email, _emailController, _emailValid),
-            _buildTextField("Phone Number", widget._profile.phone, _phoneController, _phoneValid),
+            TextFieldWidget("Full Name", widget._profile.name, _nameController, _nameValid, false),
+            TextFieldWidget("Occupation", widget._profile.occupation, _occupationController, _occValid, false),
+            TextFieldWidget("Location", widget._profile.location, _locationController, _locationValid, false),
+            TextFieldWidget("E-mail", widget._profile.email, _emailController, _emailValid, false),
+            TextFieldWidget("Phone Number", widget._profile.phone, _phoneController, _phoneValid, false),
             _selectInterests(),
             SizedBox(height:20.0),
           ],
@@ -137,36 +137,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(String labelText, String placeholder, TextEditingController controller, bool isValid) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w400,
-          color: Colors.black
-        ),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(bottom: 3),
-          labelText: labelText,
-          labelStyle: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: placeholder,
-          hintStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-            color: Colors.black,
-          ),
-          errorText: isValid ? null : "Invalid Information",
-        ),
-      ),
-    );
-  }
 
   Widget _showPicture() {
     return GestureDetector(
