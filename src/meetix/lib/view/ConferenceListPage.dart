@@ -1,16 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
-import 'SignUpPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -48,7 +45,6 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
         RaisedButton(
           onPressed: (){
             context.read<AuthController>().signOut();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
           },
           child: Text("Sign out"),
         ),
