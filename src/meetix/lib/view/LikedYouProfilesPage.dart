@@ -1,55 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
+import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 import 'MyWidgets.dart';
 import 'SignUpPage.dart';
 
-class ConferenceProfilesPage extends StatefulWidget {
+class LikedYouProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
   final bool hasProfile;
 
-  ConferenceProfilesPage(this._firestore, this._storage, this._conference,
+  LikedYouProfilesPage(this._firestore, this._storage, this._conference,
       {this.hasProfile = false});
 
   @override
-  _ConferenceProfilesPageState createState() {
-    return _ConferenceProfilesPageState();
+  _LikedYouProfilesPageState createState() {
+    return _LikedYouProfilesPageState();
   }
 }
 
-class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
+class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(widget._conference.name),
-          actions: [
-             RaisedButton(
-               onPressed: (){
-                 Navigator.push(context, MaterialPageRoute(builder: (context) => LikedYouProfilesPage(widget._firestore, widget._storage, widget._conference)));
-                },
-               child: Text("Liked You"),
-             )
-          ]
-      ),
+      appBar: AppBar(title: Text(widget._conference.name)),
       body: _buildBody(context, widget._conference),
     );
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
+
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferenceProfiles(conference),
+      stream: widget._firestore.getLikedYouProfiles(conference, context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _buildList(context, snapshot.data.docs);
+          if(snapshot.data.size > 0)
+            return _buildList(context, snapshot.data.docs);
+          else {
+            return Center(child: Text("No profiles have liked you :("));
+          }
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
@@ -59,9 +56,9 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) {
     List<Widget> profiles =
-        snapshot.map((data) => _buildListItem(context, data)).toList();
+    snapshot.map((data) => _buildProfile(context, data)).toList();
     return ListView.separated(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
@@ -74,6 +71,26 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     );
   }
 
+  Widget _buildProfile(BuildContext context, DocumentSnapshot data){
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget._firestore.getProfileById(widget._conference, data.id),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          if (snapshot.data.size > 0)
+            return _buildListItem(context, snapshot.data.docs.first);
+          else {
+            return Center(child: Text("This profile does not exist!"));
+          }
+        }
+        else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final profile = Profile.fromSnapshot(data);
 
@@ -83,11 +100,11 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => ViewProfileDetailsPage(
-                      widget._conference,
-                      profile,
-                      widget._storage,
-                      hasProfile: widget.hasProfile,
-                    )));
+                  widget._conference,
+                  profile,
+                  widget._storage,
+                  hasProfile: widget.hasProfile,
+                )));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
