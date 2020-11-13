@@ -26,21 +26,40 @@ class ConferenceProfilesPage extends StatefulWidget {
 }
 
 class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
+  int _currentTab = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: Text(widget._conference.name),
-          actions: [
-             RaisedButton(
-               onPressed: (){
-                 Navigator.push(context, MaterialPageRoute(builder: (context) => LikedYouProfilesPage(widget._firestore, widget._storage, widget._conference)));
-                },
-               child: Text("Liked You"),
-             )
-          ]
       ),
-      body: _buildBody(context, widget._conference),
+      body: IndexedStack(
+        index: _currentTab,
+        children: [
+          _buildBody(context, widget._conference),
+          LikedYouProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: widget.hasProfile,),
+        ],
+      ),
+      // body: _buildBody(context, widget._conference),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentTab,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profiles"
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: "Liked You"
+          )
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentTab = index;
+          });
+        },
+      ),
     );
   }
 

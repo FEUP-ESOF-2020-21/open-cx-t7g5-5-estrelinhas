@@ -30,10 +30,7 @@ class LikedYouProfilesPage extends StatefulWidget {
 class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget._conference.name)),
-      body: _buildBody(context, widget._conference),
-    );
+    return _buildBody(context, widget._conference);
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
