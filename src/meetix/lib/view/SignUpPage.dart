@@ -1,20 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
-import 'package:meetix/controller/FirestoreController.dart';
-import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/SignInPage.dart';
 import 'package:provider/provider.dart';
 
-import 'ConferenceListPage.dart';
-
-
 class SignUpPage extends StatefulWidget {
-  final FirestoreController _firestore;
-  final StorageController _storage;
+  final VoidCallback onSwitch;
 
-  SignUpPage(this._firestore, this._storage);
+  SignUpPage({@required this.onSwitch});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,10 +21,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<User>() != null) {
-      return ConferenceListPage(widget._firestore, widget._storage);
-    }
-
     return Scaffold(
       appBar: AppBar(title: Text("Sign Up for Meetix"),),
       body: _signUpForm(),
@@ -70,14 +58,12 @@ class _SignUpPageState extends State<SignUpPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SignUpButton(email: _emailController, password: _passwordController, displayName: _nameController,),
-              SizedBox(width: 60.0,),
-              RaisedButton(
-                onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage(widget._firestore, widget._storage)));
-                },
+              OutlineButton(
+                onPressed: widget.onSwitch,
                 child: Text("Sign In"),
-              )
+              ),
+              SizedBox(width: 60.0,),
+              SignUpButton(email: _emailController, password: _passwordController, displayName: _nameController,),
             ],
           ),
         ],

@@ -4,18 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/SignInPage.dart';
-import 'package:meetix/view/SignUpPage.dart';
+import 'package:meetix/view/AuthPage.dart';
 import 'view/ConferenceListPage.dart';
-import 'view/ViewProfileDetailsPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(startApp());
+  runApp(StartApp());
 }
 
-class startApp extends StatelessWidget {
+class StartApp extends StatelessWidget {
   // Create the initialization Future outside of `build`:
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
@@ -50,7 +48,6 @@ class MeetixApp extends StatelessWidget {
   final FirestoreController firestore = FirestoreController();
   final StorageController storage = StorageController();
 
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -65,9 +62,24 @@ class MeetixApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Meetix',
-        home: SignUpPage(firestore, storage),
+        home: LandingPage(firestore, storage),
       ),
     );
   }
 }
 
+class LandingPage extends StatelessWidget {
+  final FirestoreController _firestore;
+  final StorageController _storage;
+
+  LandingPage(this._firestore, this._storage);
+
+  @override
+  Widget build(BuildContext context) {
+    if (context.watch<User>() != null) {
+      return ConferenceListPage(_firestore, _storage);
+    } else {
+      return AuthPage();
+    }
+  }
+}
