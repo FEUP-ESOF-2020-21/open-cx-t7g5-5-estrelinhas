@@ -19,7 +19,7 @@ class Profile {
         location = map['location'],
         email = map['email'],
         phone = map['phone'],
-        interests = map['interests']==null ? List<String>() : List<String>.from(map['interests'])
+        interests = map['interests']==null ? List<String>() : List<String>.from(map['interests']),
         uid = map['uid'];
 
 
