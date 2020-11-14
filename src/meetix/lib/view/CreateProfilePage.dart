@@ -1,7 +1,7 @@
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -45,8 +45,9 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
       (_phoneController.text.isEmpty || !RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = false : _phoneValid = true;
       (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
 
+
       if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests) {
-        widget._conference.reference.collection("profiles").add({'uid':context.read<AuthController>().currentUser.uid,
+        widget._conference.reference.collection("profiles").doc(context.read<AuthController>().currentUser.uid).set({'uid':context.read<AuthController>().currentUser.uid,
                                                                   'name':_nameController.text,
                                                                   'occupation':_occupationController.text,
                                                                   'location':_locationController.text,
@@ -55,8 +56,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                                                                   'img':profileImgPath,
                                                                   'interests':_selectedInterests
         });
-
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference, hasProfile: true,)));
       }
     });
   }
@@ -74,7 +74,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             children: [
               TextButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceProfilesPage(widget._firestore, widget._storage, widget._conference)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference)));
                 },
                 child: Text("Skip", style: TextStyle(color: Colors.grey),)
               ),
