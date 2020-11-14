@@ -97,6 +97,7 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
                 builder: (context) => ViewProfileDetailsPage(
                       widget._conference,
                       profile,
+                      widget._firestore,
                       widget._storage,
                       hasProfile: widget.hasProfile,
                     )));

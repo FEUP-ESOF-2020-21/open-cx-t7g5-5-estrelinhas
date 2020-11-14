@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/EditProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -11,9 +13,10 @@ class ViewProfileDetailsPage extends StatefulWidget {
   final Conference _conference;
   final Profile _profile;
   final StorageController _storage;
+  final FirestoreController _firestore;
   final bool hasProfile;
 
-  ViewProfileDetailsPage(this._conference, this._profile, this._storage, {this.hasProfile = false});
+  ViewProfileDetailsPage(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
 
   @override
   _ViewProfileDetailsPageState createState() {
@@ -73,17 +76,23 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       floatingActionButton: Builder(
         builder: (BuildContext context) {
-          return FloatingActionButton.extended(
-            onPressed: (widget.hasProfile)? ((!_ownProfile)? likeProfile : (){
-              Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!"),),);
-            }) : (){
+          return (_ownProfile)? FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile)));
+            },
+            icon: Icon(Icons.edit, color: Colors.white,),
+            label: Text("Edit"),
+            backgroundColor: Colors.purple,
+          )
+            :
+          FloatingActionButton.extended(
+            onPressed: (widget.hasProfile)? likeProfile : (){
               Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
               Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
             },
             icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
             label: (_liked) ? Text("Liked") : Text("Like"),
-            backgroundColor: (_ownProfile || !widget.hasProfile) ? Colors.grey :
+            backgroundColor: (!widget.hasProfile) ? Colors.grey :
                              (_liked) ? Colors.green : Colors.blue,
           );
         }

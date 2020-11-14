@@ -53,7 +53,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       (_locationController.text.isEmpty || _locationController.text.length >= 3)? _locationValid = true : _locationValid = false;
       (_emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = true : _emailValid = false;
       (_phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = true : _phoneValid = false;
-      (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
+      // (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
 
 
       if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests){

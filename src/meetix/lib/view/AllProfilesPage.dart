@@ -71,6 +71,7 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
                 builder: (context) => ViewProfileDetailsPage(
                       widget._conference,
                       profile,
+                      widget._firestore,
                       widget._storage,
                       hasProfile: widget.hasProfile,
                     )));
