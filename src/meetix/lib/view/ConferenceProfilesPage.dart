@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
+import 'package:meetix/view/EditProfilePage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 
 import '../model/Conference.dart';
@@ -59,7 +60,7 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     final profile = Profile.fromSnapshot(data);
 
     return InkWell(
-      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(profile, widget._storage))); },
+      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, profile))); },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
