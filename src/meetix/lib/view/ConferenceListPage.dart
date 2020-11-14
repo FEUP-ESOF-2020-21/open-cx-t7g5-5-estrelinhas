@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +102,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0) {
-            return ConferenceProfilesPage(widget._firestore, widget._storage, conference, hasProfile: true,);
+            return ConferencePage(widget._firestore, widget._storage, conference, hasProfile: true,);
           } else {
             return CreateProfilePage(widget._firestore, widget._storage, conference);
           }

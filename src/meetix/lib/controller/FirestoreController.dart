@@ -14,4 +14,13 @@ class FirestoreController {
   Stream<QuerySnapshot> getConferenceProfiles(Conference conference) {
     return conference.reference.collection("profiles").snapshots();
   }
+
+  Stream<QuerySnapshot> getLikedYouProfiles(Conference conference, String profileID) {
+    return conference.reference.collection("likes").where('liked', arrayContains: profileID).snapshots();
+  }
+
+  Stream<QuerySnapshot> getProfileById(Conference conference, String profileID) {
+    return conference.reference.collection("profiles").where('uid', isEqualTo: profileID).snapshots();
+  }
+
 }
