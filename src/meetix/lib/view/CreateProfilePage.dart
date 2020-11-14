@@ -42,7 +42,6 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   initState(){
     super.initState();
 
-    //TODO add user id to path
     profileImgPath = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
   }
 
@@ -56,7 +55,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
 
       if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {
-        widget._conference.reference.collection("profiles").add({'uid':context.read<AuthController>().currentUser.uid,
+        widget._conference.reference.collection("profiles").doc(context.read<AuthController>().currentUser.uid).set({'uid':context.read<AuthController>().currentUser.uid,
                                                                   'name':_nameController.text,
                                                                   'occupation':_occupationController.text,
                                                                   'location':_locationController.text,
