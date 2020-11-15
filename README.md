@@ -254,7 +254,7 @@ Given I’m trying to join a conference
 When I'm filling the form with my information
 Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
 When I do not choose any interests and click the 'submit' button
-Then I expect to see no the interests in the form 
+Then I expect to see no interests in the form 
 When I click on the 'finish' button
 Then I expect to not be able to create the profile with a message warning me why
 ```
@@ -274,7 +274,7 @@ Given I’m trying to edit my profile
 When I'm changing the interests field 
 Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
 When I choose no the interests and  click the 'submit' button
-Then I expect to see no the interests in the form 
+Then I expect to see no interests in the form 
 When I click on the 'save' button
 Then I expect to not be able to save the new profile information with a message warning me why
 ```
