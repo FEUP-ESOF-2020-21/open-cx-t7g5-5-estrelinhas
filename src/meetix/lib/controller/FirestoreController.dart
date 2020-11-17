@@ -23,4 +23,13 @@ class FirestoreController {
     return conference.reference.collection("profiles").where('uid', isEqualTo: profileID).snapshots();
   }
 
+  Stream<DocumentSnapshot> getLikedProfiles(Conference conference, String profileID) {
+    return conference.reference.collection("likes").doc(profileID).snapshots();
+  }
+  
+  Stream<QuerySnapshot> getMatches(Conference conference, String profileID, List<dynamic> likedProfiles) {
+    return conference.reference.collection("likes").where('liked', arrayContains: profileID)
+         .where(FieldPath.documentId, whereIn: likedProfiles).snapshots();
+  }
+
 }
