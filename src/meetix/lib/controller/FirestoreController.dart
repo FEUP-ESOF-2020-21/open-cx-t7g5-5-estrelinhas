@@ -16,7 +16,11 @@ class FirestoreController {
   }
 
   Stream<QuerySnapshot> getLikedYouProfiles(Conference conference, String profileID) {
-    return conference.reference.collection("likes").where('liked', arrayContains: profileID).snapshots();
+    return firestore.collectionGroup("new_likes")
+        .where('conference_id', isEqualTo: conference.reference.id)
+        .where('uid', isEqualTo: profileID)
+        .where('like', isEqualTo: true)
+        .where('match', isEqualTo: false).snapshots();
   }
 
   Stream<QuerySnapshot> getProfileById(Conference conference, String profileID) {
@@ -24,7 +28,11 @@ class FirestoreController {
   }
 
   Stream<QuerySnapshot> getMatches(Conference conference, String profileID) {
-    return conference.reference.collection("profiles").doc(profileID).collection("matches").snapshots();
+    return firestore.collectionGroup("new_likes")
+        .where('conference_id', isEqualTo: conference.reference.id)
+        .where('uid', isEqualTo: profileID)
+        .where('like', isEqualTo: true)
+        .where('match', isEqualTo: true).snapshots();
   }
 
   void addLike(Conference conference, String profileID, String likedID) {

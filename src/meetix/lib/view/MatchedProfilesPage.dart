@@ -68,7 +68,7 @@ class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
 
   Widget _buildProfile(BuildContext context, DocumentSnapshot data) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getProfileById(widget._conference, data.id),
+      stream: widget._firestore.getProfileById(widget._conference, data.data()['profile_id']),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0)
