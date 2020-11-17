@@ -202,45 +202,45 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 * [Story 1: Join conference and create a profile](#story-1-join-conference-and-create-a-profile)
 
-* [Story 2: Select profile interests](#story-2:-select-profile-interests)
+* [Story 2: Select profile interests](#story-2-select-profile-interests)
 
-* [Story 3: View profile details](#story-3:-view-profile-details)
+* [Story 3: View profile details](#story-3-view-profile-details)
 
-* [Story 4: Like a profile](#story-4:-like-a-profile)
+* [Story 4: Like a profile](#story-4-like-a-profile)
 
-* [Story 5: Top 20 profiles list](#story-5:-top-20-profiles-list)
+* [Story 5: Top 20 profiles list](#story-5-top-20-profiles-list)
 
-* [Story 6: See matches](#story-6:-see-matches)
+* [Story 6: See matches](#story-6-see-matches)
 
-* [Story 7: View list of active conferences](#story-7:-view-list-of-active-conferences)
+* [Story 7: View list of active conferences](#story-7-view-list-of-active-conferences)
 
-* [Story 8: Create conference](#story-8:-create-conference)
+* [Story 8: Create conference](#story-8-create-conference)
 
-* [Story 9: List of profiles that liked mine](#story-9:-list-of-profiles-that-liked-mine)
+* [Story 9: List of profiles that liked mine](#story-9-list-of-profiles-that-liked-mine)
 
-* [Story 10: Edit profile](#story-10:-edit-profile)
+* [Story 10: Edit profile](#story-10-edit-profile)
 
-* [Story 11: Edit conference](#story-11:-edit-conference)
+* [Story 11: Edit conference](#story-11-edit-conference)
 
-* [Story 12: Leave conference](#story-12:-leave-conference)
+* [Story 12: Leave conference](#story-12-leave-conference)
 
-* [Story 13: Delete conference](#story-13:-delete-conference)
+* [Story 13: Delete conference](#story-13-delete-conference)
 
-* [Story 14: Create account](#story-14:-create-account)
+* [Story 14: Create account](#story-14-create-account)
 
-* [Story 15: Login](#story-15:-login)
+* [Story 15: Login](#story-15-login)
 
-* [Story 16: Delete/Edit account](#story-16:-delete/edit-account)
+* [Story 16: Delete/Edit account](#story-16-delete/edit-account)
 
-* [Story 17: See all profiles](#story-17:-see-all-profiles)
+* [Story 17: See all profiles](#story-17-see-all-profiles)
 
-* [Story 18: Create profile](#story-18:-create-profile)
+* [Story 18: Create profile](#story-18-create-profile)
 
-* [Story 19: See joined conferences](#story-19:-see-joined-conferences)
+* [Story 19: See joined conferences](#story-19-see-joined-conferences)
 
-* [Story 20: Search/Filter all profiles](#story-20:-search/filter-all-profiles)
+* [Story 20: Search/Filter all profiles](#story-20-search/filter-all-profiles)
 
-* [Story 21: Search for active conferences](#story-21:-search-for-active-conferences)
+* [Story 21: Search for active conferences](#story-21-search-for-active-conferences)
 
 ### **Story 1: Join conference and create a profile**
 
