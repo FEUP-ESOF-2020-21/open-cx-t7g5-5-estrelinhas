@@ -38,7 +38,7 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Let's connect throught our app, add your interests and efficiently connect with people with identical interests and network online.
+Let's connect through our app, add your interests and efficiently connect with people with identical interests and network online.
 
 ---
 
