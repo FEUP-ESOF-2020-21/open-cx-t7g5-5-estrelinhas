@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
@@ -102,8 +101,6 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
     );
   }
 
-
-
   Widget _buildAva(BuildContext context){
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
@@ -157,67 +154,50 @@ class _LikeEditButtonState extends State<LikeEditButton> {
     if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
       _ownProfile = true;
     else {
-      widget._conference.reference.collection("likes").doc(context
-          .read<AuthController>()
-          .currentUser
-          .uid)
-          .get()
-          .then((value) =>
-          updateLiked(value.data()['liked'].contains(widget._profile.uid)));
-      widget._profile.reference.collection("matches")
-          .doc(context.read<AuthController>().currentUser.uid)
-          .get()
-          .then((value) => {
-        if (value.data() != null)
-          updateMatch(value.data()['match'])
-      });
+      widget._firestore.checkLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onLike: _onLike);
+      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onExistingMatch);
     }
     super.initState();
   }
 
-  void updateLiked(bool val) {
+  void _updateLikedState(bool val) {
     setState(() {
       _liked = val;
     });
   }
 
-  void updateMatch(bool val) {
+  void _updateMatchState(bool val) {
     setState(() {
       _match = val;
     });
   }
 
-  void onMatch() {
-    updateMatch(true);
+  void _onLike() {
+    _updateLikedState(true);
+  }
+
+  void _onExistingMatch() {
+    _updateMatchState(true);
+  }
+
+  void _onNewMatch() {
+    _updateMatchState(true);
     _newMatchSnackBar();
     widget._firestore.addMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
   }
 
-
-  void likeProfile() {
-    List<String> like = [widget._profile.uid];
-    updateLiked(!_liked);
+  void _likeProfile() {
+    _updateLikedState(!_liked);
     if (_liked) {
-      widget._firestore.likeProfile(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
-      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: onMatch);
+      widget._firestore.addLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onNewMatch);
     }
     else {
+      widget._firestore.removeLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
       if (_match) {
-        updateMatch(false);
-        widget._profile.reference.collection("matches")
-            .doc(context.read<AuthController>().currentUser.uid)
-            .delete();
-        widget._conference.reference.collection("profiles")
-            .doc(context.read<AuthController>().currentUser.uid)
-            .collection("matches")
-            .doc(widget._profile.uid)
-            .delete();
+        _updateMatchState(false);
+        widget._firestore.removeMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
       }
-      widget._conference.reference.collection("likes").doc(context
-          .read<AuthController>()
-          .currentUser
-          .uid).set(
-          {"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
     }
   }
 
@@ -233,7 +213,7 @@ class _LikeEditButtonState extends State<LikeEditButton> {
 
   Widget _likeButton() {
     return FloatingActionButton.extended(
-      onPressed: (widget.hasProfile)? likeProfile : _noProfileSnackBar,
+      onPressed: (widget.hasProfile)? _likeProfile : _noProfileSnackBar,
       icon: (_match)? Icon(Icons.emoji_people) : Icon(Icons.thumb_up_sharp),
       label: (_liked) ? ((_match)? Text("Match") : Text("Liked")) : Text("Like"),
       backgroundColor: (!widget.hasProfile) ? Colors.grey :
@@ -252,5 +232,3 @@ class _LikeEditButtonState extends State<LikeEditButton> {
     );
   }
 }
-
-

@@ -27,19 +27,24 @@ class FirestoreController {
     return conference.reference.collection("profiles").doc(profileID).collection("matches").snapshots();
   }
 
-  void likeProfile(Conference conference, String profileID, String likedID) {
+  void addLike(Conference conference, String profileID, String likedID) {
     conference.reference.collection("likes").doc(profileID)
         .set({"liked": FieldValue.arrayUnion([likedID])}, SetOptions(merge: true));
   }
 
-  void checkMatch(Conference conference, String profileID, String likedID, {Function onMatch}) {
+  void removeLike(Conference conference, String profileID, String likedID) {
+    conference.reference.collection("likes").doc(profileID).set(
+        {"liked": FieldValue.arrayRemove([likedID])}, SetOptions(merge: true));
+  }
+
+  void checkLike(Conference conference, String profileID, String likedID, {Function onLike}) {
     conference.reference.collection("likes")
-        .where(FieldPath.documentId, isEqualTo: likedID)
-        .where('liked', arrayContains: profileID)
+        .where(FieldPath.documentId, isEqualTo: profileID)
+        .where('liked', arrayContains: likedID)
         .get()
         .then((value) => {
           if (value.size > 0)
-            onMatch()
+            onLike()
         })
         .catchError((error) => print(error));
   }
@@ -55,5 +60,30 @@ class FirestoreController {
         .collection("matches")
         .doc(profileID)
         .set({'match':true});
+  }
+
+  void removeMatch(Conference conference, String profileID, String likedID) {
+    conference.reference.collection("profiles")
+        .doc(profileID)
+        .collection("matches")
+        .doc(likedID)
+        .delete();
+    conference.reference.collection("profiles")
+        .doc(likedID)
+        .collection("matches")
+        .doc(profileID)
+        .delete();
+  }
+
+  void checkMatch(Conference conference, String profileID, String likedID, {Function onMatch}) {
+    conference.reference.collection("likes")
+        .where(FieldPath.documentId, isEqualTo: likedID)
+        .where('liked', arrayContains: profileID)
+        .get()
+        .then((value) => {
+      if (value.size > 0)
+        onMatch()
+    })
+        .catchError((error) => print(error));
   }
 }
