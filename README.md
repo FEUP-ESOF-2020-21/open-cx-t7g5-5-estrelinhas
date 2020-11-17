@@ -282,10 +282,43 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Joining a conference
 Given I’m trying to join a conference
-When I complete the form with my information
-Then the system allows me to choose the topics of the conference I’m interested in
-When I click the ‘finish’ button
+When I'm filling the form with my information
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose the interests and click the 'submit' button
+Then I expect to see the choosen interests in the form 
+When I click on the 'finish' button
 Then the system saves my information for matching purposes
+```
+
+```gherkin
+Scenario: Joining a conference
+Given I’m trying to join a conference
+When I'm filling the form with my information
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I do not choose any interests and click the 'submit' button
+Then I expect to see no interests in the form 
+When I click on the 'finish' button
+Then I expect to not be able to create the profile with a message warning me why
+```
+```gherkin
+Scenario: Editing the conference profile
+Given I’m trying to edit my profile
+When I'm changing the interests field 
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose the interests and  click the 'submit' button
+Then I expect to see the choosen interests in the form 
+When I click on the 'save' button
+Then the system saves my new information 
+```
+```gherkin
+Scenario: Editing the conference profile
+Given I’m trying to edit my profile
+When I'm changing the interests field 
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose no the interests and  click the 'submit' button
+Then I expect to see no interests in the form 
+When I click on the 'save' button
+Then I expect to not be able to save the new profile information with a message warning me why
 ```
 
 _Value/Effort_
@@ -499,11 +532,20 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Editing my profile’s information
-Given I’m logged-in, I have joined a conference and opened the sidebar menu
-When I click on “Your profile” button of the sidebar
-Then the app shows me my profile
+Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
+When I fill the form with all valid information I want to change and I click the 'save' button
+Then I expect the system to save my new information
+```
+
+```gherkin
+Scenario: Editing my profile’s information
+Given I’m in  my profile
+When I click on the edit button
+Then I can edit my information
+When I fill the form and some of the new information isn't valid and I click the 'save' button
+Then I expect to not be able to save the new information with a message warning me why
 ```
 
 _Value/Effort_
