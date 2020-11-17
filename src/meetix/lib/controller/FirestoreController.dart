@@ -93,18 +93,6 @@ class FirestoreController {
         });
   }
 
-  void checkMatch(Conference conference, String profileID, String likedID, {Function onMatch}) {
-    conference.reference.collection("profiles")
-        .doc(likedID)
-        .collection("likes")
-        .doc(profileID).get()
-        .then((value) => {
-          if (value.exists)
-            onMatch()
-        })
-        .catchError((error) => print(error));
-  }
-
   void checkMatchTransaction(Conference conference, String profileID, String likedID, {Function onMatch}) {
     firestore.runTransaction((transaction) async {
       DocumentReference likedRef = conference.reference
