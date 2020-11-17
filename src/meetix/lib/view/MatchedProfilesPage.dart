@@ -32,48 +32,14 @@ class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
-
-    return StreamBuilder(
-        stream: widget._firestore.getLikedProfiles(conference, context.watch<AuthController>().currentUser.uid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.data()['liked'].length > 0) {
-              return StreamBuilder<QuerySnapshot>(
-                stream: widget._firestore.getMatches(
-                    conference, context.watch<AuthController>().currentUser.uid, snapshot.data.data()['liked']),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.size > 0)
-                      return _buildList(context, snapshot.data.docs);
-                    else {
-                      return Center(child: Text("No profiles have matched yours"));
-                    }
-                  } else if (snapshot.hasError) {
-                    return Text("Error :(");
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
-              );
-            } else {
-              return Center(child: Text("You haven't liked any profiles"),);
-            }
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error :("));
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-    );
-     /* StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getMatches(
-          conference, context.watch<AuthController>().currentUser.uid),
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget._firestore.getMatches(conference, context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0)
             return _buildList(context, snapshot.data.docs);
           else {
-            return Center(child: Text("No profiles have liked you :("));
+            return Center(child: Text("No profiles have matched yours"));
           }
         } else if (snapshot.hasError) {
           return Text("Error :(");
@@ -81,7 +47,7 @@ class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
           return Center(child: CircularProgressIndicator());
         }
       },
-    );*/
+    );
   }
 
   Widget _buildList(

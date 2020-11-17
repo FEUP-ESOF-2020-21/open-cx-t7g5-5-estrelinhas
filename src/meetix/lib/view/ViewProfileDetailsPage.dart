@@ -25,45 +25,6 @@ class ViewProfileDetailsPage extends StatefulWidget {
 }
 
 class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
-  bool _liked = false;
-  bool _ownProfile = false;
-
-  @override
-  void initState() {
-    if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
-      _ownProfile = true;
-    else
-      widget._conference.reference.collection("likes").doc(context.read<AuthController>().currentUser.uid).get().then((value) => updateLiked(value.data()['liked'].contains(widget._profile.uid)));
-    super.initState();
-  }
-
-  void updateLiked(bool val) {
-    setState(() {
-      _liked = val;
-    });
-  }
-
-  void likeProfile() {
-    if (!widget.hasProfile) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text("Self-love is important!")));
-    } else {
-      List<String> like = [widget._profile.uid];
-      updateLiked(!_liked);
-      if (_liked)
-        widget._conference.reference.collection("likes").doc(context
-            .read<AuthController>()
-            .currentUser
-            .uid).set(
-            {"liked": FieldValue.arrayUnion(like)}, SetOptions(merge: true));
-      else
-        widget._conference.reference.collection("likes").doc(context
-            .read<AuthController>()
-            .currentUser
-            .uid).set(
-            {"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,29 +35,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       body: _buildBody(context),
 
-      floatingActionButton: Builder(
-        builder: (BuildContext context) {
-          return (_ownProfile)? FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile)));
-            },
-            icon: Icon(Icons.edit, color: Colors.white,),
-            label: Text("Edit"),
-            backgroundColor: Colors.purple,
-          )
-            :
-          FloatingActionButton.extended(
-            onPressed: (widget.hasProfile)? likeProfile : (){
-              Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
-            },
-            icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
-            label: (_liked) ? Text("Liked") : Text("Like"),
-            backgroundColor: (!widget.hasProfile) ? Colors.grey :
-                             (_liked) ? Colors.green : Colors.blue,
-          );
-        }
-      ),
+      floatingActionButton: LikeEditButton(widget._conference, widget._profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
     );
   }
 
@@ -189,3 +128,129 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
     );
   }
 }
+
+class LikeEditButton extends StatefulWidget {
+  final Conference _conference;
+  final Profile _profile;
+  final StorageController _storage;
+  final FirestoreController _firestore;
+  final bool hasProfile;
+
+  LikeEditButton(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
+
+  @override
+  _LikeEditButtonState createState() => _LikeEditButtonState();
+}
+
+class _LikeEditButtonState extends State<LikeEditButton> {
+  bool _liked = false;
+  bool _ownProfile = false;
+  bool _match = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return (_ownProfile)? _editButton() : _likeButton();
+  }
+
+  @override
+  void initState() {
+    if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
+      _ownProfile = true;
+    else {
+      widget._conference.reference.collection("likes").doc(context
+          .read<AuthController>()
+          .currentUser
+          .uid)
+          .get()
+          .then((value) =>
+          updateLiked(value.data()['liked'].contains(widget._profile.uid)));
+      widget._profile.reference.collection("matches")
+          .doc(context.read<AuthController>().currentUser.uid)
+          .get()
+          .then((value) => {
+        if (value.data() != null)
+          updateMatch(value.data()['match'])
+      });
+    }
+    super.initState();
+  }
+
+  void updateLiked(bool val) {
+    setState(() {
+      _liked = val;
+    });
+  }
+
+  void updateMatch(bool val) {
+    setState(() {
+      _match = val;
+    });
+  }
+
+  void onMatch() {
+    updateMatch(true);
+    _newMatchSnackBar();
+    widget._firestore.addMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+  }
+
+
+  void likeProfile() {
+    List<String> like = [widget._profile.uid];
+    updateLiked(!_liked);
+    if (_liked) {
+      widget._firestore.likeProfile(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: onMatch);
+    }
+    else {
+      if (_match) {
+        updateMatch(false);
+        widget._profile.reference.collection("matches")
+            .doc(context.read<AuthController>().currentUser.uid)
+            .delete();
+        widget._conference.reference.collection("profiles")
+            .doc(context.read<AuthController>().currentUser.uid)
+            .collection("matches")
+            .doc(widget._profile.uid)
+            .delete();
+      }
+      widget._conference.reference.collection("likes").doc(context
+          .read<AuthController>()
+          .currentUser
+          .uid).set(
+          {"liked": FieldValue.arrayRemove(like)}, SetOptions(merge: true));
+    }
+  }
+
+  void _noProfileSnackBar() {
+    Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
+  }
+  
+  void _newMatchSnackBar() {
+    Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("It's a match!"),),);
+  }
+
+  Widget _likeButton() {
+    return FloatingActionButton.extended(
+      onPressed: (widget.hasProfile)? likeProfile : _noProfileSnackBar,
+      icon: (_match)? Icon(Icons.emoji_people) : Icon(Icons.thumb_up_sharp),
+      label: (_liked) ? ((_match)? Text("Match") : Text("Liked")) : Text("Like"),
+      backgroundColor: (!widget.hasProfile) ? Colors.grey :
+      (_liked) ? (_match)? Colors.pink : Colors.green : Colors.blue,
+    );
+  }
+
+  Widget _editButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile)));
+      },
+      icon: Icon(Icons.edit, color: Colors.white,),
+      label: Text("Edit"),
+      backgroundColor: Colors.purple,
+    );
+  }
+}
+
+
