@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 
 import '../model/Conference.dart';
 
@@ -16,10 +14,9 @@ class FirestoreController {
   }
 
   Stream<QuerySnapshot> getLikedYouProfiles(Conference conference, String profileID) {
-    return firestore.collectionGroup("new_likes")
+    return firestore.collectionGroup("likes")
         .where('conference_id', isEqualTo: conference.reference.id)
         .where('uid', isEqualTo: profileID)
-        .where('like', isEqualTo: true)
         .where('match', isEqualTo: false).snapshots();
   }
 
@@ -28,31 +25,43 @@ class FirestoreController {
   }
 
   Stream<QuerySnapshot> getMatches(Conference conference, String profileID) {
-    return firestore.collectionGroup("new_likes")
+    return firestore.collectionGroup("likes")
         .where('conference_id', isEqualTo: conference.reference.id)
         .where('uid', isEqualTo: profileID)
-        .where('like', isEqualTo: true)
         .where('match', isEqualTo: true).snapshots();
   }
 
   void addLike(Conference conference, String profileID, String likedID) {
-    conference.reference.collection("likes").doc(profileID)
-        .set({"liked": FieldValue.arrayUnion([likedID])}, SetOptions(merge: true));
+    conference.reference.collection("profiles")
+        .doc(profileID)
+        .collection("likes")
+        .doc(likedID)
+        .set({
+          "conference_id" : conference.reference.id,
+          "profile_id" : profileID,
+          "uid" : likedID,
+          "match" : false
+        });
   }
 
   void removeLike(Conference conference, String profileID, String likedID) {
-    conference.reference.collection("likes").doc(profileID).set(
-        {"liked": FieldValue.arrayRemove([likedID])}, SetOptions(merge: true));
+    conference.reference.collection("profiles")
+        .doc(profileID)
+        .collection("likes")
+        .doc(likedID)
+        .delete();
   }
 
-  void checkLike(Conference conference, String profileID, String likedID, {Function onLike}) {
-    conference.reference.collection("likes")
-        .where(FieldPath.documentId, isEqualTo: profileID)
-        .where('liked', arrayContains: likedID)
-        .get()
-        .then((value) => {
-          if (value.size > 0)
-            onLike()
+  void checkLikeMatch(Conference conference, String profileID, String likedID, {Function onLike, Function onMatch}) {
+    conference.reference.collection("profiles")
+        .doc(profileID).collection("likes")
+        .doc(likedID).get()
+        .then((value) {
+          if (value.exists) {
+            onLike();
+            if (value.data()['match'])
+              onMatch();
+          }
         })
         .catchError((error) => print(error));
   }
@@ -60,38 +69,66 @@ class FirestoreController {
   void addMatch(Conference conference, String profileID, String likedID) {
     conference.reference.collection("profiles")
         .doc(profileID)
-        .collection("matches")
+        .collection("likes")
         .doc(likedID)
-        .set({'match':true});
+        .update({
+          "match" : true
+        });
     conference.reference.collection("profiles")
         .doc(likedID)
-        .collection("matches")
+        .collection("likes")
         .doc(profileID)
-        .set({'match':true});
+        .update({
+          "match" : true
+        });
   }
 
   void removeMatch(Conference conference, String profileID, String likedID) {
     conference.reference.collection("profiles")
-        .doc(profileID)
-        .collection("matches")
         .doc(likedID)
-        .delete();
-    conference.reference.collection("profiles")
-        .doc(likedID)
-        .collection("matches")
+        .collection("likes")
         .doc(profileID)
-        .delete();
+        .update({
+          "match" : false
+        });
   }
 
   void checkMatch(Conference conference, String profileID, String likedID, {Function onMatch}) {
-    conference.reference.collection("likes")
-        .where(FieldPath.documentId, isEqualTo: likedID)
-        .where('liked', arrayContains: profileID)
-        .get()
+    conference.reference.collection("profiles")
+        .doc(likedID)
+        .collection("likes")
+        .doc(profileID).get()
         .then((value) => {
-      if (value.size > 0)
-        onMatch()
-    })
+          if (value.exists)
+            onMatch()
+        })
         .catchError((error) => print(error));
+  }
+
+  void checkMatchTransaction(Conference conference, String profileID, String likedID, {Function onMatch}) {
+    firestore.runTransaction((transaction) async {
+      DocumentReference likedRef = conference.reference
+          .collection("profiles")
+          .doc(likedID)
+          .collection("likes")
+          .doc(profileID);
+
+      DocumentSnapshot likedDoc = await transaction.get(likedRef);
+
+      if (likedDoc.exists) {
+        DocumentReference profileRef = conference.reference
+            .collection("profiles")
+            .doc(profileID)
+            .collection("likes")
+            .doc(likedID);
+
+        transaction.update(profileRef, {"match" : true});
+        transaction.update(likedRef, {"match" : true});
+
+        onMatch();
+      }
+    })
+    .then((value) => null)
+    .catchError((error) => print(error));
   }
 }

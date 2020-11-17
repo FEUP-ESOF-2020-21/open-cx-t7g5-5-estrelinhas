@@ -154,8 +154,7 @@ class _LikeEditButtonState extends State<LikeEditButton> {
     if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
       _ownProfile = true;
     else {
-      widget._firestore.checkLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onLike: _onLike);
-      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onExistingMatch);
+      widget._firestore.checkLikeMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onLike: _onLike, onMatch: _onExistingMatch);
     }
     super.initState();
   }
@@ -183,14 +182,13 @@ class _LikeEditButtonState extends State<LikeEditButton> {
   void _onNewMatch() {
     _updateMatchState(true);
     _newMatchSnackBar();
-    widget._firestore.addMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
   }
 
   void _likeProfile() {
     _updateLikedState(!_liked);
     if (_liked) {
       widget._firestore.addLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
-      widget._firestore.checkMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onNewMatch);
+      widget._firestore.checkMatchTransaction(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onNewMatch);
     }
     else {
       widget._firestore.removeLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
