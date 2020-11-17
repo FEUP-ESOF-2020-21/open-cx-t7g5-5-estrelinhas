@@ -200,6 +200,49 @@ Let's connect through our app, add your interests and efficiently connect with p
 
 ## User Stories
 
+* [Story 1: Join conference and create a profile](#Story-1:-Join-conference-and-create-a-profile)
+
+* [Story 2: Select profile interests](#Story-2:-Select-profile-interests)
+
+* [Story 3: View profile details](#Story-3:-View-profile-details)
+
+* [Story 4: Like a profile](#Story-4:-Like-a-profile)
+
+* [Story 5: Top 20 profiles list](#Story-5:-Top-20-profiles-list)
+
+* [Story 6: See matches](#Story-6:-See-matches)
+
+* [Story 7: View list of active conferences](#Story-7:-View-list-of-active-conferences)
+
+* [Story 8: Create conference](#Story-8:-Create-conference)
+
+* [Story 9: List of profiles that liked mine](#Story-9:-List-of-profiles-that-liked-mine)
+
+* [Story 10: Edit profile](#Story-10:-Edit-profile)
+
+* [Story 11: Edit conference](#Story-11:-Edit-conference)
+
+* [Story 12: Leave conference](#Story-12:-Leave-conference)
+
+* [Story 13: Delete conference](#Story-13:-Delete-conference)
+
+* [Story 14: Create account](#Story-14:-Create-account)
+
+* [Story 15: Login](#Story-15:-Login)
+
+* [Story 16: Delete/Edit account](#Story-16:-Delete/Edit-account)
+
+* [Story 17: See all profiles](#Story-17:-See-all-profiles)
+
+* [Story 18: Create profile](#Story-18:-Create-profile)
+
+* [Story 19: See joined conferences](#Story-19:-See-joined-conferences)
+
+* [Story 20: Search/Filter all profiles](#Story-20:-Search/Filter-all-profiles)
+
+* [Story 21: Search for active conferences](#Story-21:-Search-for-active-conferences)
+
+
 ### **Story 1: Join conference and create a profile**
 
 As a conference attendee, I want to be able to join a conference and create my conference profile.
