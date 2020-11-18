@@ -34,7 +34,7 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
-    return FutureBuilder<List<String>>(
+    return FutureBuilder<List<List<String>>>(
       future: widget._functions.getTop20(context.watch<AuthController>().currentUser.uid, widget._conference.reference.id),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -52,7 +52,7 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
     );
   }
 
-  Widget _buildList(BuildContext context, List<String> profileIDs) {
+  Widget _buildList(BuildContext context, List<List<String>> profileIDs) {
     List<Widget> profiles = profileIDs.map((data) => _buildProfile(context, data)).toList();
     return ListView.separated(
       shrinkWrap: true,
@@ -66,13 +66,13 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
     );
   }
 
-  Widget _buildProfile(BuildContext context, String profileID) {
+  Widget _buildProfile(BuildContext context, List<String> profileID) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getProfileById(widget._conference, profileID),
+      stream: widget._firestore.getProfileById(widget._conference, profileID[0]),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0)
-            return _buildListItem(context, snapshot.data.docs.first);
+            return _buildListItem(context, snapshot.data.docs.first, profileID[1]);
           else {
             return Center(child: Text("This profile does not exist!"));
           }
@@ -85,7 +85,7 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data, String num_match) {
     final profile = Profile.fromSnapshot(data);
 
     return InkWell(
@@ -103,30 +103,37 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            CustomAvatar(
-              imgURL: profile.img,
-              source: widget._storage,
-              initials: profile.name[0],
-              radius: 60,
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            ProfileOccupationDisplay(
-              profile: profile,
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            // Expanded(child: SizedBox(),),
-            Icon(
-              Icons.connect_without_contact_rounded,
-              color: Colors.grey,
-              size: 40,
-            ),
-          ],
+        child: Container(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CustomAvatar(
+                    imgURL: profile.img,
+                    source: widget._storage,
+                    initials: profile.name[0],
+                    radius: 60,
+                  ),
+                  SizedBox(
+                    width: 20.0,
+                  ),
+                  ProfileOccupationDisplay(
+                    profile: profile,
+                  ),
+                  SizedBox(
+                    width: 20.0,
+                  ),
+                  // Expanded(child: SizedBox(),),
+                  Icon(
+                    Icons.connect_without_contact_rounded,
+                    color: Colors.grey,
+                    size: 40,
+                  ),
+                ],
+              ),
+              Text(num_match + " " + ((num_match == "1")? "interest" : "interests") + " in common"),
+            ],
+          ),
         ),
       ),
     );
