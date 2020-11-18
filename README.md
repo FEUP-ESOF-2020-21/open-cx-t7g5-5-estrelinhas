@@ -238,7 +238,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 * [Story 19: See joined conferences](#story-19-see-joined-conferences)
 
-* [Story 20: Search/Filter all profiles](#story-20-search/filter-all-profiles)
+* [Story 20: Search/Filter all profiles](#story-20-searchfilter-all-profiles)
 
 * [Story 21: Search for active conferences](#story-21-search-for-active-conferences)
 
