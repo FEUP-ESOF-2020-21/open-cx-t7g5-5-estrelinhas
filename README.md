@@ -38,7 +38,7 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Let's connect throught our app, add your interests and efficiently connect with people with identical interests and network online.
+Let's connect through our app, add your interests and efficiently connect with people with identical interests and network online.
 
 ---
 
@@ -230,7 +230,7 @@ Let's connect throught our app, add your interests and efficiently connect with 
 
 * [Story 15: Login](#story-15-login)
 
-* [Story 16: Delete/Edit account](#story-16-delete/edit-account)
+* [Story 16: Delete/Edit account](#story-16-deleteedit-account)
 
 * [Story 17: See all profiles](#story-17-see-all-profiles)
 
