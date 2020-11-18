@@ -3,6 +3,7 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
+import 'package:meetix/view/MatchedProfilesPage.dart';
 
 import 'LikedYouProfilesPage.dart';
 
@@ -32,6 +33,7 @@ class _ConferencePageState extends State<ConferencePage> {
         children: [
           AllProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: widget.hasProfile,),
           LikedYouProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: widget.hasProfile,),
+          MatchedProfilesPage(widget._firestore, widget._storage, widget._conference, hasProfile: widget.hasProfile,),
         ],
       ),
       // body: _buildBody(context, widget._conference),
@@ -45,7 +47,11 @@ class _ConferencePageState extends State<ConferencePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: "Liked You"
-          )
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_people),
+              label: "Matches"
+          ),
         ],
         onTap: (index) {
           setState(() {
