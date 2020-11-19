@@ -109,15 +109,24 @@ class AvatarWithBorder extends StatelessWidget {
 class MultiSelectChip extends StatefulWidget {
   final List<String> list;
   final Function(List<String>) onSelectionChanged;
+  final Function onInvalidSelection;
+  final Function(List<String>) isValidSelection;
+  final List<String> startSelection;
 
-  MultiSelectChip(this.list, {this.onSelectionChanged});
+  MultiSelectChip(this.list, {this.onSelectionChanged, this.onInvalidSelection, this.isValidSelection, this.startSelection});
 
   @override
   _MultiSelectChipState createState() => _MultiSelectChipState();
 }
 
 class _MultiSelectChipState extends State<MultiSelectChip> {
-  List<String> selectedChoices = List();
+  List<String> selectedChoices;
+
+  initState() {
+    super.initState();
+    selectedChoices = widget.startSelection;
+    widget.onSelectionChanged(selectedChoices);
+  }
 
   _buildChoiceList() {
     List<Widget> choices = List();
@@ -130,10 +139,15 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
           selected: selectedChoices.contains(item),
           onSelected: (selected) {
             setState(() {
-              selectedChoices.contains(item)
-                  ? selectedChoices.remove(item)
-                  : selectedChoices.add(item);
-              widget.onSelectionChanged(selectedChoices);
+              if (!widget.isValidSelection(selectedChoices) && !selectedChoices.contains(item)) {
+                widget.onInvalidSelection();
+              } else {
+                selectedChoices.contains(item) ?
+                  selectedChoices.remove(item)
+                    :
+                  selectedChoices.add(item);
+                widget.onSelectionChanged(selectedChoices);
+              }
             });
           },
         ),
@@ -145,8 +159,12 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: _buildChoiceList(),
+    return Builder(
+      builder: (BuildContext context) {
+        return Wrap(
+          children: _buildChoiceList(),
+        );
+      },
     );
   }
 }
@@ -262,7 +280,6 @@ class _SelectInterestsState extends State<SelectInterests> {
     );
   }
 
-
   _showInterestsDialog(List<String> interests) {
     List<String> _currentSelection = List<String>();
 
@@ -271,29 +288,44 @@ class _SelectInterestsState extends State<SelectInterests> {
       builder: (BuildContext context) {
 
         //Here we will build the content of the dialog
-        return AlertDialog(
-          title: Text("Interests"),
-          content: MultiSelectChip(
-            interests,
-            onSelectionChanged: (selectedList) {
-              _currentSelection = selectedList;
-            },
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Builder(
+            builder: (context) => AlertDialog(
+                  title: Text("Interests"),
+                  content: MultiSelectChip(
+                    interests,
+                    onSelectionChanged: (selectedList) {
+                      _currentSelection = selectedList;
+                    },
+                    onInvalidSelection: () {
+                      Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+                      Scaffold.of(context).showSnackBar(SnackBar(content: Text("You can select only up to 5 interests!"), behavior: SnackBarBehavior.floating,),);
+                    },
+                    isValidSelection: (selectedList) {
+                      return selectedList.length < 5;
+                    },
+                    startSelection: widget.selectedInterests,
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("Submit"),
+                      onPressed: () {
+                        setState(() {
+                          widget.selectedInterests = _currentSelection;
+                          widget.onInterestsChanged(widget.selectedInterests);
+                          (widget.selectedInterests.isEmpty) ?
+                          widget.hasInterests = false : widget.hasInterests = true;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
           ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Submit"),
-              onPressed: () {
-                setState(() {
-                  widget.selectedInterests = _currentSelection;
-                  widget.onInterestsChanged(widget.selectedInterests);
-                  (widget.selectedInterests.isEmpty)? widget.hasInterests = false : widget.hasInterests = true;
-                });
-                Navigator.of(context).pop();
-              },
-            )
-          ],
         );
-      });
+          }
+        );
   }
 }
 
