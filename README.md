@@ -46,8 +46,10 @@ We want to make networking in the ever more common online conferences easier. Us
 ## Elevator Pitch
 
 Online conferences provide us the chance to hear from speakers anywhere in the world without getting yourself off the couch. However, networking is a victim here. 
-In these circumstances, there aren't many opportunities to reach out to business leaders or potential employers. 
-To make this easier for you,  Meetix  allows you to match with other conference users with similar interests, making networking one tap away
+
+In these circumstances, there aren't many opportunities to reach out to business leaders or potential employers.
+
+To make this easier for you,  Meetix  allows you to match with other conference users with similar interests, making networking one tap away.
 So let's connect through our app, add your interests and efficiently connect with people with identical interests and network online.
 
 ---
