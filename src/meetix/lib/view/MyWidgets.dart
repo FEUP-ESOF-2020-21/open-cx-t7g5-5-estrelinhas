@@ -305,7 +305,7 @@ class _SelectInterestsState extends State<SelectInterests> {
                     isValidSelection: (selectedList) {
                       return selectedList.length < 5;
                     },
-                    startSelection: widget.selectedInterests,
+                    startSelection: widget.selectedInterests.toList(),
                   ),
                   actions: <Widget>[
                     FlatButton(
