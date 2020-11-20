@@ -2,32 +2,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Profile.dart';
+import 'package:meetix/view/EditProfilePage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 import 'MyWidgets.dart';
 
-class ConferenceProfilesPage extends StatefulWidget {
+class AllProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
+  final bool hasProfile;
 
-  ConferenceProfilesPage(this._firestore, this._storage, this._conference);
+  AllProfilesPage(this._firestore, this._storage, this._conference,
+      {this.hasProfile = false});
 
   @override
-  _ConferenceProfilesPageState createState() {
-    return _ConferenceProfilesPageState();
+  _AllProfilesPageState createState() {
+    return _AllProfilesPageState();
   }
 }
 
-class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
+class _AllProfilesPageState extends State<AllProfilesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget._conference.name)),
-      body: _buildBody(context, widget._conference),
-    );
+    return _buildBody(context, widget._conference);
   }
 
   Widget _buildBody(BuildContext context, Conference conference) {
@@ -46,11 +46,16 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> profiles =  snapshot.map((data) => _buildListItem(context, data)).toList();
+    List<Widget> profiles =
+        snapshot.map((data) => _buildListItem(context, data)).toList();
     return ListView.separated(
+      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: profiles.length,
-      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
+      separatorBuilder: (context, index) => Divider(
+        height: 0,
+        color: Colors.grey,
+      ),
       itemBuilder: (context, index) => profiles[index],
     );
   }
@@ -59,7 +64,18 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
     final profile = Profile.fromSnapshot(data);
 
     return InkWell(
-      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailsPage(profile, widget._storage))); },
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewProfileDetailsPage(
+                      widget._conference,
+                      profile,
+                      widget._firestore,
+                      widget._storage,
+                      hasProfile: widget.hasProfile,
+                    )));
+      },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -70,11 +86,21 @@ class _ConferenceProfilesPageState extends State<ConferenceProfilesPage> {
               initials: profile.name[0],
               radius: 60,
             ),
-            SizedBox(width: 20.0,),
-            ProfileOccupationDisplay(profile: profile,),
-            SizedBox(width: 20.0,),
+            SizedBox(
+              width: 20.0,
+            ),
+            ProfileOccupationDisplay(
+              profile: profile,
+            ),
+            SizedBox(
+              width: 20.0,
+            ),
             // Expanded(child: SizedBox(),),
-            Icon(Icons.connect_without_contact_rounded, color: Colors.grey, size: 40,),
+            Icon(
+              Icons.connect_without_contact_rounded,
+              color: Colors.grey,
+              size: 40,
+            ),
           ],
         ),
       ),

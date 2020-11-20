@@ -4,6 +4,7 @@ class Conference {
   final String name;
   final String img;
   final int num_attendees;
+  final List<String> interests;
   final DocumentReference reference;
 
   Conference.fromMap(Map<String, dynamic> map, {this.reference})
@@ -11,7 +12,8 @@ class Conference {
         assert(map['num_attendees'] != null),
         name = map['name'],
         num_attendees = map['num_attendees'],
-        img = map['img'];
+        img = map['img'],
+        interests = map['interests']==null ? List<String>() : List<String>.from(map['interests']);
 
   Conference.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);

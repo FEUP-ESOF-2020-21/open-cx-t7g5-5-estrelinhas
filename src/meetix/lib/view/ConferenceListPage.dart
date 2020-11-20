@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceProfilesPage.dart';
+import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
-import 'SignUpPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
+  final FunctionsController _functions;
 
-  ConferenceListPage(this._firestore, this._storage);
+  ConferenceListPage(this._firestore, this._storage, this._functions);
 
   @override
   _ConferenceListPageState createState() {
@@ -48,7 +48,6 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
         RaisedButton(
           onPressed: (){
             context.read<AuthController>().signOut();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage(widget._firestore, widget._storage)));
           },
           child: Text("Sign out"),
         ),
@@ -71,7 +70,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     final _conference = Conference.fromSnapshot(data);
 
     return InkWell(
-      onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, _conference))); },
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference)));
+      },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -92,6 +93,25 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget openConference(BuildContext context, Conference conference) {
+    return FutureBuilder(
+      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0) {
+            return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true,);
+          } else {
+            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
+          }
+        } else if (snapshot.hasError) {
+          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
+        } else {
+          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
+        }
+      },
     );
   }
 }

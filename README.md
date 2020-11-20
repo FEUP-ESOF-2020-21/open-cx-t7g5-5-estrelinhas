@@ -38,11 +38,18 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Let's connect through our app, add your interests and efficiently connect with people with identical interests and network online.
+We want to make networking in the ever more common online conferences easier. Users select a conference they're attending and can see other attendees with similar interests to theirs. Once two profiles match, they can share contact information. With Meetix, connections are easier and more meaningful than ever.
 
 ---
 
 ## Elevator Pitch
+
+Online conferences provide us the chance to hear from speakers anywhere in the world without getting yourself off the couch. However, networking is a victim here. 
+
+In these circumstances, there aren't many opportunities to reach out to business leaders or potential employers.
+
+To make this easier for you,  Meetix  allows you to match with other conference users with similar interests, making networking one tap away.
+So let's connect through our app, add your interests and efficiently connect with people with identical interests and network online.
 
 ---
 
@@ -200,6 +207,48 @@ Let's connect through our app, add your interests and efficiently connect with p
 
 ## User Stories
 
+* [Story 1: Join conference and create a profile](#story-1-join-conference-and-create-a-profile)
+
+* [Story 2: Select profile interests](#story-2-select-profile-interests)
+
+* [Story 3: View profile details](#story-3-view-profile-details)
+
+* [Story 4: Like a profile](#story-4-like-a-profile)
+
+* [Story 5: Top 20 profiles list](#story-5-top-20-profiles-list)
+
+* [Story 6: See matches](#story-6-see-matches)
+
+* [Story 7: View list of active conferences](#story-7-view-list-of-active-conferences)
+
+* [Story 8: Create conference](#story-8-create-conference)
+
+* [Story 9: List of profiles that liked mine](#story-9-list-of-profiles-that-liked-mine)
+
+* [Story 10: Edit profile](#story-10-edit-profile)
+
+* [Story 11: Edit conference](#story-11-edit-conference)
+
+* [Story 12: Leave conference](#story-12-leave-conference)
+
+* [Story 13: Delete conference](#story-13-delete-conference)
+
+* [Story 14: Create account](#story-14-create-account)
+
+* [Story 15: Login](#story-15-login)
+
+* [Story 16: Delete/Edit account](#story-16-deleteedit-account)
+
+* [Story 17: See all profiles](#story-17-see-all-profiles)
+
+* [Story 18: Create profile](#story-18-create-profile)
+
+* [Story 19: See joined conferences](#story-19-see-joined-conferences)
+
+* [Story 20: Search/Filter all profiles](#story-20-searchfilter-all-profiles)
+
+* [Story 21: Search for active conferences](#story-21-search-for-active-conferences)
+
 ### **Story 1: Join conference and create a profile**
 
 As a conference attendee, I want to be able to join a conference and create my conference profile.
@@ -240,10 +289,43 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Joining a conference
 Given I’m trying to join a conference
-When I complete the form with my information
-Then the system allows me to choose the topics of the conference I’m interested in
-When I click the ‘finish’ button
+When I'm filling the form with my information
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose the interests and click the 'submit' button
+Then I expect to see the choosen interests in the form 
+When I click on the 'finish' button
 Then the system saves my information for matching purposes
+```
+
+```gherkin
+Scenario: Joining a conference
+Given I’m trying to join a conference
+When I'm filling the form with my information
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I do not choose any interests and click the 'submit' button
+Then I expect to see no interests in the form 
+When I click on the 'finish' button
+Then I expect to not be able to create the profile with a message warning me why
+```
+```gherkin
+Scenario: Editing the conference profile
+Given I’m trying to edit my profile
+When I'm changing the interests field 
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose the interests and  click the 'submit' button
+Then I expect to see the choosen interests in the form 
+When I click on the 'save' button
+Then the system saves my new information 
+```
+```gherkin
+Scenario: Editing the conference profile
+Given I’m trying to edit my profile
+When I'm changing the interests field 
+Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
+When I choose no the interests and  click the 'submit' button
+Then I expect to see no interests in the form 
+When I click on the 'save' button
+Then I expect to not be able to save the new profile information with a message warning me why
 ```
 
 _Value/Effort_
@@ -457,11 +539,20 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Editing my profile’s information
-Given I’m logged-in, I have joined a conference and opened the sidebar menu
-When I click on “Your profile” button of the sidebar
-Then the app shows me my profile
+Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
+When I fill the form with all valid information I want to change and I click the 'save' button
+Then I expect the system to save my new information
+```
+
+```gherkin
+Scenario: Editing my profile’s information
+Given I’m in  my profile
+When I click on the edit button
+Then I can edit my information
+When I fill the form and some of the new information isn't valid and I click the 'save' button
+Then I expect to not be able to save the new information with a message warning me why
 ```
 
 _Value/Effort_

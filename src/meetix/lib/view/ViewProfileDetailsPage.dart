@@ -1,14 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/EditProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
-import '../controller/FirestoreController.dart';
+import 'package:provider/provider.dart';
 
 class ViewProfileDetailsPage extends StatefulWidget {
+  final Conference _conference;
   final Profile _profile;
   final StorageController _storage;
+  final FirestoreController _firestore;
+  final bool hasProfile;
 
-  ViewProfileDetailsPage(this._profile, this._storage);
+  ViewProfileDetailsPage(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
 
   @override
   _ViewProfileDetailsPageState createState() {
@@ -19,58 +27,71 @@ class ViewProfileDetailsPage extends StatefulWidget {
 class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
+    return getProfile(context);
+  }
+  
+  Widget getProfile(BuildContext context) {
+    return StreamBuilder(
+      stream: widget._firestore.getProfileById(widget._conference, widget._profile.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0)
+            return _showProfile(context, snapshot.data.docs.first);
+          else {
+            return Center(child: Text("This profile does not exist!"));
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+  
+  Widget _showProfile(BuildContext context, DocumentSnapshot data) {
+    Profile profile = Profile.fromSnapshot(data);
+    
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget._profile.name + " Profile"),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-          elevation: 2 ,
-          actions: [
-            IconButton(
-                icon:Icon(
-                  Icons.cancel_outlined,
-                  size: 30,
-                  color:Colors.white,
-                ),
-                onPressed:(){Navigator.pop(context);}//atençao isto tem que ser mudado
-            )
-          ]
+        title: Text(profile.name + "'s Profile"),
+        centerTitle: true,
       ),
 
-      body: _buildBody(context),
+      body: _buildBody(context, profile),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){},
-        icon: Icon(Icons.thumb_up_sharp, color: Colors.white,),
-        label: Text("Like"),
-      ),
+      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, Profile profile) {
     return
       ListView(
           children: <Widget>[
             SizedBox(height:10.0),
-            _buildAva(context),
-            if (widget._profile.occupation != null) ...[
-              _buildInfo(context, "Occupation", widget._profile.occupation),
+            _buildAva(context, profile),
+            if (profile.occupation != null) ...[
+              _buildInfo(context, "Occupation", profile.occupation),
             ],
-            if (widget._profile.location != null) ...[
-              _buildInfo(context, "Location", widget._profile.location),
+            if (profile.location != null) ...[
+              _buildInfo(context, "Location", profile.location),
             ],
-            if (widget._profile.email != null) ...[
-              _buildInfo(context, "E-mail", widget._profile.email),
+            if (profile.email != null) ...[
+              _buildInfo(context, "E-mail", profile.email),
             ],
-            if (widget._profile.phone != null) ...[
-              _buildInfo(context, "Phone number", widget._profile.phone),
+            if (profile.phone != null) ...[
+              _buildInfo(context, "Phone number", profile.phone),
             ],
+            if (profile.interests != null) ...[
+              _buildInterests(context, profile.interests),
+            ],
+            SizedBox(height:20.0),
     ]
       );
   }
 
   Widget _buildInfo(BuildContext context, String labelText, String infoText) {
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,21 +110,37 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
     );
   }
 
+  Widget _buildInterests(BuildContext context, List<String> interests){
+    return  Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            SizedBox(height:50.0),
+            Text("Interests",
+              style: Theme.of(context).textTheme.overline,
+              textScaleFactor: 1.5,
+            ),
+            InterestsWrap(interests),
+          ]
+      ),
+    );
+  }
 
-  Widget _buildAva(BuildContext context){
+  Widget _buildAva(BuildContext context, Profile profile){
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
       child: Center(
           child:Column(
             children:[
               CustomAvatar(
-                imgURL: widget._profile.img,
+                imgURL: profile.img,
                 source: widget._storage,
-                initials: widget._profile.name[0],
+                initials: profile.name[0],
                 radius: 60,
               ),
               SizedBox(height: 20.0),
-              Text(widget._profile.name,
+              Text(profile.name,
                 style: Theme.of(context).textTheme.headline5,
                 textScaleFactor: 1.5,
                 textAlign: TextAlign.center,
@@ -111,6 +148,111 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
             ],
           )
       ),
+    );
+  }
+}
+
+class LikeEditButton extends StatefulWidget {
+  final Conference _conference;
+  final Profile _profile;
+  final StorageController _storage;
+  final FirestoreController _firestore;
+  final bool hasProfile;
+
+  LikeEditButton(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
+
+  @override
+  _LikeEditButtonState createState() => _LikeEditButtonState();
+}
+
+class _LikeEditButtonState extends State<LikeEditButton> {
+  bool _liked = false;
+  bool _ownProfile = false;
+  bool _match = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return (_ownProfile)? _editButton() : _likeButton();
+  }
+
+  @override
+  void initState() {
+    if (widget._profile.uid == context.read<AuthController>().currentUser.uid)
+      _ownProfile = true;
+    else {
+      widget._firestore.checkLikeMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onLike: _onLike, onMatch: _onExistingMatch);
+    }
+    super.initState();
+  }
+
+  void _updateLikedState(bool val) {
+    setState(() {
+      _liked = val;
+    });
+  }
+
+  void _updateMatchState(bool val) {
+    setState(() {
+      _match = val;
+    });
+  }
+
+  void _onLike() {
+    _updateLikedState(true);
+  }
+
+  void _onExistingMatch() {
+    _updateMatchState(true);
+  }
+
+  void _onNewMatch() {
+    _updateMatchState(true);
+    _newMatchSnackBar();
+  }
+
+  void _likeProfile() {
+    _updateLikedState(!_liked);
+    if (_liked) {
+      widget._firestore.addLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+      widget._firestore.checkMatchTransaction(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid, onMatch: _onNewMatch);
+    }
+    else {
+      widget._firestore.removeLike(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+      if (_match) {
+        _updateMatchState(false);
+        widget._firestore.removeMatch(widget._conference, context.read<AuthController>().currentUser.uid, widget._profile.uid);
+      }
+    }
+  }
+
+  void _noProfileSnackBar() {
+    Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
+  }
+  
+  void _newMatchSnackBar() {
+    Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("It's a match!"),),);
+  }
+
+  Widget _likeButton() {
+    return FloatingActionButton.extended(
+      onPressed: (widget.hasProfile)? _likeProfile : _noProfileSnackBar,
+      icon: (_match)? Icon(Icons.emoji_people) : Icon(Icons.thumb_up_sharp),
+      label: (_liked) ? ((_match)? Text("Match") : Text("Liked")) : Text("Like"),
+      backgroundColor: (!widget.hasProfile) ? Colors.grey :
+      (_liked) ? (_match)? Colors.pink : Colors.green : Colors.blue,
+    );
+  }
+
+  Widget _editButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile)));
+      },
+      icon: Icon(Icons.edit, color: Colors.white,),
+      label: Text("Edit"),
+      backgroundColor: Colors.purple,
     );
   }
 }
