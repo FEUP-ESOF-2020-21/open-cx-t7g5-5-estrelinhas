@@ -40,7 +40,6 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 We want to make networking in the ever more common online conferences easier. Users select a conference they're attending and can see other attendees with similar interests to theirs. Once two profiles match, they can share contact information. With Meetix, connections are easier and more meaningful than ever.
 
-
 ---
 
 ## Elevator Pitch
