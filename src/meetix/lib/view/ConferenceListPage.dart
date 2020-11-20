@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
@@ -13,8 +14,9 @@ import '../controller/FirestoreController.dart';
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
+  final FunctionsController _functions;
 
-  ConferenceListPage(this._firestore, this._storage);
+  ConferenceListPage(this._firestore, this._storage, this._functions);
 
   @override
   _ConferenceListPageState createState() {
@@ -100,9 +102,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0) {
-            return ConferencePage(widget._firestore, widget._storage, conference, hasProfile: true,);
+            return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true,);
           } else {
-            return CreateProfilePage(widget._firestore, widget._storage, conference);
+            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
           }
         } else if (snapshot.hasError) {
           return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);

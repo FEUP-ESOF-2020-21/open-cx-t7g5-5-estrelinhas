@@ -1,5 +1,6 @@
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
@@ -12,8 +13,9 @@ class CreateProfilePage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
+  final FunctionsController _functions;
 
-  CreateProfilePage(this._firestore, this._storage, this._conference);
+  CreateProfilePage(this._firestore, this._storage,  this._functions, this._conference);
 
   @override
   _CreateProfilePageState createState() => _CreateProfilePageState();
@@ -56,7 +58,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                                                                   'img':profileImgPath,
                                                                   'interests':_selectedInterests
         });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference, hasProfile: true,)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true,)));
       }
     });
   }
@@ -74,7 +76,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             children: [
               TextButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._conference)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference)));
                 },
                 child: Text("Skip", style: TextStyle(color: Colors.grey),)
               ),

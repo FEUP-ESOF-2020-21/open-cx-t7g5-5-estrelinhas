@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
@@ -26,38 +27,63 @@ class ViewProfileDetailsPage extends StatefulWidget {
 class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
+    return getProfile(context);
+  }
+  
+  Widget getProfile(BuildContext context) {
+    return StreamBuilder(
+      stream: widget._firestore.getProfileById(widget._conference, widget._profile.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0)
+            return _showProfile(context, snapshot.data.docs.first);
+          else {
+            return Center(child: Text("This profile does not exist!"));
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+  
+  Widget _showProfile(BuildContext context, DocumentSnapshot data) {
+    Profile profile = Profile.fromSnapshot(data);
+    
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget._profile.name + "'s Profile"),
-          centerTitle: true,
+        title: Text(profile.name + "'s Profile"),
+        centerTitle: true,
       ),
 
-      body: _buildBody(context),
+      body: _buildBody(context, profile),
 
-      floatingActionButton: LikeEditButton(widget._conference, widget._profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
+      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, Profile profile) {
     return
       ListView(
           children: <Widget>[
             SizedBox(height:10.0),
-            _buildAva(context),
-            if (widget._profile.occupation != null) ...[
-              _buildInfo(context, "Occupation", widget._profile.occupation),
+            _buildAva(context, profile),
+            if (profile.occupation != null) ...[
+              _buildInfo(context, "Occupation", profile.occupation),
             ],
-            if (widget._profile.location != null) ...[
-              _buildInfo(context, "Location", widget._profile.location),
+            if (profile.location != null) ...[
+              _buildInfo(context, "Location", profile.location),
             ],
-            if (widget._profile.email != null) ...[
-              _buildInfo(context, "E-mail", widget._profile.email),
+            if (profile.email != null) ...[
+              _buildInfo(context, "E-mail", profile.email),
             ],
-            if (widget._profile.phone != null) ...[
-              _buildInfo(context, "Phone number", widget._profile.phone),
+            if (profile.phone != null) ...[
+              _buildInfo(context, "Phone number", profile.phone),
             ],
-            if (widget._profile.interests != null) ...[
-              _buildInterests(context, widget._profile.interests),
+            if (profile.interests != null) ...[
+              _buildInterests(context, profile.interests),
             ],
             SizedBox(height:20.0),
     ]
@@ -101,20 +127,20 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
     );
   }
 
-  Widget _buildAva(BuildContext context){
+  Widget _buildAva(BuildContext context, Profile profile){
     return Padding(
       padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
       child: Center(
           child:Column(
             children:[
               CustomAvatar(
-                imgURL: widget._profile.img,
+                imgURL: profile.img,
                 source: widget._storage,
-                initials: widget._profile.name[0],
+                initials: profile.name[0],
                 radius: 60,
               ),
               SizedBox(height: 20.0),
-              Text(widget._profile.name,
+              Text(profile.name,
                 style: Theme.of(context).textTheme.headline5,
                 textScaleFactor: 1.5,
                 textAlign: TextAlign.center,

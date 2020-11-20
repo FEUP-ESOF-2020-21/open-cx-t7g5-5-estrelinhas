@@ -81,7 +81,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Profile for " + widget._conference.name)),
-      body: _buildBody(context),
+      body: Builder(builder: (context) => _buildBody(context)),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
