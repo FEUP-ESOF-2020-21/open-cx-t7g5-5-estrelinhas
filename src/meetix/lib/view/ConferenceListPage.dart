@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
+import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Meetix Conferences')),
       body: _buildBody(context),
+      floatingActionButton: CreateConferenceButton(widget._firestore, widget._storage, widget._functions),
     );
   }
 
@@ -112,6 +115,36 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           return Scaffold(body: Center(child: CircularProgressIndicator(),),);
         }
       },
+    );
+  }
+}
+
+class CreateConferenceButton extends StatefulWidget {
+  final StorageController _storage;
+  final FirestoreController _firestore;
+  final FunctionsController _functions;
+
+  CreateConferenceButton(this._firestore, this._storage, this._functions);
+
+  @override
+  _CreateConferenceButtonState createState() => _CreateConferenceButtonState();
+}
+
+class _CreateConferenceButtonState extends State<CreateConferenceButton>{
+
+  @override
+  Widget build(BuildContext context) {
+    return _addButton();
+  }
+
+  Widget _addButton() {
+    return FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
+        },
+      icon: Icon(Icons.add, color: Colors.white,),
+      label: Text("Create Conference"),
+      backgroundColor: Colors.deepOrangeAccent
     );
   }
 }
