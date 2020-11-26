@@ -9,6 +9,10 @@ class FirestoreController {
     return firestore.collection("conference").snapshots();
   }
 
+  CollectionReference getConferenceCollection() {
+    return firestore.collection("conference");
+  }
+
   Stream<QuerySnapshot> getConferenceProfiles(Conference conference) {
     return conference.reference.collection("profiles").snapshots();
   }
