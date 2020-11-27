@@ -241,7 +241,7 @@ So let's connect through our app, add your interests and efficiently connect wit
 
 * [Story 17: See all profiles](#story-17-see-all-profiles)
 
-* [Story 18: View profile (Staff)](#story-18-view-profile-(staff))
+* [Story 18: View profile (Staff)](#story-18-view-profile-staff)
 
 * [Story 19: See joined conferences](#story-19-see-joined-conferences)
 
