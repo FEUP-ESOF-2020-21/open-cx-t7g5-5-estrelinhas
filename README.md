@@ -57,7 +57,7 @@ So let's connect through our app, add your interests and efficiently connect wit
 
 ## Use Case Diagram
 
-![Use case diagram](./img/uml.png)
+![Use case diagram](./img/UseCaseDiagram.png)
 
 ### Register account
 
@@ -241,7 +241,7 @@ So let's connect through our app, add your interests and efficiently connect wit
 
 * [Story 17: See all profiles](#story-17-see-all-profiles)
 
-* [Story 18: Create profile](#story-18-create-profile)
+* [Story 18: View profile (Staff)](#story-18-view-profile-(staff))
 
 * [Story 19: See joined conferences](#story-19-see-joined-conferences)
 
@@ -264,8 +264,16 @@ Scenario: Joining a conference
 Given I’m trying to join a conference
 When I click on the conference event
 Then the system opens a page for me to create my conference profile
-When I click the 'next' button
-Then the system adds me to that conference’s attendee list
+When I complete this form
+Then the system allows me to choose the topics of the conference I’m interested in
+When I click the ‘finish’ button
+Then the system adds me to that conference’s attendee list, saving my information for matching purposes and adding me to that conference's attendee list
+
+Scenario: Not adding an image
+Given I'm creating my profile
+When I do not upload any image and click the 'finish' button
+Then the system assigns me a default image
+
 ```
 
 _Value/Effort_
@@ -305,7 +313,7 @@ Then the system opens an alert dialog where it allows me to choose the topics of
 When I do not choose any interests and click the 'submit' button
 Then I expect to see no interests in the form 
 When I click on the 'finish' button
-Then I expect to not be able to create the profile with a message warning me why
+Then the system saves my information even though I can't use all the funcitionalities of the app
 ```
 ```gherkin
 Scenario: Editing the conference profile
@@ -325,7 +333,7 @@ Then the system opens an alert dialog where it allows me to choose the topics of
 When I choose no the interests and  click the 'submit' button
 Then I expect to see no interests in the form 
 When I click on the 'save' button
-Then I expect to not be able to save the new profile information with a message warning me why
+Then the system saves my information even though I can't use all the funcitionalities of the app 
 ```
 
 _Value/Effort_
@@ -489,7 +497,18 @@ Then the app shows me a menu of options
 When I click the ‘Create conference’ button
 Then the app takes me to a form where I enter the conference details
 When I finish inputting data
-Then the app saves the conference.
+Then the app saves the conference and shows me the conference list page
+
+Scenario: Inserting invalid dates
+Given I'm inserting the start and end dates
+When I insert an end date that's before the start date and I click the create conference button
+Then the app warns me that the information is invalid and does not allow me to create a conference
+
+Scenario: Creating a conference
+Given I'm inserting the conference interests
+When I click the create conference button with no interests selected 
+Then the app does not allow me to create a conference
+
 ```
 
 _Value/Effort_
@@ -767,28 +786,26 @@ Effort: S
 
 ---
 
-### **Story 18: Create profile**
+### **Story 18: View profile (Staff)**
 
-As a conference staff, I want to be able to create a profile for the conference I have just created.
+As a conference staff, I want to see my profile with something that signals that I'm the conference staff, so that users can also see that I've created the conference.
 
 _Acceptance Tests_
 
 ```gherkin
-Scenario: Creating a staff profile.
-Given I have finished creating the conference
-When I click the ‘finish’ button
-Then the system opens a page for me to create my conference profile
-When I complete this form
-Then the system allows me to choose the topics of the conference I’m interested in
-When I click the ‘finish’ button
-Then the system adds me to that conference’s attendee list, saving my information for matching purposes
+Scenario: View a staff profile.
+Given I'm in a conference workspace and I'm viewing users profiles
+When the user id matches the conference creator id 
+Then the app shows me a conference staff profile
+When I'm viewing a conference staff profile
+Then the system shows me a profile similar to others users with something that signals that user is a conference staff.
 ```
 
 _Value/Effort_
 
 Value: Could Have
 
-Effort: M
+Effort: S
 
 ---
 
