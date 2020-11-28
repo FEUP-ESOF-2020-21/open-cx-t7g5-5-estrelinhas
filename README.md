@@ -351,6 +351,7 @@ As an user, I want to be able to open a person’s profile to see its informatio
 _User interface mockups_
 
 ![User story #3 mockup](./img/mockup-see_profile.jpg)
+![User story #3 mockup](./img/mockup-see_profile_staff.jpg)
 
 _Acceptance Tests_
 
@@ -455,7 +456,7 @@ As a conference attendee, I want to be able to view all active conferences.
 _User interface mockups_
 
 ![User story #7 mockup](./img/mockup-welcome.jpg)
-![User story #7 mockup](./img/mockup-search_conf.jpg)
+![User story #7 mockup](./img/mockup-view_conf.jpg)
 
 _Acceptance Tests_
 
@@ -767,7 +768,7 @@ As an user, I want to be able to see all the profiles for a given conference.
 
 _User interface mockups_
 
-![User story #17 mockup](./img/mockup-all_profiles.jpg)
+![User story #17 mockup](./img/mockup-view_all_profiles.jpg)
 
 _Acceptance Tests_
 
@@ -789,6 +790,10 @@ Effort: S
 ### **Story 18: View profile (Staff)**
 
 As a conference staff, I want to see my profile with something that signals that I'm the conference staff, so that users can also see that I've created the conference.
+
+_User interface mockups_
+
+![User story #18 mockup](./img/mockup-see_profile_staff.jpg)
 
 _Acceptance Tests_
 
@@ -843,7 +848,7 @@ As an user, I want to be able to search/filter all the profiles for a given conf
 
 _User interface mockups_
 
-![User story #20 mockup](./img/mockup-all_profiles.jpg)
+![User story #20 mockup](./img/mockup-search_filter_all_profiles.jpg)
 
 _Acceptance Tests_
 
