@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
@@ -6,8 +7,9 @@ import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
 import 'package:meetix/view/MatchedProfilesPage.dart';
 import 'package:meetix/view/TopProfilesPage.dart';
-
-import 'LikedYouProfilesPage.dart';
+import 'package:meetix/view/EditConferencePage.dart';
+import 'package:meetix/view/LikedYouProfilesPage.dart';
+import 'package:provider/provider.dart';
 
 class ConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -22,6 +24,7 @@ class ConferencePage extends StatefulWidget {
   _ConferencePageState createState() => _ConferencePageState();
 }
 
+
 class _ConferencePageState extends State<ConferencePage> {
   int _currentTab = 0;
 
@@ -30,6 +33,30 @@ class _ConferencePageState extends State<ConferencePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._conference.name),
+        actions: <Widget>[
+          if(context.watch<AuthController>().currentUser.uid == widget._conference.uid)(
+            PopupMenuButton(
+                onSelected: (newValue){
+                    if(newValue == 0){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference))).then((value) => setState(() {}));
+                    }
+                    else if(newValue == 1){
+                        print("Delete Conference");
+                    }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: Text("Edit Conference"),
+                    value: 0,
+                  ),
+                  PopupMenuItem(
+                    child: Text("Delete Conference"),
+                    value: 1,
+                  ),
+                ],
+            )
+          ),
+        ],
       ),
       body: IndexedStack(
         index: _currentTab,
@@ -72,4 +99,5 @@ class _ConferencePageState extends State<ConferencePage> {
       ),
     );
   }
+
 }

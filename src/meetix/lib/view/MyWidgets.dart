@@ -113,7 +113,6 @@ class AvatarWithBorderURL extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('here');
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
