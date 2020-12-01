@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,8 @@ class _EditConferencePageState extends State<EditConferencePage> {
   bool _startDateValid = true;
   bool _endDateValid = true;
   bool _interestsValid = true;
-  String profileImgPath;
+  String profileImgUrl = 'default-conference.png';
+  File profileImg;
 
   Map updates = Map<String,dynamic>();
 
@@ -42,7 +45,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
   initState(){
     super.initState();
 
-    profileImgPath = widget._conference.img;
+    profileImgUrl = widget._conference.img;
   }
 
   submitForm() {
@@ -54,6 +57,10 @@ class _EditConferencePageState extends State<EditConferencePage> {
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
+      if(profileImg != null){
+        profileImgUrl = 'conferences/' + widget._conference.reference.id + '/conference_img';
+      }
+
       if(_nameController.text.isNotEmpty)
         updates['name'] = _nameController.text;
       if(_startDateController.text.isNotEmpty)
@@ -63,7 +70,9 @@ class _EditConferencePageState extends State<EditConferencePage> {
       if(_interestsController.text.isNotEmpty)
         updates['interests'] = _interestsController.text.split(",");
 
-      widget._conference.reference.update(updates);
+      widget._conference.reference.update(updates).then((value) async {
+        if(profileImg != null) await widget._storage.uploadFile(profileImgUrl, profileImg);
+      });
 
       Navigator.pop(context);
     }
@@ -106,7 +115,13 @@ class _EditConferencePageState extends State<EditConferencePage> {
         },
         child: ListView(
           children: [
-            SizedBox(height: 50),
+            SizedBox(height: 15),
+            ShowAvatarEdit(
+              storage: widget._storage,
+              profileImgUrl: profileImgUrl,
+              onFileChosen: (file) {profileImg = file;},
+            ),
+            SizedBox(height: 35),
 
             TextFieldWidget(
               labelText: "Name",
@@ -116,22 +131,27 @@ class _EditConferencePageState extends State<EditConferencePage> {
               isValid: _nameValid,
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
               labelText: "Start Date",
               hintText: widget._conference.start_date,
               hintWeight: FontWeight.w400,
               controller: _startDateController,
               isValid: _startDateValid,
+              textInputType: TextInputType.datetime
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
               labelText: "End Date",
               hintText: widget._conference.end_date,
               hintWeight: FontWeight.w400,
               controller: _endDateController,
               isValid: _endDateValid,
+              textInputType: TextInputType.datetime
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
               labelText: "Interests",
               hintText: widget._conference.interests.join(','),

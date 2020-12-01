@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -29,7 +31,9 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   bool _startDateValid = true;
   bool _endDateValid = true;
   bool _interestsValid = true;
-  String profileImgPath = 'default-avatar.jpg';
+  String profileImgUrl = 'default-conference.png';
+  File profileImg;
+
 
   submitForm() {
     setState(() {
@@ -37,19 +41,25 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
       (_startDateController.text.isEmpty || _startDateController.text.length < 10)? _startDateValid = false : _startDateValid = true;
       (_endDateController.text.isEmpty || _endDateController.text.length < 10 || !_compareDates(_endDateController.text, _startDateController.text))? _endDateValid = false : _endDateValid = true;
       (_interestsController.text.isEmpty)? _interestsValid = false : _interestsValid = true;
-
-      if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
-        widget._firestore.getConferenceCollection().doc(_nameController.text).set({'uid':context.read<AuthController>().currentUser.uid,
-                                                                  'name':_nameController.text,
-                                                                  'img':profileImgPath,
-                                                                  'interests': _interestsController.text.split(","),
-                                                                  'start_date':_startDateController.text,
-                                                                  'end_date': _endDateController.text
-
-        });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceListPage(widget._firestore, widget._storage, widget._functions)));
-      }
     });
+
+    if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
+      widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
+        'name':_nameController.text,
+        'img': profileImgUrl,
+        'interests': _interestsController.text.split(","),
+        'start_date':_startDateController.text,
+        'end_date': _endDateController.text
+      }).then((docRef) {
+        if(profileImg != null){
+          profileImgUrl = 'conferences/' + docRef.id + '/conference_img';
+          Map updates = Map<String,dynamic>();
+          updates['img'] = profileImgUrl;
+          docRef.update(updates).then((value) async => await widget._storage.uploadFile(profileImgUrl, profileImg));
+        }
+      });
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceListPage(widget._firestore, widget._storage, widget._functions)));
+    }
   }
 
   @override
@@ -83,7 +93,13 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         },
         child: ListView(
           children: [
-            SizedBox(height: 50),
+            SizedBox(height: 15),
+            ShowAvatarEdit(
+              storage: widget._storage,
+              profileImgUrl: profileImgUrl,
+              onFileChosen: (file) {profileImg = file;},
+            ),
+            SizedBox(height: 35),
 
             TextFieldWidget(
               labelText: "Name",
@@ -92,20 +108,25 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
               isValid: _nameValid,
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
               labelText: "Start Date",
               hintText: "dd/mm/yyyy",
               controller: _startDateController,
               isValid: _startDateValid,
+              textInputType: TextInputType.datetime
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
               labelText: "End Date",
               hintText: "dd/mm/yyyy",
               controller: _endDateController,
               isValid: _endDateValid,
+              textInputType: TextInputType.datetime
             ),
             SizedBox(height: 10),
+
             TextFieldWidget(
                 labelText: "Interests",
                 hintText: "AI,media,...",
@@ -128,7 +149,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
 
     if(d1Year == d2Year){
       if(d1Month >= d2Month){
-        return d1Day > d2Day;
+        return d1Day >= d2Day;
       }
       else{
         return d1Month > d2Month;
