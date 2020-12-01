@@ -51,6 +51,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         'start_date':_startDateController.text,
         'end_date': _endDateController.text
       }).then((docRef) {
+
         if(profileImg != null){
           profileImgUrl = 'conferences/' + docRef.id + '/conference_img';
           Map updates = Map<String,dynamic>();
