@@ -37,6 +37,10 @@ class _ConferencePageState extends State<ConferencePage> {
     return showConferenceWorkspace(context);
   }
 
+  void _toConferenceListRefresh() {
+    Navigator.pop(context, true);
+  }
+
   Widget showConferenceWorkspace(BuildContext context) {
     return StreamBuilder(
       stream: widget._firestore.getConferenceById(widget._conference.reference.id),
@@ -61,11 +65,12 @@ class _ConferencePageState extends State<ConferencePage> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(conference.name),
-          actions: <Widget> [
-            if(context.watch<AuthController>().currentUser.uid == conference.uid)
-              _buildPopupMenu(context, conference)
-          ],
+        leading: BackButton(onPressed: _toConferenceListRefresh),
+        title: Text(conference.name),
+        actions: <Widget> [
+          if(context.watch<AuthController>().currentUser.uid == conference.uid)
+            _buildPopupMenu(context, conference)
+        ],
       ),
       body: _buildBody(context, conference),
 
@@ -79,7 +84,7 @@ class _ConferencePageState extends State<ConferencePage> {
     return PopupMenuButton(
         onSelected: (newValue){
           if(newValue == 0){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference))).then((value) => setState(() {}));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference)));
           }
           else if(newValue == 1){
             confirmDialog(context, conference);
@@ -142,14 +147,11 @@ class _ConferencePageState extends State<ConferencePage> {
   }
 
   _confirmDelete(bool delete, BuildContext context, Conference conference){
+    Navigator.pop(context); // Close dialog
     if(delete){
       widget._firestore.deleteConference(conference.reference.id);
       //delete storage
-      Navigator.pop(context);
-      Navigator.pop(context);
-    }
-    else {
-      Navigator.pop(context);
+      _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
     }
   }
 

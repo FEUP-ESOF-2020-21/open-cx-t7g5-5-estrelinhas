@@ -133,5 +133,4 @@ class FirestoreController {
           .doc(conferenceID)
           .delete();
   }
-
 }

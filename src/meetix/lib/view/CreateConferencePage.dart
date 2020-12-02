@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -30,11 +31,11 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   bool _startDateValid = true;
   bool _endDateValid = true;
   bool _interestsValid = true;
-  DateTime _startDate = DateTime.now(), _endDate = null;
+  DateTime _startDate = DateTime.now(), _endDate;
   String profileImgUrl = 'default-conference.png';
   File profileImg;
 
-  submitForm() {
+  submitForm() async {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
       (_startDateController.text.isEmpty)? _startDateValid = false : _startDateValid = true;
@@ -43,27 +44,26 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
-      widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
+      DocumentReference docRef = await widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
         'name':_nameController.text,
         'img': profileImgUrl,
         'interests': _interestsController.text.split(","),
         'start_date':_startDateController.text,
         'end_date': _endDateController.text
-      }).then((docRef) {
-
-        if(profileImg != null){
-          profileImgUrl = 'conferences/' + docRef.id + '/conference_img';
-          Map updates = Map<String,dynamic>();
-          updates['img'] = profileImgUrl;
-          docRef.update(updates).then((value) async => await widget._storage.uploadFile(profileImgUrl, profileImg));
-        }
       });
+
+      if(profileImg != null){
+        profileImgUrl = 'conferences/' + docRef.id + '/conference_img';
+        await widget._storage.uploadFile(profileImgUrl, profileImg);
+        Map updates = Map<String,dynamic>();
+        updates['img'] = profileImgUrl;
+        await docRef.update(updates);
+      }
       Navigator.pop(context);
     }
   }
 
   _selectDate(BuildContext context, TextEditingController destination, bool start) async {
-    print("Selecting " + start.toString() + " date");
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: (start || _endDate == null)? _startDate : _endDate,
@@ -122,7 +122,6 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
               onFileChosen: (file) {profileImg = file;},
             ),
             SizedBox(height: 35),
-
             TextFieldWidget(
               labelText: "Name",
               hintText: "Conference Name",
@@ -134,7 +133,6 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             SizedBox(height: 10),
             _dateSelector(context, false),
             SizedBox(height: 10),
-
             TextFieldWidget(
                 labelText: "Interests",
                 hintText: "AI,media,...",
@@ -171,7 +169,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   Widget _dateSelector(BuildContext context, bool start) {
     return GestureDetector(
       onTap: () {
-        (start)? _selectDate(context, _startDateController, true) : _selectDate(context, _endDateController, false);
+        FocusScope.of(context).unfocus();
+        _selectDate(context, _startDateController, start);
       },
       child: Container(
         color: Colors.transparent,

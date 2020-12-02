@@ -74,7 +74,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
