@@ -60,7 +60,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
-      (_interestsController.text.isEmpty)? _interestsValid = true : _interestsValid = false;
+      // (_interestsController.text.isEmpty)? _interestsValid = true : _interestsValid = false;
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
@@ -68,13 +68,13 @@ class _EditConferencePageState extends State<EditConferencePage> {
         profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
       }
 
-      if(_nameController.text.isNotEmpty)
+      if(_nameController.text != _conference.name)
         updates['name'] = _nameController.text;
       if(_startDateController.text.isNotEmpty)
         updates['start_date'] = Timestamp.fromDate(_conference.start_date);
       if(_endDateController.text.isNotEmpty)
         updates['end_date'] = Timestamp.fromDate(_conference.end_date);
-      if(_interestsController.text.isNotEmpty)
+      if(_interestsController.text != _conference.interests.join(","))
         updates['interests'] = _interestsController.text.split(",");
 
       _conference.reference.update(updates).then((value) async {
@@ -129,26 +129,24 @@ class _EditConferencePageState extends State<EditConferencePage> {
               onFileChosen: (file) {profileImg = file;},
             ),
             SizedBox(height: 35),
-
             TextFieldWidget(
               labelText: "Name",
               hintText: _conference.name,
-              hintWeight: FontWeight.w400,
               controller: _nameController,
               isValid: _nameValid,
+              defaultValue: _conference.name,
             ),
             SizedBox(height: 10),
             _dateSelector(context, true),
             SizedBox(height: 10),
             _dateSelector(context, false),
             SizedBox(height: 10),
-
             TextFieldWidget(
               labelText: "Interests",
-              hintText: _conference.interests.join(','),
-              hintWeight: FontWeight.w400,
+              hintText: "Interests",
               controller: _interestsController,
               isValid: _interestsValid,
+              defaultValue: _conference.interests.join(","),
             ),
           ],
         ),

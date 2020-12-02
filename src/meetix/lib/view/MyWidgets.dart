@@ -231,8 +231,9 @@ class TextFieldWidget extends StatefulWidget{
   final bool isValid;
   final FontWeight hintWeight;
   final TextInputType textInputType;
+  final String defaultValue;
 
-  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text});
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue=""});
 
   @override
   _TextFieldState createState() => _TextFieldState();
@@ -240,10 +241,16 @@ class TextFieldWidget extends StatefulWidget{
 
 class _TextFieldState extends State<TextFieldWidget>{
   FontWeight weight;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.defaultValue != "")
+      widget.controller.text = widget.defaultValue;
+  }
+
   @override
   Widget build(BuildContext context) {
-    /*if(widget.hint) weight=FontWeight.w100;
-    else  weight=FontWeight.w400;*/
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
