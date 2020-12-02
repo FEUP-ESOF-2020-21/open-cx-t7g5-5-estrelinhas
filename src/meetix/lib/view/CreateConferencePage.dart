@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -32,6 +34,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   bool _endDateValid = true;
   bool _interestsValid = true;
   String profileImgPath = 'default-avatar.jpg';
+  
+  DateTime _startDate = DateTime.now(), _endDate = null;
 
   submitForm() {
     setState(() {
@@ -52,6 +56,28 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceListPage(widget._firestore, widget._storage, widget._functions)));
       }
     });
+  }
+
+  _selectDate(BuildContext context, TextEditingController destination, bool start) async {
+    print("Selecting " + start.toString() + " date");
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: (start || _endDate == null)? _startDate : _endDate,
+        firstDate: (start)? DateTime.now() : _startDate,
+        lastDate: (start && _endDate != null)? _endDate : DateTime(2100)
+    );
+    if (picked != null)
+      setState(() {
+        var date = "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
+        if (start) {
+          _startDate = picked;
+          _startDateController.text = date;
+        }
+        else {
+          _endDate = picked;
+          _endDateController.text = date;
+        }
+      });
   }
 
   @override
@@ -94,19 +120,21 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
               isValid: _nameValid,
             ),
             SizedBox(height: 10),
-            TextFieldWidget(
+            /*TextFieldWidget(
               labelText: "Start Date",
               hintText: "dd/mm/yyyy",
               controller: _startDateController,
               isValid: _startDateValid,
-            ),
+            ),*/
+            _dateSelector(context, true),
             SizedBox(height: 10),
-            TextFieldWidget(
+            /*TextFieldWidget(
               labelText: "End Date",
               hintText: "dd/mm/yyyy",
               controller: _endDateController,
               isValid: _endDateValid,
-            ),
+            ),*/
+            _dateSelector(context, false),
             SizedBox(height: 10),
             TextFieldWidget(
                 labelText: "Interests",
@@ -139,6 +167,25 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     else{
       return d1Year > d2Year;
     }
+  }
+
+  Widget _dateSelector(BuildContext context, bool start) {
+    return GestureDetector(
+      onTap: () {
+        (start)? _selectDate(context, _startDateController, true) : _selectDate(context, _endDateController, false);
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: IgnorePointer(
+          child: TextFieldWidget(
+            labelText: (start)? "Start Date" : "End Date",
+            hintText: "Select date",
+            controller: (start)? _startDateController : _endDateController,
+            isValid: (start)? _startDateValid : _endDateValid,
+          ),
+        ),
+      ),
+    );
   }
 }
 
