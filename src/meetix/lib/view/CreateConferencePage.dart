@@ -52,7 +52,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
       DocumentReference docRef = await widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
         'name':_nameController.text,
         'img': profileImgUrl,
-        'interests': _interestsController.text.split(","),
+        'interests': _interestsController.text.split(",").map((e) => e.trim()).toSet().where((e) => e.isNotEmpty).toList(),
         'start_date': Timestamp.fromDate(_startDate),
         'end_date': Timestamp.fromDate(_endDate),
       });
@@ -119,7 +119,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             SizedBox(height: 10),
             TextFieldWidget(
                 labelText: "Interests",
-                hintText: "AI,media,...",
+                hintText: "AI, media, ...",
                 controller: _interestsController,
                 isValid: _interestsValid,
             ),

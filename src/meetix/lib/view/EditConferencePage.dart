@@ -74,8 +74,8 @@ class _EditConferencePageState extends State<EditConferencePage> {
         updates['start_date'] = Timestamp.fromDate(_conference.start_date);
       if(_endDateController.text.isNotEmpty && _endDateController.text.isNotEmpty)
         updates['end_date'] = Timestamp.fromDate(_conference.end_date);
-      if(_interestsController.text.isNotEmpty && _interestsController.text != _conference.interests.join(","))
-        updates['interests'] = _interestsController.text.split(",");
+      if(_interestsController.text.isNotEmpty && _interestsController.text != _conference.interests.join(", "))
+        updates['interests'] = _interestsController.text.split(",").map((e) => e.trim()).toSet().where((e) => e.isNotEmpty).toList();
 
       _conference.reference.update(updates).then((value) async {
         if(profileImg != null) await widget._storage.uploadFile(profileImgUrl, profileImg);
@@ -146,7 +146,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
               hintText: "Interests",
               controller: _interestsController,
               isValid: _interestsValid,
-              defaultValue: _conference.interests.join(","),
+              defaultValue: _conference.interests.join(", "),
             ),
           ],
         ),
