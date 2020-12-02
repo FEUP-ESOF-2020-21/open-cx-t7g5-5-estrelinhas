@@ -146,7 +146,7 @@ class _ConferencePageState extends State<ConferencePage> {
       widget._firestore.deleteConference(conference.reference.id);
       //delete storage
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceListPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState(() {}));
+      Navigator.pop(context);
     }
     else {
       Navigator.pop(context);

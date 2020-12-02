@@ -4,7 +4,6 @@ import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -38,8 +37,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
-      (_startDateController.text.isEmpty || _startDateController.text.length < 10)? _startDateValid = false : _startDateValid = true;
-      (_endDateController.text.isEmpty || _endDateController.text.length < 10 || !_compareDates(_endDateController.text, _startDateController.text))? _endDateValid = false : _endDateValid = true;
+      (_startDateController.text.isEmpty)? _startDateValid = false : _startDateValid = true;
+      (_endDateController.text.isEmpty)? _endDateValid = false : _endDateValid = true;
       (_interestsController.text.isEmpty)? _interestsValid = false : _interestsValid = true;
     });
 
@@ -59,7 +58,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
           docRef.update(updates).then((value) async => await widget._storage.uploadFile(profileImgUrl, profileImg));
         }
       });
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferenceListPage(widget._firestore, widget._storage, widget._functions)));
+      Navigator.pop(context);
     }
   }
 
