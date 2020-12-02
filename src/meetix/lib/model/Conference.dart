@@ -5,8 +5,8 @@ class Conference {
   final String img;
   final List<String> interests;
   final String uid;
-  final String start_date;
-  final String end_date;
+  final DateTime start_date;
+  final DateTime end_date;
   final DocumentReference reference;
 
   Conference.fromMap(Map<String, dynamic> map, {this.reference})
@@ -15,8 +15,8 @@ class Conference {
         img = map['img'],
         interests = map['interests']==null ? List<String>() : List<String>.from(map['interests']),
         uid = map['uid'],
-        start_date = map['start_date'],
-        end_date = map['end_date'];
+        start_date = map['start_date'].toDate(),
+        end_date = map['end_date'].toDate();
 
   Conference.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);

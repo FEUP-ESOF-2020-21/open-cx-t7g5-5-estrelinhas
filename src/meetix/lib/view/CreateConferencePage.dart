@@ -35,6 +35,11 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   String profileImgUrl = 'default-conference.png';
   File profileImg;
 
+  String _readableDate(DateTime date) {
+    DateTime local = date.toLocal();
+    return "${local.day}/${local.month}/${local.year}";
+  }
+
   submitForm() async {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
@@ -48,8 +53,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         'name':_nameController.text,
         'img': profileImgUrl,
         'interests': _interestsController.text.split(","),
-        'start_date':_startDateController.text,
-        'end_date': _endDateController.text
+        'start_date': Timestamp.fromDate(_startDate),
+        'end_date': Timestamp.fromDate(_endDate),
       });
 
       if(profileImg != null){
@@ -72,7 +77,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     );
     if (picked != null)
       setState(() {
-        var date = "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
+        var date = _readableDate(picked);
         if (start) {
           _startDate = picked;
           _startDateController.text = date;
@@ -143,27 +148,6 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         ),
       ),
     );
-  }
-
-  bool _compareDates(String d1, String d2) {
-    int d1Day = int.parse(d1.substring(0,2));
-    int d1Month = int.parse(d1.substring(3,5));
-    int d1Year = int.parse(d1.substring(6));
-    int d2Day = int.parse(d2.substring(0,2));
-    int d2Month = int.parse(d2.substring(3,5));
-    int d2Year = int.parse(d2.substring(6));
-
-    if(d1Year == d2Year){
-      if(d1Month >= d2Month){
-        return d1Day >= d2Day;
-      }
-      else{
-        return d1Month > d2Month;
-      }
-    }
-    else{
-      return d1Year > d2Year;
-    }
   }
 
   Widget _dateSelector(BuildContext context, bool start) {

@@ -48,6 +48,10 @@ class _EditConferencePageState extends State<EditConferencePage> {
     profileImgUrl = widget._conference.img;
   }
 
+  String _readableDate(DateTime date) {
+    return "${date.toLocal().day}/${date.toLocal().month}/${date.toLocal().year}";
+  }
+
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
@@ -134,7 +138,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
 
             TextFieldWidget(
               labelText: "Start Date",
-              hintText: widget._conference.start_date,
+              hintText: _readableDate(widget._conference.start_date),
               hintWeight: FontWeight.w400,
               controller: _startDateController,
               isValid: _startDateValid,
@@ -144,7 +148,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
 
             TextFieldWidget(
               labelText: "End Date",
-              hintText: widget._conference.end_date,
+              hintText: _readableDate(widget._conference.end_date),
               hintWeight: FontWeight.w400,
               controller: _endDateController,
               isValid: _endDateValid,
