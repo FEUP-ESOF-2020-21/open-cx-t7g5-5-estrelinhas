@@ -68,27 +68,6 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     }
   }
 
-  _selectDate(BuildContext context, TextEditingController destination, bool start) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: (start || _endDate == null)? _startDate : _endDate,
-        firstDate: (start)? DateTime.now() : _startDate,
-        lastDate: (start && _endDate != null)? _endDate : DateTime(2100)
-    );
-    if (picked != null)
-      setState(() {
-        var date = _readableDate(picked);
-        if (start) {
-          _startDate = picked;
-          _startDateController.text = date;
-        }
-        else {
-          _endDate = picked;
-          _endDateController.text = date;
-        }
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +127,28 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         ),
       ),
     );
+  }
+
+  _selectDate(BuildContext context, TextEditingController destination, bool start) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: (start || _endDate == null)? _startDate : _endDate,
+        firstDate: (start)? DateTime.now() : _startDate,
+        lastDate: (start && _endDate != null)? _endDate : DateTime(2100),
+        helpText: (start)? "Select start date" : "Select end date"
+    );
+    if (picked != null)
+      setState(() {
+        var date = _readableDate(picked);
+        if (start) {
+          _startDate = picked;
+          _startDateController.text = date;
+        }
+        else {
+          _endDate = picked;
+          _endDateController.text = date;
+        }
+      });
   }
 
   Widget _dateSelector(BuildContext context, bool start) {

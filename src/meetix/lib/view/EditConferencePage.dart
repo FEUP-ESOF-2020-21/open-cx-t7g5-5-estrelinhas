@@ -60,8 +60,6 @@ class _EditConferencePageState extends State<EditConferencePage> {
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
-      // (_startDateController.text.isEmpty)? _startDateValid = true : _startDateValid = false;
-      // (_endDateController.text.isEmpty)? _endDateValid = true : _endDateValid = false;
       (_interestsController.text.isEmpty)? _interestsValid = true : _interestsValid = false;
     });
 
@@ -141,24 +139,8 @@ class _EditConferencePageState extends State<EditConferencePage> {
             ),
             SizedBox(height: 10),
             _dateSelector(context, true),
-            // TextFieldWidget(
-            //   labelText: "Start Date",
-            //   hintText: _readableDate(_conference.start_date),
-            //   hintWeight: FontWeight.w400,
-            //   controller: _startDateController,
-            //   isValid: _startDateValid,
-            //   textInputType: TextInputType.datetime
-            // ),
             SizedBox(height: 10),
             _dateSelector(context, false),
-            // TextFieldWidget(
-            //   labelText: "End Date",
-            //   hintText: _readableDate(_conference.end_date),
-            //   hintWeight: FontWeight.w400,
-            //   controller: _endDateController,
-            //   isValid: _endDateValid,
-            //   textInputType: TextInputType.datetime
-            // ),
             SizedBox(height: 10),
 
             TextFieldWidget(
@@ -174,33 +156,13 @@ class _EditConferencePageState extends State<EditConferencePage> {
     );
   }
 
-  bool _compareDates(String d1, String d2) {
-    int d1Day = int.parse(d1.substring(0,2));
-    int d1Month = int.parse(d1.substring(3,5));
-    int d1Year = int.parse(d1.substring(6));
-    int d2Day = int.parse(d2.substring(0,2));
-    int d2Month = int.parse(d2.substring(3,5));
-    int d2Year = int.parse(d2.substring(6));
-
-    if(d1Year == d2Year){
-      if(d1Month == d2Month){
-        return d1Day >= d2Day;
-      }
-      else{
-        return d1Month > d2Month;
-      }
-    }
-    else{
-      return d1Year > d2Year;
-    }
-  }
-
   _selectDate(BuildContext context, TextEditingController destination, bool start) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: (start || _conference.end_date == null)? _conference.start_date : _conference.end_date,
         firstDate: (start)? DateTime.now() : _conference.end_date,
-        lastDate: (start && _conference.end_date != null)? _conference.end_date : DateTime(2100)
+        lastDate: (start && _conference.end_date != null)? _conference.end_date : DateTime(2100),
+        helpText: (start)? "Select start date" : "Select end date"
     );
     if (picked != null)
       setState(() {
