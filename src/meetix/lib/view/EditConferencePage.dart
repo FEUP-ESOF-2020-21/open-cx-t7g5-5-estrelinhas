@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,14 @@ class EditConferencePage extends StatefulWidget {
   EditConferencePage(this._firestore, this._storage,  this._functions, this._conference);
 
   @override
-  _EditConferencePageState createState() => _EditConferencePageState();
+  _EditConferencePageState createState() => _EditConferencePageState(_conference);
 }
 
 class _EditConferencePageState extends State<EditConferencePage> {
+  Conference _conference;
+
+  _EditConferencePageState(this._conference);
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _startDateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
@@ -45,7 +50,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
   initState(){
     super.initState();
 
-    profileImgUrl = widget._conference.img;
+    profileImgUrl = _conference.img;
   }
 
   String _readableDate(DateTime date) {
@@ -55,26 +60,26 @@ class _EditConferencePageState extends State<EditConferencePage> {
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
-      (_startDateController.text.isEmpty || _startDateController.text.length <= 10)? _startDateValid = true : _startDateValid = false;
-      (_endDateController.text.isEmpty || _endDateController.text.length <= 10 || _compareDates(_endDateController.text, _startDateController.text))? _endDateValid = true : _endDateValid = false;
+      // (_startDateController.text.isEmpty)? _startDateValid = true : _startDateValid = false;
+      // (_endDateController.text.isEmpty)? _endDateValid = true : _endDateValid = false;
       (_interestsController.text.isEmpty)? _interestsValid = true : _interestsValid = false;
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
       if(profileImg != null){
-        profileImgUrl = 'conferences/' + widget._conference.reference.id + '/conference_img';
+        profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
       }
 
       if(_nameController.text.isNotEmpty)
         updates['name'] = _nameController.text;
       if(_startDateController.text.isNotEmpty)
-        updates['start_date'] = _startDateController.text;
+        updates['start_date'] = Timestamp.fromDate(_conference.start_date);
       if(_endDateController.text.isNotEmpty)
-        updates['end_date'] = _endDateController.text;
+        updates['end_date'] = Timestamp.fromDate(_conference.end_date);
       if(_interestsController.text.isNotEmpty)
         updates['interests'] = _interestsController.text.split(",");
 
-      widget._conference.reference.update(updates).then((value) async {
+      _conference.reference.update(updates).then((value) async {
         if(profileImg != null) await widget._storage.uploadFile(profileImgUrl, profileImg);
       });
 
@@ -129,36 +134,36 @@ class _EditConferencePageState extends State<EditConferencePage> {
 
             TextFieldWidget(
               labelText: "Name",
-              hintText: widget._conference.name,
+              hintText: _conference.name,
               hintWeight: FontWeight.w400,
               controller: _nameController,
               isValid: _nameValid,
             ),
             SizedBox(height: 10),
-
-            TextFieldWidget(
-              labelText: "Start Date",
-              hintText: _readableDate(widget._conference.start_date),
-              hintWeight: FontWeight.w400,
-              controller: _startDateController,
-              isValid: _startDateValid,
-              textInputType: TextInputType.datetime
-            ),
+            _dateSelector(context, true),
+            // TextFieldWidget(
+            //   labelText: "Start Date",
+            //   hintText: _readableDate(_conference.start_date),
+            //   hintWeight: FontWeight.w400,
+            //   controller: _startDateController,
+            //   isValid: _startDateValid,
+            //   textInputType: TextInputType.datetime
+            // ),
             SizedBox(height: 10),
-
-            TextFieldWidget(
-              labelText: "End Date",
-              hintText: _readableDate(widget._conference.end_date),
-              hintWeight: FontWeight.w400,
-              controller: _endDateController,
-              isValid: _endDateValid,
-              textInputType: TextInputType.datetime
-            ),
+            _dateSelector(context, false),
+            // TextFieldWidget(
+            //   labelText: "End Date",
+            //   hintText: _readableDate(_conference.end_date),
+            //   hintWeight: FontWeight.w400,
+            //   controller: _endDateController,
+            //   isValid: _endDateValid,
+            //   textInputType: TextInputType.datetime
+            // ),
             SizedBox(height: 10),
 
             TextFieldWidget(
               labelText: "Interests",
-              hintText: widget._conference.interests.join(','),
+              hintText: _conference.interests.join(','),
               hintWeight: FontWeight.w400,
               controller: _interestsController,
               isValid: _interestsValid,
@@ -188,6 +193,48 @@ class _EditConferencePageState extends State<EditConferencePage> {
     else{
       return d1Year > d2Year;
     }
+  }
+
+  _selectDate(BuildContext context, TextEditingController destination, bool start) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: (start || _conference.end_date == null)? _conference.start_date : _conference.end_date,
+        firstDate: (start)? DateTime.now() : _conference.end_date,
+        lastDate: (start && _conference.end_date != null)? _conference.end_date : DateTime(2100)
+    );
+    if (picked != null)
+      setState(() {
+        var date = _readableDate(picked);
+        if (start) {
+          _conference.start_date = picked;
+          _startDateController.text = date;
+        }
+        else {
+          _conference.end_date = picked;
+          _endDateController.text = date;
+        }
+      });
+  }
+
+  Widget _dateSelector(BuildContext context, bool start) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        _selectDate(context, _startDateController, start);
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: IgnorePointer(
+          child: TextFieldWidget(
+            labelText: (start)? "Start Date" : "End Date",
+            hintText: (start)? _readableDate(_conference.start_date) : _readableDate(_conference.end_date),
+            hintWeight: FontWeight.w400,
+            controller: (start)? _startDateController : _endDateController,
+            isValid: (start)? _startDateValid : _endDateValid,
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Conference {
-  final String name;
-  final String img;
-  final List<String> interests;
-  final String uid;
-  final DateTime start_date;
-  final DateTime end_date;
+  String name;
+  String img;
+  List<String> interests;
+  String uid;
+  DateTime start_date;
+  DateTime end_date;
   final DocumentReference reference;
 
   Conference.fromMap(Map<String, dynamic> map, {this.reference})
