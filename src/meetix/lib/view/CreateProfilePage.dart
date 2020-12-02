@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -35,32 +37,36 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   bool _locationValid = true;
   bool _emailValid = true;
   bool _phoneValid = true;
-  bool _hasInterests = true;
-  String profileImgPath = 'default-avatar.jpg';
+  String profileImgUrl = 'default-avatar.jpg';
+  File profileImg;
 
-  submitForm() {
+  submitForm() async{
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
       (_occupationController.text.isEmpty) ? _occValid = false : _occValid = true;
       (_locationController.text.isEmpty)? _locationValid = false : _locationValid = true;
       (_emailController.text.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = false : _emailValid = true;
       (_phoneController.text.isEmpty || !RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = false : _phoneValid = true;
-      (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
-
-
-      if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests) {
-        widget._conference.reference.collection("profiles").doc(context.read<AuthController>().currentUser.uid).set({'uid':context.read<AuthController>().currentUser.uid,
-                                                                  'name':_nameController.text,
-                                                                  'occupation':_occupationController.text,
-                                                                  'location':_locationController.text,
-                                                                  'email':_emailController.text,
-                                                                  'phone':_phoneController.text,
-                                                                  'img':profileImgPath,
-                                                                  'interests':_selectedInterests
-        });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true,)));
-      }
     });
+
+    if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {
+      if(profileImg != null){
+        profileImgUrl = 'conferences/' + widget._conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
+        await widget._storage.uploadFile(profileImgUrl, profileImg);
+      }
+
+      widget._conference.reference.collection("profiles").doc(context.read<AuthController>().currentUser.uid).set({'uid':context.read<AuthController>().currentUser.uid,
+        'name':_nameController.text,
+        'occupation':_occupationController.text,
+        'location':_locationController.text,
+        'email':_emailController.text,
+        'phone':_phoneController.text,
+        'img':profileImgUrl,
+        'interests':_selectedInterests
+      });
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true,)));
+    }
   }
 
   @override
@@ -104,9 +110,8 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
             ShowAvatarEdit(
               storage: widget._storage,
-              conference: widget._conference,
-              profileImgPath: profileImgPath,
-              onPathChanged: (path) {profileImgPath = path;},
+              profileImgUrl: profileImgUrl,
+              onFileChosen: (file) {profileImg = file;},
             ),
 
             SizedBox(height: 35),
@@ -147,7 +152,6 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             SelectInterests(
                 conference: widget._conference,
                 selectedInterests: _selectedInterests,
-                hasInterests: _hasInterests,
                 onInterestsChanged: (selectedList) {_selectedInterests = selectedList;}
             ),
             SizedBox(height:20.0),

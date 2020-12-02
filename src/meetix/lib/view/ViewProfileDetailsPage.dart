@@ -248,7 +248,10 @@ class _LikeEditButtonState extends State<LikeEditButton> {
   Widget _editButton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile))
+        ).then((value) => setState(() {}));
       },
       icon: Icon(Icons.edit, color: Colors.white,),
       label: Text("Edit"),
