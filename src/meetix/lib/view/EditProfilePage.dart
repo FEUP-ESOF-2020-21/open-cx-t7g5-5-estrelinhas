@@ -63,22 +63,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
         await widget._storage.uploadFile(profileImgUrl, profileImg);
       }
 
-      if(_nameController.text.isNotEmpty)
+      if(_nameController.text.isNotEmpty && _nameController.text != widget._profile.name)
         updates['name'] = _nameController.text;
-      if(_occupationController.text.isNotEmpty)
+      if(_occupationController.text.isNotEmpty && _occupationController.text != widget._profile.occupation)
         updates['occupation'] = _occupationController.text;
-      if(_locationController.text.isNotEmpty)
+      if(_locationController.text.isNotEmpty && _locationController.text != widget._profile.location)
         updates['location'] = _locationController.text;
-      if(_emailController.text.isNotEmpty)
+      if(_emailController.text.isNotEmpty && _emailController.text != widget._profile.email)
         updates['email'] = _emailController.text;
-      if(_phoneController.text.isNotEmpty)
+      if(_phoneController.text.isNotEmpty && _phoneController.text != widget._profile.phone)
         updates['phone'] = _phoneController.text;
       if(!listEquals(widget._profile.interests, _selectedInterests))
         updates['interests'] = _selectedInterests;
 
       widget._profile.reference.update(updates);
 
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 
@@ -135,6 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _nameController,
                 isValid: _nameValid,
+                defaultValue: widget._profile.name,
             ),
             TextFieldWidget(
                 labelText: "Occupation",
@@ -142,6 +143,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _occupationController,
                 isValid: _occValid,
+                defaultValue: widget._profile.occupation,
             ),
             TextFieldWidget(
                 labelText: "Location",
@@ -149,6 +151,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _locationController,
                 isValid: _locationValid,
+                defaultValue: widget._profile.location,
             ),
             TextFieldWidget(
                 labelText: "E-mail",
@@ -156,7 +159,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _emailController,
                 isValid: _emailValid,
-                textInputType: TextInputType.emailAddress
+                textInputType: TextInputType.emailAddress,
+                defaultValue: widget._profile.email,
             ),
             TextFieldWidget(
                 labelText: "Phone Number",
@@ -164,7 +168,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _phoneController,
                 isValid: _phoneValid,
-                textInputType: TextInputType.phone
+                textInputType: TextInputType.phone,
+                defaultValue: widget._profile.phone,
             ),
 
             SelectInterests(

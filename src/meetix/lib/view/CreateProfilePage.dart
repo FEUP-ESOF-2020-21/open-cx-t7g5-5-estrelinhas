@@ -40,7 +40,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   String profileImgUrl = 'default-avatar.jpg';
   File profileImg;
 
-  submitForm() async{
+  submitForm() async {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
       (_occupationController.text.isEmpty) ? _occValid = false : _occValid = true;

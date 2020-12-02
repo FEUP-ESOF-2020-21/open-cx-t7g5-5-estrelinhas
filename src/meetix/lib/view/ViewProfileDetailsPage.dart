@@ -60,7 +60,10 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       body: _buildBody(context, profile),
 
-      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
+      floatingActionButton: LikeEditButton(
+        widget._conference, profile, widget._firestore, widget._storage,
+        hasProfile: widget.hasProfile, onSetState: () {setState((){});},
+      ),
     );
   }
 
@@ -158,8 +161,9 @@ class LikeEditButton extends StatefulWidget {
   final StorageController _storage;
   final FirestoreController _firestore;
   final bool hasProfile;
+  final Function onSetState;
 
-  LikeEditButton(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
+  LikeEditButton(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false, this.onSetState});
 
   @override
   _LikeEditButtonState createState() => _LikeEditButtonState();
@@ -251,7 +255,7 @@ class _LikeEditButtonState extends State<LikeEditButton> {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => EditProfilePage(widget._firestore, widget._storage, widget._conference, widget._profile))
-        ).then((value) => setState(() {}));
+        ).then((value) => setState(() { widget.onSetState(); }));
       },
       icon: Icon(Icons.edit, color: Colors.white,),
       label: Text("Edit"),

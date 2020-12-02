@@ -68,13 +68,13 @@ class _EditConferencePageState extends State<EditConferencePage> {
         profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
       }
 
-      if(_nameController.text != _conference.name)
+      if(_nameController.text.isNotEmpty && _nameController.text != _conference.name)
         updates['name'] = _nameController.text;
-      if(_startDateController.text.isNotEmpty)
+      if(_startDateController.text.isNotEmpty && _startDateController.text.isNotEmpty)
         updates['start_date'] = Timestamp.fromDate(_conference.start_date);
-      if(_endDateController.text.isNotEmpty)
+      if(_endDateController.text.isNotEmpty && _endDateController.text.isNotEmpty)
         updates['end_date'] = Timestamp.fromDate(_conference.end_date);
-      if(_interestsController.text != _conference.interests.join(","))
+      if(_interestsController.text.isNotEmpty && _interestsController.text != _conference.interests.join(","))
         updates['interests'] = _interestsController.text.split(",");
 
       _conference.reference.update(updates).then((value) async {
