@@ -1110,6 +1110,8 @@ Effort: S
 
 ![Domain Model](./img/domain_model.png)
 
+The users of our app can either be attendees or staff. A staff is the person who creates the conference (1 - *). When users join a conference, they have to create a profile (1 - 1), that will be their profile in that conference (\* - 1) . Attendees can like other attendees (1 - *) and if the like is mutual they match (1 - *).
+
 ---
 
 # Architecture and Design
@@ -1133,6 +1135,8 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 ### Package diagram
 
 ![Package diagram](./img/package-diagram.png)
+
+TO DO : adicionar textinho
 
 ---
 
