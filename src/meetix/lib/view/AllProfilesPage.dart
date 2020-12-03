@@ -74,7 +74,9 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
                       widget._firestore,
                       widget._storage,
                       hasProfile: widget.hasProfile,
-                    )));
+                    )
+            )
+        ).then((value) => setState(() {}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
