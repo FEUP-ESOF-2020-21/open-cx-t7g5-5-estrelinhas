@@ -35,7 +35,10 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
       stream: widget._firestore.getConferenceProfiles(conference),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return _buildList(context, snapshot.data.docs);
+          if (snapshot.data.docs.isEmpty)
+            return Center(child: Text("No profiles"));
+          else
+            return _buildList(context, snapshot.data.docs);
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
