@@ -32,36 +32,72 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Meetix Conferences')),
       body: _buildBody(context),
-      floatingActionButton: CreateConferenceButton(widget._firestore, widget._storage, widget._functions),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Container(
+              height: 130,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Meetix",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                    Text(
+                      "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white
+                      ),
+                    ),
+                    SizedBox(height: 8,)
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text("Create Conference"),
+              onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: (){ context.read<AuthController>().signOut(); },
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
-    return Column(
-      children: [
-        StreamBuilder<QuerySnapshot>(
-          stream: widget._firestore.getConferences(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
-            return _buildList(context, snapshot.data.docs);
-          },
-        ),
-        Text("Signed in as " + context.watch<AuthController>().currentUser.email),
-        RaisedButton(
-          onPressed: (){
-            context.read<AuthController>().signOut();
-          },
-          child: Text("Sign out"),
-        ),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget._firestore.getConferences(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildList(context, snapshot.data.docs);
+      },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
     return ListView.separated(
-      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: conferences.length,
       separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
@@ -115,36 +151,6 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           return Scaffold(body: Center(child: CircularProgressIndicator(),),);
         }
       },
-    );
-  }
-}
-
-class CreateConferenceButton extends StatefulWidget {
-  final StorageController _storage;
-  final FirestoreController _firestore;
-  final FunctionsController _functions;
-
-  CreateConferenceButton(this._firestore, this._storage, this._functions);
-
-  @override
-  _CreateConferenceButtonState createState() => _CreateConferenceButtonState();
-}
-
-class _CreateConferenceButtonState extends State<CreateConferenceButton>{
-
-  @override
-  Widget build(BuildContext context) {
-    return _addButton();
-  }
-
-  Widget _addButton() {
-    return FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
-        },
-      icon: Icon(Icons.add, color: Colors.white,),
-      label: Text("Create Conference"),
-      backgroundColor: Colors.deepOrangeAccent
     );
   }
 }
