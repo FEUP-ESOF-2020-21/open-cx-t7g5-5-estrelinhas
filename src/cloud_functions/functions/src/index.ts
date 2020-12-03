@@ -2,7 +2,9 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 admin.initializeApp()
 
-import { FieldPath } from '@google-cloud/firestore'
+import { FieldPath, FieldValue } from '@google-cloud/firestore'
+
+const tools = require('firebase-tools');
 
 
 const db = admin.firestore()
@@ -44,4 +46,72 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
     top.sort((a, b) => {return +b[1] - +a[1]})
 
     return top.slice(0, 5);
+});
+
+exports.deleteConference = functions.https.onCall(async (data, context) => {
+    const conferencePath = "/conference/" + data.conferenceID
+    const conferenceRef = db.doc(conferencePath)
+    const conferenceData = (await conferenceRef.get()).data()
+    const uid = conferenceData? conferenceData["uid"] : null
+    if (!uid) {
+        throw new functions.https.HttpsError(
+            'internal',
+            'Could not retrieve creator UID from conference. Possibly does not exist.'
+        )
+    }
+
+    if (uid !== context.auth?.uid) {
+        throw new functions.https.HttpsError(
+            'permission-denied',
+            'Only conference creator can delete'
+        )
+    }
+
+    await tools.firestore.delete(conferencePath, {
+        project: process.env.GCLOUD_PROJECT,
+        recursive: true,
+        yes: true,
+    })
+
+    const bucket = admin.storage().bucket();
+
+    bucket.deleteFiles({
+        prefix: 'conferences/' + data.conferenceID,
+    }, function(err) {
+        if (err)
+            console.log(err)
+    },)
+
+    return "Deleted documents and files for " + data.conferenceID
+});
+
+exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
+    const oldConf = change.before.data()
+    const oldInterests : Array<String>  = oldConf.interests
+    const newConf = change.after.data()
+    const newInterests : Array<String> = newConf.interests
+
+    const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
+
+    if (deletedInterests.length > 0) {
+        const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
+
+        let batches : Array<Array<String>> = []
+        let idx = 0
+
+        while (idx < deletedInterests.length) {
+            batches.push(deletedInterests.slice(idx, idx + 10))
+            idx += 10
+        }
+
+        for (let batch of batches) {
+            const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
+
+            hadInterest.forEach((profile) => {
+                profiles.doc(profile.id).update({
+                    interests: FieldValue.arrayRemove(...batch),
+                }).catch((err) => console.log(err))
+            })
+        }
+    }
 });

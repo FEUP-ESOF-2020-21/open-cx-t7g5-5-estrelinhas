@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:flutter/material.dart';
@@ -33,48 +35,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool _locationValid = true;
   bool _emailValid = true;
   bool _phoneValid = true;
-  bool _hasInterests = true;
 
-  String profileImgPath;
+  String profileImgUrl;
+  File profileImg;
   Map updates = Map<String,dynamic>();
 
   @override
   initState(){
     super.initState();
 
-    profileImgPath = widget._profile.img;
+    profileImgUrl = widget._profile.img;
     _selectedInterests = widget._profile.interests;
   }
 
-  submitForm() {
+  submitForm() async{
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
       (_occupationController.text.isEmpty || _occupationController.text.length >=3) ? _occValid = true : _occValid = false;
       (_locationController.text.isEmpty || _locationController.text.length >= 3)? _locationValid = true : _locationValid = false;
       (_emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = true : _emailValid = false;
       (_phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = true : _phoneValid = false;
-      // (_selectedInterests.isEmpty)? _hasInterests = false : _hasInterests = true;
-
-
-      if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid && _hasInterests){
-        if(_nameController.text.isNotEmpty)
-          updates['name'] = _nameController.text;
-        if(_occupationController.text.isNotEmpty)
-          updates['occupation'] = _occupationController.text;
-        if(_locationController.text.isNotEmpty)
-          updates['location'] = _locationController.text;
-        if(_emailController.text.isNotEmpty)
-          updates['email'] = _emailController.text;
-        if(_phoneController.text.isNotEmpty)
-          updates['phone'] = _phoneController.text;
-        if(!listEquals(widget._profile.interests, _selectedInterests))
-          updates['interests'] = _selectedInterests;
-
-        widget._profile.reference.update(updates);
-
-        Navigator.pop(context);
-      }
     });
+
+    if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid){
+      if(profileImg != null){
+        profileImgUrl = 'conferences/' + widget._conference.reference.id + '/profiles/' + widget._profile.uid + '/profile_img';
+        await widget._storage.uploadFile(profileImgUrl, profileImg);
+      }
+
+      if(_nameController.text.isNotEmpty && _nameController.text != widget._profile.name)
+        updates['name'] = _nameController.text;
+      if(_occupationController.text.isNotEmpty && _occupationController.text != widget._profile.occupation)
+        updates['occupation'] = _occupationController.text;
+      if(_locationController.text.isNotEmpty && _locationController.text != widget._profile.location)
+        updates['location'] = _locationController.text;
+      if(_emailController.text.isNotEmpty && _emailController.text != widget._profile.email)
+        updates['email'] = _emailController.text;
+      if(_phoneController.text.isNotEmpty && _phoneController.text != widget._profile.phone)
+        updates['phone'] = _phoneController.text;
+      if(!listEquals(widget._profile.interests, _selectedInterests))
+        updates['interests'] = _selectedInterests;
+
+      widget._profile.reference.update(updates);
+
+      Navigator.pop(context, true);
+    }
   }
 
   @override
@@ -118,9 +123,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
             ShowAvatarEdit(
               storage: widget._storage,
-              conference: widget._conference,
-              profileImgPath: widget._profile.img,
-              onPathChanged: (path) {profileImgPath = path;},
+              profileImgUrl: widget._profile.img,
+              onFileChosen: (file) {profileImg = file;},
             ),
 
             SizedBox(height: 35),
@@ -131,6 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _nameController,
                 isValid: _nameValid,
+                defaultValue: widget._profile.name,
             ),
             TextFieldWidget(
                 labelText: "Occupation",
@@ -138,6 +143,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _occupationController,
                 isValid: _occValid,
+                defaultValue: widget._profile.occupation,
             ),
             TextFieldWidget(
                 labelText: "Location",
@@ -145,6 +151,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _locationController,
                 isValid: _locationValid,
+                defaultValue: widget._profile.location,
             ),
             TextFieldWidget(
                 labelText: "E-mail",
@@ -152,7 +159,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _emailController,
                 isValid: _emailValid,
-                textInputType: TextInputType.emailAddress
+                textInputType: TextInputType.emailAddress,
+                defaultValue: widget._profile.email,
             ),
             TextFieldWidget(
                 labelText: "Phone Number",
@@ -160,13 +168,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 hintWeight: FontWeight.w400,
                 controller: _phoneController,
                 isValid: _phoneValid,
-                textInputType: TextInputType.phone
+                textInputType: TextInputType.phone,
+                defaultValue: widget._profile.phone,
             ),
 
             SelectInterests(
               conference: widget._conference,
               selectedInterests: _selectedInterests,
-              hasInterests: _hasInterests,
               onInterestsChanged: (selectedList) {_selectedInterests = selectedList;}
             ),
             SizedBox(height:20.0),
