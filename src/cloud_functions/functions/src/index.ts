@@ -4,6 +4,8 @@ admin.initializeApp()
 
 import { FieldPath } from '@google-cloud/firestore'
 
+const tools = require('firebase-tools');
+
 
 const db = admin.firestore()
 
@@ -44,4 +46,41 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
     top.sort((a, b) => {return +b[1] - +a[1]})
 
     return top.slice(0, 5);
+});
+
+exports.deleteConference = functions.https.onCall(async (data, context) => {
+    const conferencePath = "/conference/" + data.conference
+    const conferenceRef = db.doc(conferencePath)
+    const conferenceData = (await conferenceRef.get()).data()
+    const uid = conferenceData? conferenceData["uid"] : null
+    if (!uid) {
+        throw new functions.https.HttpsError(
+            'internal',
+            'Could not retrieve creator UID from conference. Possibly does not exist.'
+        )
+    }
+
+    if (uid != "GOD") {
+        throw new functions.https.HttpsError(
+            'permission-denied',
+            'Only conference creator can delete'
+        )
+    }
+
+    await tools.firestore.delete(conferencePath, {
+        project: process.env.GCLOUD_PROJECT,
+        recursive: true,
+        yes: true,
+    })
+
+    const bucket = admin.storage().bucket();
+
+    bucket.deleteFiles({
+        prefix: 'conferences/' + data.conference
+    }, function(err) {
+        if (err)
+            console.log(err)
+    })
+
+    return "Deleted documents and files for " + data.conference
 });
