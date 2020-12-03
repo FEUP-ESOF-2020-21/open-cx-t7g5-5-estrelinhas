@@ -48,41 +48,95 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
     return top.slice(0, 5);
 });
 
-exports.deleteConference = functions.https.onCall(async (data, context) => {
+/**
+ * Function that recursively deletes documents and subcollections of a conference or profile.
+ * Also cascades to delete storage files.
+ * 
+ * data.conferenceID - conference ID to delete or to which profile to delete belongs
+ * data.profileID - profile ID to delete
+ * data.type - delete conference or profile
+ */
+exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context) => {
     const conferencePath = "/conference/" + data.conferenceID
     const conferenceRef = db.doc(conferencePath)
     const conferenceData = (await conferenceRef.get()).data()
-    const uid = conferenceData? conferenceData["uid"] : null
-    if (!uid) {
+    const creator_uid = conferenceData? conferenceData["uid"] : null
+
+    if (!creator_uid) {
         throw new functions.https.HttpsError(
             'internal',
             'Could not retrieve creator UID from conference. Possibly does not exist.'
         )
     }
 
-    if (uid !== context.auth?.uid) {
+    if (data.type === "conference") {
+        if (creator_uid !== context.auth?.uid) {
+            throw new functions.https.HttpsError(
+                'permission-denied',
+                'Only conference creator can delete conference'
+            )
+        }
+
+        await tools.firestore.delete(conferencePath, {
+            project: process.env.GCLOUD_PROJECT,
+            recursive: true,
+            yes: true,
+        })
+
+        const bucket = admin.storage().bucket();
+
+        bucket.deleteFiles({
+            prefix: 'conferences/' + data.conferenceID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
+
+        return "Deleted documents and files for conference " + data.conferenceID
+    }
+    else if (data.type === "profile") {
+        const profilePath = conferencePath + "/profiles/" + data.profileID
+        const profileRef = db.doc(profilePath)
+        const profileData = (await profileRef.get()).data()
+        if (!profileData) {
+            throw new functions.https.HttpsError(
+                'internal',
+                'Could not retrieve profile. Possibly does not exist.'
+            )
+        }
+
+        if (data.profileID !== context.auth?.uid && creator_uid !== context.auth?.uid) {
+            throw new functions.https.HttpsError(
+                'permission-denied',
+                'Only profile or conference creator can delete profile'
+            )
+        }
+
+        await tools.firestore.delete(profilePath, {
+            project: process.env.GCLOUD_PROJECT,
+            recursive: true,
+            yes: true,
+        })
+
+        const bucket = admin.storage().bucket();
+
+        bucket.deleteFiles({
+            prefix: 'conferences/' + data.conferenceID + "/profiles/" + data.profileID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
+
+        return "Deleted documents and files for profile " + data.profileID + " in conference " + data.conferenceID
+    }
+    else {
         throw new functions.https.HttpsError(
-            'permission-denied',
-            'Only conference creator can delete'
+            'invalid-argument',
+            'Can only delete conference or profile entries'
         )
     }
 
-    await tools.firestore.delete(conferencePath, {
-        project: process.env.GCLOUD_PROJECT,
-        recursive: true,
-        yes: true,
-    })
-
-    const bucket = admin.storage().bucket();
-
-    bucket.deleteFiles({
-        prefix: 'conferences/' + data.conferenceID,
-    }, function(err) {
-        if (err)
-            console.log(err)
-    },)
-
-    return "Deleted documents and files for " + data.conferenceID
+    
 });
 
 exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
