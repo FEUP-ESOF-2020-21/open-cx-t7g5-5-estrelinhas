@@ -19,4 +19,10 @@ class FunctionsController {
 
     return ret;
   }
+
+  Future<void> deleteConference(String conferenceID) async {
+    HttpsCallable function = functions.httpsCallable('deleteConference');
+
+    await function.call({'conferenceID' : conferenceID});
+  }
 }

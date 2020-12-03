@@ -49,7 +49,9 @@ class _ConferencePageState extends State<ConferencePage> {
           if(snapshot.data.size > 0)
             return _displayConferenceWorkspace(context, snapshot.data.docs.first);
           else {
-            return Center(child: Text("This conference does not exist!"));
+            return Container(
+                color: Colors.white,
+            );
           }
         } else if (snapshot.hasError) {
           return Text("Error :(");
@@ -146,13 +148,28 @@ class _ConferencePageState extends State<ConferencePage> {
     );
   }
 
-  _confirmDelete(bool delete, BuildContext context, Conference conference){
-    Navigator.pop(context); // Close dialog
+  _confirmDelete(bool delete, BuildContext context, Conference conference) async {
     if(delete){
-      widget._firestore.deleteConference(conference.reference.id);
-      //delete storage
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text("Deleting..."),
+            children: [
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+           ]
+          );
+        },
+      );
+      // await Future.delayed(Duration(seconds: 2));
+      await widget._functions.deleteConference(conference.reference.id);
+      Navigator.pop(context);
       _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
     }
+    Navigator.pop(context); // Close dialog
   }
 
   confirmDialog(BuildContext context, Conference conference){

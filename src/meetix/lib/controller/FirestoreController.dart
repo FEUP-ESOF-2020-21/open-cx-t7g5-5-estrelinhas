@@ -127,10 +127,4 @@ class FirestoreController {
     .then((value) => null)
     .catchError((error) => print(error));
   }
-
-  void deleteConference(String conferenceID) {
-      firestore.collection("conference")
-          .doc(conferenceID)
-          .delete();
-  }
 }
