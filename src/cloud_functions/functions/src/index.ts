@@ -95,14 +95,23 @@ exports.editInterests = functions.firestore.document('conference/{confID}').onUp
 
     if (deletedInterests.length > 0) {
         const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
-        const hadInterest = await profiles.where("interests", "array-contains-any", deletedInterests).get()
 
-        hadInterest.forEach((profile) => {
-            // const profileInterests : Array<String> = profile.data().interests
-            // const updatedInterests = profileInterests.filter(interest => !deletedInterests.includes(interest))
-            profiles.doc(profile.id).update({
-                interests: FieldValue.arrayRemove(...deletedInterests),
-            }).catch((err) => console.log(err))
-        })
+        let batches : Array<Array<String>> = []
+        let idx = 0
+
+        while (idx < deletedInterests.length) {
+            batches.push(deletedInterests.slice(idx, idx + 10))
+            idx += 10
+        }
+
+        for (let batch of batches) {
+            const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
+
+            hadInterest.forEach((profile) => {
+                profiles.doc(profile.id).update({
+                    interests: FieldValue.arrayRemove(...batch),
+                }).catch((err) => console.log(err))
+            })
+        }
     }
 });
