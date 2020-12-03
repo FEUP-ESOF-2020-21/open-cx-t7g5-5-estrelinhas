@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 admin.initializeApp()
 
-import { FieldPath } from '@google-cloud/firestore'
+import { FieldPath, FieldValue } from '@google-cloud/firestore'
 
 const tools = require('firebase-tools');
 
@@ -83,4 +83,26 @@ exports.deleteConference = functions.https.onCall(async (data, context) => {
     },)
 
     return "Deleted documents and files for " + data.conferenceID
+});
+
+exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
+    const oldConf = change.before.data()
+    const oldInterests : Array<String>  = oldConf.interests
+    const newConf = change.after.data()
+    const newInterests : Array<String> = newConf.interests
+
+    const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
+
+    if (deletedInterests.length > 0) {
+        const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
+        const hadInterest = await profiles.where("interests", "array-contains-any", deletedInterests).get()
+
+        hadInterest.forEach((profile) => {
+            // const profileInterests : Array<String> = profile.data().interests
+            // const updatedInterests = profileInterests.filter(interest => !deletedInterests.includes(interest))
+            profiles.doc(profile.id).update({
+                interests: FieldValue.arrayRemove(...deletedInterests),
+            }).catch((err) => console.log(err))
+        })
+    }
 });
