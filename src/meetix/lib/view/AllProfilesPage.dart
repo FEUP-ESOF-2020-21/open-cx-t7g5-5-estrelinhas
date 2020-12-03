@@ -38,77 +38,13 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
           if (snapshot.data.docs.isEmpty)
             return Center(child: Text("No profiles"));
           else
-            return _buildList(context, snapshot.data.docs);
+            return ProfileListView(widget._firestore, widget._storage, widget._conference, widget.hasProfile, snapshot.data.docs, fromQuery: false,);
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
           return Center(child: CircularProgressIndicator());
         }
       },
-    );
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> profiles =
-        snapshot.map((data) => _buildListItem(context, data)).toList();
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: profiles.length,
-      separatorBuilder: (context, index) => Divider(
-        height: 0,
-        color: Colors.grey,
-      ),
-      itemBuilder: (context, index) => profiles[index],
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final profile = Profile.fromSnapshot(data);
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ViewProfileDetailsPage(
-                      widget._conference,
-                      profile.uid,
-                      widget._firestore,
-                      widget._storage,
-                      hasProfile: widget.hasProfile,
-                    )
-            )
-        ).then((value) => setState(() {}));
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            CustomAvatar(
-              imgURL: profile.img,
-              source: widget._storage,
-              initials: profile.name[0],
-              radius: 60,
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            ProfileOccupationDisplay(
-              profile: profile,
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            // Expanded(child: SizedBox(),),
-            Icon(
-              Icons.connect_without_contact_rounded,
-              color: Colors.grey,
-              size: 40,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
