@@ -13,6 +13,7 @@ import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:provider/provider.dart';
 
 import 'ConferenceListPage.dart';
+import 'ViewProfileDetailsPage.dart';
 
 class ConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -31,6 +32,13 @@ class ConferencePage extends StatefulWidget {
 
 class _ConferencePageState extends State<ConferencePage> {
   int _currentTab = 0;
+  bool isCreator;
+
+  @override
+  void initState() {
+    super.initState();
+    isCreator = context.read<AuthController>().currentUser.uid == widget._conference.uid;
+  }
 
   @override
   Widget build(BuildContext context){
@@ -70,8 +78,8 @@ class _ConferencePageState extends State<ConferencePage> {
         leading: BackButton(onPressed: _toConferenceListRefresh),
         title: Text(conference.name),
         actions: <Widget> [
-          if(context.watch<AuthController>().currentUser.uid == conference.uid)
-            _buildPopupMenu(context, conference)
+          if (widget.hasProfile || isCreator)
+          _buildPopupMenu(context, conference)
         ],
       ),
       body: _buildBody(context, conference),
@@ -82,25 +90,55 @@ class _ConferencePageState extends State<ConferencePage> {
   }
 
   Widget _buildPopupMenu(BuildContext context, Conference conference){
-
     return PopupMenuButton(
         onSelected: (newValue){
           if(newValue == 0){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ViewProfileDetailsPage(
+                      widget._conference,
+                      context.watch<AuthController>().currentUser.uid,
+                      widget._firestore,
+                      widget._storage,
+                      hasProfile: widget.hasProfile,
+                    )
+                )
+            ).then((value) => setState(() {}));
           }
           else if(newValue == 1){
-            confirmDialog(context, conference);
+            confirmDeleteDialog(context, conference, "D_PROFILE");
+          }
+          else if(newValue == 2){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference)));
+          }
+          else if(newValue == 3){
+            confirmDeleteDialog(context, conference, "D_CONFERENCE");
           }
         },
         itemBuilder: (context) => [
-          PopupMenuItem(
-            child: Text("Edit Conference"),
-            value: 0,
-          ),
-          PopupMenuItem(
-            child: Text("Delete Conference"),
-            value: 1,
-          ),
+          if (widget.hasProfile)
+            ...[
+              PopupMenuItem(
+                child: Text("View/Edit Profile"),
+                value: 0,
+              ),
+              PopupMenuItem(
+                child: Text("Leave Conference"),
+                value: 1,
+              ),
+            ],
+          if (isCreator)
+            ...[
+              PopupMenuItem(
+                child: Text("Edit Conference"),
+                value: 2,
+              ),
+              PopupMenuItem(
+                child: Text("Delete Conference"),
+                value: 3,
+              ),
+            ],
         ],
     );
   }
@@ -148,55 +186,98 @@ class _ConferencePageState extends State<ConferencePage> {
     );
   }
 
-  _confirmDelete(bool delete, BuildContext context, Conference conference) async {
-    if(delete){
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text("Deleting..."),
-            children: [
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-           ]
-          );
-        },
-      );
-      // await Future.delayed(Duration(seconds: 2));
-      await widget._functions.deleteConference(conference.reference.id);
-      Navigator.pop(context);
-      _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
-    }
+  _actionDeleteConference(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text("Deleting conference..."),
+          children: [
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+         ]
+        );
+      },
+    );
+    await widget._functions.deleteConference(widget._conference.reference.id);
+    Navigator.pop(context);
     Navigator.pop(context); // Close dialog
+    _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
+  }
+  
+  _actionDeleteProfile(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text("Deleting profile..."),
+          children: [
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+         ]
+        );
+      },
+    );
+    await widget._functions.deleteProfile(widget._conference.reference.id, context.read<AuthController>().currentUser.uid);
+    Navigator.pop(context);
+    Navigator.pop(context); // Close dialog
+    _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
   }
 
-  confirmDialog(BuildContext context, Conference conference){
+  confirmDeleteDialog(BuildContext context, Conference conference, String action) async {
     return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context){
-        return AlertDialog(
-          title: Text("Delete Conference"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text("Are you sure you want to delete this conference?"),
-              ],
-            )
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => _confirmDelete(false, context, conference),
-              child: Text("Cancel"),
+        if (action == "D_CONFERENCE") {
+          return AlertDialog(
+            title: Text("Delete Conference"),
+            content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Are you sure you want to delete this conference?"),
+                  ],
+                )
             ),
-            FlatButton(
-              onPressed: () => _confirmDelete(true, context, conference),
-              child: Text("Delete"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel"),
+              ),
+              FlatButton(
+                onPressed: () => _actionDeleteConference(context),
+                child: Text("Delete"),
+              ),
+            ],
+          );
+        } else if (action == "D_PROFILE") {
+          return AlertDialog(
+            title: Text("Delete Profile"),
+            content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Are you sure you want to delete your profile?"),
+                  ],
+                )
             ),
-          ],
-        );
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel"),
+              ),
+              FlatButton(
+                onPressed: () => _actionDeleteProfile(context),
+                child: Text("Delete"),
+              ),
+            ],
+          );
+        } else {
+          return SimpleDialog(title: Text("INVALID"),);
+        }
       },
     );
   }

@@ -11,12 +11,12 @@ import 'package:provider/provider.dart';
 
 class ViewProfileDetailsPage extends StatefulWidget {
   final Conference _conference;
-  final Profile _profile;
+  final String _profileID;
   final StorageController _storage;
   final FirestoreController _firestore;
   final bool hasProfile;
 
-  ViewProfileDetailsPage(this._conference, this._profile, this._firestore, this._storage, {this.hasProfile = false});
+  ViewProfileDetailsPage(this._conference, this._profileID, this._firestore, this._storage, {this.hasProfile = false});
 
   @override
   _ViewProfileDetailsPageState createState() {
@@ -32,7 +32,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   
   Widget getProfile(BuildContext context) {
     return StreamBuilder(
-      stream: widget._firestore.getProfileById(widget._conference, widget._profile.uid),
+      stream: widget._firestore.getProfileById(widget._conference, widget._profileID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0)

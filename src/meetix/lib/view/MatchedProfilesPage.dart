@@ -95,7 +95,7 @@ class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
             MaterialPageRoute(
                 builder: (context) => ViewProfileDetailsPage(
                       widget._conference,
-                      profile,
+                      profile.uid,
                       widget._firestore,
                       widget._storage,
                       hasProfile: widget.hasProfile,
