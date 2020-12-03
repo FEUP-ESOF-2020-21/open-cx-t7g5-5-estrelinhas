@@ -29,7 +29,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
   Widget build(BuildContext context) {
     return getProfile(context);
   }
-  
+
   Widget getProfile(BuildContext context) {
     return StreamBuilder(
       stream: widget._firestore.getProfileById(widget._conference, widget._profile.uid),
@@ -48,10 +48,10 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       },
     );
   }
-  
+
   Widget _showProfile(BuildContext context, DocumentSnapshot data) {
     Profile profile = Profile.fromSnapshot(data);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(profile.name + "'s Profile"),
@@ -60,10 +60,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       body: _buildBody(context, profile),
 
-      floatingActionButton: LikeEditButton(
-        widget._conference, profile, widget._firestore, widget._storage,
-        hasProfile: widget.hasProfile, onSetState: () {setState((){});},
-      ),
+      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
     );
   }
 
@@ -89,7 +86,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
               _buildInterests(context, profile.interests),
             ],
             SizedBox(height:20.0),
-    ]
+          ]
       );
   }
 
@@ -132,8 +129,8 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
   Widget _buildAva(BuildContext context, Profile profile){
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
-      child: Center(
+        padding: const EdgeInsets.only(top: 15.0, left: 10.0, right:10.0),
+        child: Center(
           child:Column(
             children:[
               CustomAvatar(
@@ -142,16 +139,40 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
                 initials: profile.name[0],
                 radius: 60,
               ),
-              SizedBox(height: 20.0),
-              Text(profile.name,
-                style: Theme.of(context).textTheme.headline5,
-                textScaleFactor: 1.5,
-                textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(profile.name,
+                      style: Theme.of(context).textTheme.headline5,
+                      textScaleFactor: 1.5,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
+              if(profile.uid == widget._conference.uid)
+               Container(
+                alignment: Alignment.bottomCenter,
+                height:20.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:<Widget>[
+                    Text('Staff', style:TextStyle(
+                        fontWeight:FontWeight.bold,
+                        fontSize:20.0
+                    ),),
+                    SizedBox(width:5.0),
+                    Icon(Icons.support_agent_sharp, color:Colors.blue)
+                  ],
+                ),
+              )
             ],
-          )
-      ),
-    );
+          ),
+
+        ),
+      );
   }
 }
 
@@ -233,7 +254,7 @@ class _LikeEditButtonState extends State<LikeEditButton> {
     Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
     Scaffold.of(context).showSnackBar(SnackBar(content: Text("You must create a profile first!"),),);
   }
-  
+
   void _newMatchSnackBar() {
     Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
     Scaffold.of(context).showSnackBar(SnackBar(content: Text("It's a match!"),),);
