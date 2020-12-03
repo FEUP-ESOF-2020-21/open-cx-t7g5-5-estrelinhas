@@ -49,7 +49,7 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
 });
 
 exports.deleteConference = functions.https.onCall(async (data, context) => {
-    const conferencePath = "/conference/" + data.conference
+    const conferencePath = "/conference/" + data.conferenceID
     const conferenceRef = db.doc(conferencePath)
     const conferenceData = (await conferenceRef.get()).data()
     const uid = conferenceData? conferenceData["uid"] : null
@@ -60,7 +60,7 @@ exports.deleteConference = functions.https.onCall(async (data, context) => {
         )
     }
 
-    if (uid != "GOD") {
+    if (uid !== context.auth?.uid) {
         throw new functions.https.HttpsError(
             'permission-denied',
             'Only conference creator can delete'
@@ -76,11 +76,11 @@ exports.deleteConference = functions.https.onCall(async (data, context) => {
     const bucket = admin.storage().bucket();
 
     bucket.deleteFiles({
-        prefix: 'conferences/' + data.conference
+        prefix: 'conferences/' + data.conferenceID,
     }, function(err) {
         if (err)
             console.log(err)
-    })
+    },)
 
-    return "Deleted documents and files for " + data.conference
+    return "Deleted documents and files for " + data.conferenceID
 });
