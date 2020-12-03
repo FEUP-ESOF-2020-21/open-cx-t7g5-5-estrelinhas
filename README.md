@@ -1108,6 +1108,8 @@ Effort: S
 
 ## Domain model
 
+![Domain Model](./img/domain_model.png)
+
 ---
 
 # Architecture and Design
