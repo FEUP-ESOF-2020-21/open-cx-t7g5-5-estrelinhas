@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
@@ -8,6 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:meetix/controller/AuthController.dart';
+
+import 'ViewProfileDetailsPage.dart';
 
 
 class CustomAvatar extends StatelessWidget {
@@ -435,5 +439,105 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
     else {
       print('Grant permission and try again!');
     }
+  }
+}
+
+class ProfileListView extends StatelessWidget {
+  final FirestoreController _firestore;
+  final StorageController _storage;
+  final Conference _conference;
+  final bool hasProfile;
+  final List<QueryDocumentSnapshot> snapshots;
+  @required final bool fromQuery;
+
+  ProfileListView(this._firestore, this._storage, this._conference, this.hasProfile, this.snapshots, {this.fromQuery});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildList(context, snapshots);
+  }
+
+  Widget _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) {
+    List<Widget> profiles = snapshot.map((data) {
+      if (fromQuery)
+        return _buildProfile(context, data);
+      else if (context.watch<AuthController>().currentUser.uid != data.data()['uid'])
+        return _buildListItem(context, data);
+    }).toList();
+    profiles.removeWhere((element) => element == null);
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemCount: profiles.length,
+      separatorBuilder: (context, index) => Divider(
+        height: 0,
+        color: Colors.grey,
+      ),
+      itemBuilder: (context, index) => profiles[index],
+    );
+  }
+
+  Widget _buildProfile(BuildContext context, DocumentSnapshot data) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.getProfileById(_conference, data.data()['profile_id']),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0)
+            return _buildListItem(context, snapshot.data.docs.first);
+          else {
+            return Center(child: Text("This profile does not exist!"));
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final profile = Profile.fromSnapshot(data);
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewProfileDetailsPage(
+                  _conference,
+                  profile.uid,
+                  _firestore,
+                  _storage,
+                  hasProfile: hasProfile,
+                )));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            CustomAvatar(
+              imgURL: profile.img,
+              source: _storage,
+              initials: profile.name[0],
+              radius: 60,
+            ),
+            SizedBox(
+              width: 20.0,
+            ),
+            ProfileOccupationDisplay(
+              profile: profile,
+            ),
+            SizedBox(
+              width: 20.0,
+            ),
+            Icon(
+              Icons.connect_without_contact_rounded,
+              color: Colors.grey,
+              size: 40,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
