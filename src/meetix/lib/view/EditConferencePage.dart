@@ -43,6 +43,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
   bool _interestsValid = true;
   String profileImgUrl = 'default-conference.png';
   File profileImg;
+  DateTime _startDate, _endDate;
 
   Map updates = Map<String,dynamic>();
 
@@ -51,6 +52,8 @@ class _EditConferencePageState extends State<EditConferencePage> {
     super.initState();
 
     profileImgUrl = _conference.img;
+    _startDate = _conference.start_date;
+    _endDate = _conference.end_date;
   }
 
   String _readableDate(DateTime date) {
@@ -60,7 +63,8 @@ class _EditConferencePageState extends State<EditConferencePage> {
   submitForm() {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
-      // (_interestsController.text.isEmpty)? _interestsValid = true : _interestsValid = false;
+      _startDateValid = _startDate.isBefore(_endDate);
+      _endDateValid = _endDate.isAfter(_startDate);
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
@@ -71,9 +75,9 @@ class _EditConferencePageState extends State<EditConferencePage> {
       if(_nameController.text.isNotEmpty && _nameController.text != _conference.name)
         updates['name'] = _nameController.text;
       if(_startDateController.text.isNotEmpty && _startDateController.text.isNotEmpty)
-        updates['start_date'] = Timestamp.fromDate(_conference.start_date);
+        updates['start_date'] = Timestamp.fromDate(_startDate);
       if(_endDateController.text.isNotEmpty && _endDateController.text.isNotEmpty)
-        updates['end_date'] = Timestamp.fromDate(_conference.end_date);
+        updates['end_date'] = Timestamp.fromDate(_endDate);
       if(_interestsController.text.isNotEmpty && _interestsController.text != _conference.interests.join(", "))
         updates['interests'] = _interestsController.text.split(",").map((e) => e.trim()).toSet().where((e) => e.isNotEmpty).toList();
 
@@ -135,6 +139,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
               controller: _nameController,
               isValid: _nameValid,
               defaultValue: _conference.name,
+              errorText: "Name must be at least 3 characters long",
             ),
             SizedBox(height: 10),
             _dateSelector(context, true),
@@ -147,6 +152,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
               controller: _interestsController,
               isValid: _interestsValid,
               defaultValue: _conference.interests.join(", "),
+              errorText: "You must add at least one interest",
             ),
           ],
         ),
@@ -156,21 +162,21 @@ class _EditConferencePageState extends State<EditConferencePage> {
 
   _selectDate(BuildContext context, TextEditingController destination, bool start) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: (start || _conference.end_date == null)? _conference.start_date : _conference.end_date,
-        firstDate: (start)? DateTime.now() : _conference.end_date,
-        lastDate: (start && _conference.end_date != null)? _conference.end_date : DateTime(2100),
-        helpText: (start)? "Select start date" : "Select end date"
+      context: context,
+      initialDate: (start || _endDate == null)? _startDate : _endDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      helpText: (start)? "Select start date" : "Select end date",
     );
     if (picked != null)
       setState(() {
         var date = _readableDate(picked);
         if (start) {
-          _conference.start_date = picked;
+          _startDate = picked;
           _startDateController.text = date;
         }
         else {
-          _conference.end_date = picked;
+          _endDate = picked;
           _endDateController.text = date;
         }
       });
@@ -187,10 +193,11 @@ class _EditConferencePageState extends State<EditConferencePage> {
         child: IgnorePointer(
           child: TextFieldWidget(
             labelText: (start)? "Start Date" : "End Date",
-            hintText: (start)? _readableDate(_conference.start_date) : _readableDate(_conference.end_date),
+            hintText: (start)? _readableDate(_startDate) : _readableDate(_endDate),
             hintWeight: FontWeight.w400,
             controller: (start)? _startDateController : _endDateController,
             isValid: (start)? _startDateValid : _endDateValid,
+            errorText: (start)? "Start date must be before end date" : "End date must be after start date",
           ),
         ),
       ),

@@ -236,8 +236,9 @@ class TextFieldWidget extends StatefulWidget{
   final FontWeight hintWeight;
   final TextInputType textInputType;
   final String defaultValue;
+  final String errorText;
 
-  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue=""});
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information"});
 
   @override
   _TextFieldState createState() => _TextFieldState();
@@ -280,7 +281,7 @@ class _TextFieldState extends State<TextFieldWidget>{
             fontWeight: widget.hintWeight,
             color: Colors.black,
           ),
-          errorText: widget.isValid ? null : "Invalid Information",
+          errorText: widget.isValid ? null : widget.errorText,
         ),
       ),
     );

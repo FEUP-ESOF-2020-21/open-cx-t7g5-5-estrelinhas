@@ -43,8 +43,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   submitForm() async {
     setState(() {
       (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
-      (_startDateController.text.isEmpty)? _startDateValid = false : _startDateValid = true;
-      (_endDateController.text.isEmpty)? _endDateValid = false : _endDateValid = true;
+      (_startDateController.text.isEmpty || _startDate.isAfter(_endDate))? _startDateValid = false : _startDateValid = true;
+      (_endDateController.text.isEmpty || _endDate.isBefore(_startDate))? _endDateValid = false : _endDateValid = true;
       (_interestsController.text.isEmpty)? _interestsValid = false : _interestsValid = true;
     });
 
@@ -111,6 +111,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
               hintText: "Conference Name",
               controller: _nameController,
               isValid: _nameValid,
+              errorText: "Name must be at least 3 characters long",
             ),
             SizedBox(height: 10),
             _dateSelector(context, true),
@@ -118,10 +119,11 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             _dateSelector(context, false),
             SizedBox(height: 10),
             TextFieldWidget(
-                labelText: "Interests",
-                hintText: "AI, media, ...",
-                controller: _interestsController,
-                isValid: _interestsValid,
+              labelText: "Interests",
+              hintText: "AI, media, ... (separated by , )",
+              controller: _interestsController,
+              isValid: _interestsValid,
+              errorText: "You must add at least one interest",
             ),
           ],
         ),
@@ -133,9 +135,9 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: (start || _endDate == null)? _startDate : _endDate,
-        firstDate: (start)? DateTime.now() : _startDate,
-        lastDate: (start && _endDate != null)? _endDate : DateTime(2100),
-        helpText: (start)? "Select start date" : "Select end date"
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2100),
+        helpText: (start)? "Select start date" : "Select end date",
     );
     if (picked != null)
       setState(() {
@@ -165,11 +167,10 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             hintText: "Select date",
             controller: (start)? _startDateController : _endDateController,
             isValid: (start)? _startDateValid : _endDateValid,
+            errorText: (start)? "Start date must be before end date" : "End date must be after start date",
           ),
         ),
       ),
     );
   }
 }
-
-
