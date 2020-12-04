@@ -153,21 +153,39 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
                 ),
               ),
               if(profile.uid == widget._conference.uid)
-               Container(
-                alignment: Alignment.bottomCenter,
-                height:20.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:<Widget>[
-                    Text('Staff', style:TextStyle(
-                        fontWeight:FontWeight.bold,
-                        fontSize:20.0
-                    ),),
-                    SizedBox(width:5.0),
-                    Icon(Icons.support_agent_sharp, color:Colors.blue)
-                  ],
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  height:20.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:<Widget>[
+                      Text('Staff', style:TextStyle(
+                          fontWeight:FontWeight.bold,
+                          fontSize:20.0
+                      ),),
+                      SizedBox(width:5.0),
+                      Icon(Icons.support_agent_sharp, color:Colors.blue)
+                    ],
+                  ),
                 ),
-              )
+              if(profile.uid == widget._conference.uid && profile.uid == context.watch<AuthController>().currentUser.uid)
+                SizedBox(height: 10),
+              if (profile.uid == context.watch<AuthController>().currentUser.uid)
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  height:20.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:<Widget>[
+                      Text('You', style:TextStyle(
+                          fontWeight:FontWeight.bold,
+                          fontSize:20.0
+                      ),),
+                      SizedBox(width:5.0),
+                      Icon(Icons.person, color:Colors.pink)
+                    ],
+                  ),
+                ),
             ],
           ),
 

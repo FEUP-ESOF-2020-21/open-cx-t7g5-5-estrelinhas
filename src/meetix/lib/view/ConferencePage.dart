@@ -121,7 +121,7 @@ class _ConferencePageState extends State<ConferencePage> {
           if (widget.hasProfile) {
             list.add(
               PopupMenuItem(
-                child: Text("View/Edit Profile"),
+                child: Text("View/Edit My Profile"),
                 value: 0,
               )
             );

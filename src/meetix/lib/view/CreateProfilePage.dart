@@ -72,7 +72,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profile for " + widget._conference.name)),
+      appBar: AppBar(title: Text("My profile for " + widget._conference.name)),
       body: _buildBody(context),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
