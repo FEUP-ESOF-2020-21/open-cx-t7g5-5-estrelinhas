@@ -122,7 +122,7 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Normal Flow:**
   1. The user selects a conference.
-  2. The user provides the data for the conference profile.
+  2. The user provides the data for their conference profile.
   3. The user selects the interests of the provided list.
 
 ### Edit conference profile
@@ -148,7 +148,7 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Description:** The user can view the top20 profiles that match the most with their conference profile.
 
-* **Preconditions and Postconditions:** The user must have a profile with minimum information to be contacted in order to match other user interests.
+* **Preconditions and Postconditions:** The user must have a profile with at least one interest in order to match other user interests.
 
 * **Normal Flow:**
   1. When in a conference workspace, the user should go to the see top 20 page.
@@ -161,9 +161,9 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** After the user creates the profile for the conference, it is possible to search and filter other profiles for the same conference.
+* **Description:** After the user is in a conference workspace, it is possible to search and filter other profiles for the same conference.
 
-* **Preconditions and Postconditions:** The user must have a profile for the conference.
+* **Preconditions and Postconditions:** The user must be logged in.
 
 * **Normal Flow:**
   1. In the conference workspace, the user clicks on the "Profiles" button to see all the profiles for that conference.
@@ -189,7 +189,7 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Description:** In order to match with other profiles, the user must like the profiles they would like to connect with.
 
-* **Preconditions and Postconditions:** The user must be in someone’s profile. After this, the other user will be able to see that this user liked their profile.
+* **Preconditions and Postconditions:** The user must be in someone’s profile and have joined that conference. After this, the other user will be able to see that this user liked their profile.
 
 * **Normal Flow:**
 
@@ -1001,7 +1001,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Search profiles
 Given I’m logged-in and I have joined a conference,
-When I click on the "All" button located at the bottom of the screen
+When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
 When I click on the "Search bar" and insert a string,
 Then the app shows me all profiles matching the string
@@ -1010,7 +1010,7 @@ Then the app shows me all profiles matching the string
 ```gherkin
 Scenario: Filter profiles
 Given I’m logged-in and I have joined a conference,
-When I click on the "All" button located at the bottom of the screen
+When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
 When I click on the "Filter button"
 Then the app shows me all filters
