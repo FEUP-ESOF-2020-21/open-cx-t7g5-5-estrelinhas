@@ -83,15 +83,6 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
             yes: true,
         })
 
-        const bucket = admin.storage().bucket();
-
-        bucket.deleteFiles({
-            prefix: 'conferences/' + data.conferenceID,
-        }, function(err) {
-            if (err)
-                console.log(err)
-        },)
-
         return "Deleted documents and files for conference " + data.conferenceID
     }
     else if (data.type === "profile") {
@@ -118,15 +109,6 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
             yes: true,
         })
 
-        const bucket = admin.storage().bucket();
-
-        bucket.deleteFiles({
-            prefix: 'conferences/' + data.conferenceID + "/profiles/" + data.profileID,
-        }, function(err) {
-            if (err)
-                console.log(err)
-        },)
-
         return "Deleted documents and files for profile " + data.profileID + " in conference " + data.conferenceID
     }
     else {
@@ -135,8 +117,6 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
             'Can only delete conference or profile entries'
         )
     }
-
-    
 });
 
 exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
@@ -168,4 +148,36 @@ exports.editInterests = functions.firestore.document('conference/{confID}').onUp
             })
         }
     }
+});
+
+exports.onDeleteConference = functions.firestore.document('conference/{confID}').onDelete((change, context) => {
+    const bucket = admin.storage().bucket();
+
+    bucket.deleteFiles({
+        prefix: 'conferences/' + context.params.confID,
+    }, function(err) {
+        if (err)
+            console.log(err)
+    },)
+});
+
+exports.onDeleteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onDelete(async (change, context) => {
+    const bucket = admin.storage().bucket();
+
+    bucket.deleteFiles({
+        prefix: 'conferences/' + context.params.confID + "/profiles/" + context.params.profileID,
+    }, function(err) {
+        if (err)
+            console.log(err)
+    },)
+
+    const liked_profiles = await db.collectionGroup("likes")
+        .where("conference_id", "==", context.params.confID)
+        .where("uid", "==", context.params.profileID)
+        .get()
+    
+    
+    liked_profiles.forEach(profile => {
+        profile.ref.delete().catch((err) => console.log(err))
+    });
 });
