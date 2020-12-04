@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
+import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
@@ -30,35 +32,72 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Meetix Conferences')),
       body: _buildBody(context),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Container(
+              height: 130,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Meetix",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                    Text(
+                      "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white
+                      ),
+                    ),
+                    SizedBox(height: 8,)
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text("Create Conference"),
+              onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: (){ context.read<AuthController>().signOut(); },
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
-    return Column(
-      children: [
-        StreamBuilder<QuerySnapshot>(
-          stream: widget._firestore.getConferences(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
-            return _buildList(context, snapshot.data.docs);
-          },
-        ),
-        Text("Signed in as " + context.watch<AuthController>().currentUser.email),
-        RaisedButton(
-          onPressed: (){
-            context.read<AuthController>().signOut();
-          },
-          child: Text("Sign out"),
-        ),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget._firestore.getConferences(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildList(context, snapshot.data.docs);
+      },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
     return ListView.separated(
-      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: conferences.length,
       separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
@@ -71,7 +110,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

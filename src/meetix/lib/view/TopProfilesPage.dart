@@ -55,7 +55,6 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
   Widget _buildList(BuildContext context, List<List<String>> profileIDs) {
     List<Widget> profiles = profileIDs.map((data) => _buildProfile(context, data)).toList();
     return ListView.separated(
-      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: profiles.length,
       separatorBuilder: (context, index) => Divider(
@@ -95,7 +94,7 @@ class _TopProfilesPageState extends State<TopProfilesPage> {
             MaterialPageRoute(
                 builder: (context) => ViewProfileDetailsPage(
                       widget._conference,
-                      profile,
+                      profile.uid,
                       widget._firestore,
                       widget._storage,
                       hasProfile: widget.hasProfile,

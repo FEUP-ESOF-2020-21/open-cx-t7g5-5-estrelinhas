@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
@@ -8,6 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:meetix/controller/AuthController.dart';
+
+import 'ViewProfileDetailsPage.dart';
 
 
 class CustomAvatar extends StatelessWidget {
@@ -66,13 +70,12 @@ class ProfileOccupationDisplay extends StatelessWidget {
 }
 
 class AvatarWithBorder extends StatelessWidget {
-  String imgURL;
+  ImageProvider<Object> imageProvider;
   double radius, border;
   Icon icon;
   Color borderColor, backgroundColor;
-  StorageController source;
 
-  AvatarWithBorder({this.imgURL, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor, this.source});
+  AvatarWithBorder({this.imageProvider, this.radius = 20, this.border = 5, this.icon, this.backgroundColor, this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +94,48 @@ class AvatarWithBorder extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: this.borderColor,
         radius: this.radius,
-        child: (this.imgURL != null && this.source != null)? CustomAvatar(
-            imgURL: this.imgURL,
-            radius: this.radius - this.border,
-            source: this.source,
+        child: (this.imageProvider != null) ? CircleAvatar(
+          backgroundImage: this.imageProvider,
+          radius: this.radius - this.border,
         ) : CircleAvatar(
           radius: this.radius - this.border,
           backgroundColor: this.backgroundColor,
           child: (this.icon != null)? this.icon : Icon(Icons.error),
+        ),
+      )
+    );
+  }
+}
+
+class AvatarWithBorderURL extends StatelessWidget {
+  @required String imgURL;
+  @required StorageController source;
+  double radius, border;
+  Color borderColor;
+
+  AvatarWithBorderURL({this.imgURL, this.radius = 20, this.border = 5, this.borderColor, this.source});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              spreadRadius: 2,
+              blurRadius: 10,
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0, 10)
+          ),
+        ],
+        shape: BoxShape.circle,
+      ),
+      child: CircleAvatar(
+        backgroundColor: this.borderColor,
+        radius: this.radius,
+        child: CustomAvatar(
+          imgURL: this.imgURL,
+          radius: this.radius - this.border,
+          source: this.source,
         ),
       ),
     );
@@ -198,8 +235,10 @@ class TextFieldWidget extends StatefulWidget{
   final bool isValid;
   final FontWeight hintWeight;
   final TextInputType textInputType;
+  final String defaultValue;
+  final String errorText;
 
-  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text});
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information"});
 
   @override
   _TextFieldState createState() => _TextFieldState();
@@ -207,10 +246,16 @@ class TextFieldWidget extends StatefulWidget{
 
 class _TextFieldState extends State<TextFieldWidget>{
   FontWeight weight;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.defaultValue != "")
+      widget.controller.text = widget.defaultValue;
+  }
+
   @override
   Widget build(BuildContext context) {
-    /*if(widget.hint) weight=FontWeight.w100;
-    else  weight=FontWeight.w400;*/
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0, left: 10.0, right: 10.0),
       child: TextField(
@@ -236,7 +281,7 @@ class _TextFieldState extends State<TextFieldWidget>{
             fontWeight: widget.hintWeight,
             color: Colors.black,
           ),
-          errorText: widget.isValid ? null : "Invalid Information",
+          errorText: widget.isValid ? null : widget.errorText,
         ),
       ),
     );
@@ -246,10 +291,9 @@ class _TextFieldState extends State<TextFieldWidget>{
 class SelectInterests extends StatefulWidget{
   @required final Conference conference;
   @required List<String> selectedInterests;
-  @required bool hasInterests;
   @required final Function(List<String>) onInterestsChanged;
 
-  SelectInterests({this.conference, this.selectedInterests, this.hasInterests, this.onInterestsChanged});
+  SelectInterests({this.conference, this.selectedInterests, this.onInterestsChanged});
 
   @override
   _SelectInterestsState createState() => _SelectInterestsState();
@@ -264,13 +308,7 @@ class _SelectInterestsState extends State<SelectInterests> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests)
-          else
-            if(!widget.hasInterests)
-              Text(
-                "No interests selected!",
-                style: TextStyle(color: Colors.red),
-              ),
+          if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests),
           RaisedButton(
             child: Text("Select Interests"),
             onPressed: () => _showInterestsDialog(widget.conference.interests),
@@ -314,8 +352,6 @@ class _SelectInterestsState extends State<SelectInterests> {
                         setState(() {
                           widget.selectedInterests = _currentSelection;
                           widget.onInterestsChanged(widget.selectedInterests);
-                          (widget.selectedInterests.isEmpty) ?
-                          widget.hasInterests = false : widget.hasInterests = true;
                         });
                         Navigator.of(context).pop();
                       },
@@ -331,49 +367,57 @@ class _SelectInterestsState extends State<SelectInterests> {
 
 class ShowAvatarEdit extends StatefulWidget{
   @required final StorageController storage;
-  @required final Conference conference;
-  String profileImgPath;
-  @required final Function(String) onPathChanged;
+  String profileImgUrl;
+  @required final Function(File) onFileChosen;
 
-  ShowAvatarEdit({this.storage, this.conference, this.profileImgPath='default-avatar.jpg', this.onPathChanged});
+  ShowAvatarEdit({this.storage, this.profileImgUrl='default-avatar.jpg', this.onFileChosen});
 
   @override
   _ShowAvatarEditState createState() => _ShowAvatarEditState();
-
-
 }
 
 class _ShowAvatarEditState extends State<ShowAvatarEdit>{
+  File profileImg;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {uploadImage();},
+      onTap: () {chooseImage();},
       child: Center(
         child: Stack(
           children: [
-            AvatarWithBorder(
-              radius: 65,
-              imgURL: widget.profileImgPath,
-              source: widget.storage,
-              borderColor: Theme.of(context).scaffoldBackgroundColor,
-              backgroundColor: Colors.blue,
+            if(profileImg != null) (
+              AvatarWithBorder(
+                radius: 65,
+                imageProvider: new FileImage(profileImg),
+                  borderColor: Theme.of(context).scaffoldBackgroundColor
+              )
+            )
+            else(
+              AvatarWithBorderURL(
+                radius: 65,
+                imgURL: widget.profileImgUrl,
+                source: widget.storage,
+                borderColor: Theme.of(context).scaffoldBackgroundColor
+              )
             ),
             Positioned(
               bottom: 0,
               right: 0,
               child: AvatarWithBorder(
                 border: 4,
-                icon: Icon(Icons.edit, color: Colors.white,),
+                icon: Icon(Icons.edit, color: Colors.white),
                 borderColor: Theme.of(context).scaffoldBackgroundColor,
                 backgroundColor: Theme.of(context).accentColor,
               ),
             ),
           ],
-        ),
+        ) /*CircleAvatar(backgroundImage: new FileImage(widget.profileImg), radius: 65)*/,
       ),
     );
   }
-  uploadImage() async {
+
+  chooseImage() async {
     final _picker = ImagePicker();
     PickedFile image;
 
@@ -383,14 +427,11 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
     if(permissionStatus.isGranted){
       image = await _picker.getImage(source: ImageSource.gallery);
       if(image != null){
-        widget.profileImgPath = 'conferences/' + widget.conference.reference.id + '/profiles/' + context.read<AuthController>().currentUser.uid + '/profile_img';
-        widget.onPathChanged(widget.profileImgPath);
+        File file = File(image.path);
 
-        var file = File(image.path);
+        widget.onFileChosen(file);
 
-        await widget.storage.uploadFile(widget.profileImgPath, file);
-
-        setState(() {});
+        setState(() {profileImg = file;});
       }
       else {
         print('No path Received');
@@ -399,5 +440,105 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
     else {
       print('Grant permission and try again!');
     }
+  }
+}
+
+class ProfileListView extends StatelessWidget {
+  final FirestoreController _firestore;
+  final StorageController _storage;
+  final Conference _conference;
+  final bool hasProfile;
+  final List<QueryDocumentSnapshot> snapshots;
+  @required final bool fromQuery;
+
+  ProfileListView(this._firestore, this._storage, this._conference, this.hasProfile, this.snapshots, {this.fromQuery});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildList(context, snapshots);
+  }
+
+  Widget _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) {
+    List<Widget> profiles = snapshot.map((data) {
+      if (fromQuery)
+        return _buildProfile(context, data);
+      else if (context.watch<AuthController>().currentUser.uid != data.data()['uid'])
+        return _buildListItem(context, data);
+    }).toList();
+    profiles.removeWhere((element) => element == null);
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemCount: profiles.length,
+      separatorBuilder: (context, index) => Divider(
+        height: 0,
+        color: Colors.grey,
+      ),
+      itemBuilder: (context, index) => profiles[index],
+    );
+  }
+
+  Widget _buildProfile(BuildContext context, DocumentSnapshot data) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.getProfileById(_conference, data.data()['profile_id']),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0)
+            return _buildListItem(context, snapshot.data.docs.first);
+          else {
+            return Center(child: Text("This profile does not exist!"));
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final profile = Profile.fromSnapshot(data);
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewProfileDetailsPage(
+                  _conference,
+                  profile.uid,
+                  _firestore,
+                  _storage,
+                  hasProfile: hasProfile,
+                )));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            CustomAvatar(
+              imgURL: profile.img,
+              source: _storage,
+              initials: profile.name[0],
+              radius: 60,
+            ),
+            SizedBox(
+              width: 20.0,
+            ),
+            ProfileOccupationDisplay(
+              profile: profile,
+            ),
+            SizedBox(
+              width: 20.0,
+            ),
+            Icon(
+              Icons.connect_without_contact_rounded,
+              color: Colors.grey,
+              size: 40,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
