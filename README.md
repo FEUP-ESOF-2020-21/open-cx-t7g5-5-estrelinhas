@@ -1001,7 +1001,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Search profiles
 Given I’m logged-in and I have joined a conference,
-When I click on the "All" button located at the bottom of the screen
+When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
 When I click on the "Search bar" and insert a string,
 Then the app shows me all profiles matching the string
@@ -1010,7 +1010,7 @@ Then the app shows me all profiles matching the string
 ```gherkin
 Scenario: Filter profiles
 Given I’m logged-in and I have joined a conference,
-When I click on the "All" button located at the bottom of the screen
+When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
 When I click on the "Filter button"
 Then the app shows me all filters
