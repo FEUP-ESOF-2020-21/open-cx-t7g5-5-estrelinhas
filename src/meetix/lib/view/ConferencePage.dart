@@ -116,30 +116,43 @@ class _ConferencePageState extends State<ConferencePage> {
             confirmDeleteDialog(context, conference, "D_CONFERENCE");
           }
         },
-        itemBuilder: (context) => [
-          if (widget.hasProfile)
-            ...[
+        itemBuilder: (context) {
+          var list = List<PopupMenuEntry<Object>>();
+          if (widget.hasProfile) {
+            list.add(
               PopupMenuItem(
                 child: Text("View/Edit Profile"),
                 value: 0,
-              ),
+              )
+            );
+            list.add(
               PopupMenuItem(
-                child: Text("Leave Conference"),
+                child: Text("Leave Conference", style: TextStyle(color: Colors.red),),
                 value: 1,
               ),
-            ],
-          if (isCreator)
-            ...[
+            );
+          }
+
+          if (isCreator) {
+            list.add(
+              PopupMenuDivider()
+            );
+            list.add(
               PopupMenuItem(
                 child: Text("Edit Conference"),
                 value: 2,
-              ),
+              )
+            );
+            list.add(
               PopupMenuItem(
-                child: Text("Delete Conference"),
+                child: Text("Delete Conference", style: TextStyle(color: Colors.red),),
                 value: 3,
-              ),
-            ],
-        ],
+              )
+            );
+          }
+
+          return list;
+        },
     );
   }
 

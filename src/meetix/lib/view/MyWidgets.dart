@@ -458,12 +458,13 @@ class ProfileListView extends StatelessWidget {
   }
 
   Widget _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) {
-    List<Widget> profiles = snapshot.map((data) => 
-        (fromQuery)?
-        _buildProfile(context, data)
-            :
-        _buildListItem(context, data)
-    ).toList();
+    List<Widget> profiles = snapshot.map((data) {
+      if (fromQuery)
+        return _buildProfile(context, data);
+      else if (context.watch<AuthController>().currentUser.uid != data.data()['uid'])
+        return _buildListItem(context, data);
+    }).toList();
+    profiles.removeWhere((element) => element == null);
     return ListView.separated(
       padding: EdgeInsets.zero,
       itemCount: profiles.length,
