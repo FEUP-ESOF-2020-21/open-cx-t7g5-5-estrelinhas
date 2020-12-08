@@ -123,52 +123,53 @@ class _ConferencePageState extends State<ConferencePage> {
             ),
           ),
 
-          ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              widget.hasProfile ? _ListProfileTile(context, conference) : _ListCreateProfileTile(context, conference),
-              if(isCreator) _ListStaffTile(context, conference),
-              Padding(
-                padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-                child: Text("Conferences", style: TextStyle(color: Colors.blue),),
-              ),
-              ListTile(
-                leading: Icon(Icons.add),
-                title: Text("Create Conference"),
-                onTap: (){ Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Joined Conferences"),
-                //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
-              ),
-              ListTile(
-                leading: Icon(Icons.list),
-                title: Text("Available Conferences"),
-                //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
-              ),
-              Divider(
-                color: Colors.blue,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-                child: Text("Settings", style: TextStyle(color: Colors.blue),),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text("Account Settings"),
-                //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Logout"),
-                onTap: (){ context.read<AuthController>().signOut(); },
-              )
-            ],
+          Expanded(child:
+            ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                widget.hasProfile ? _ListProfileTile(context, conference) : _ListCreateProfileTile(context, conference),
+                if(isCreator) _ListStaffTile(context, conference),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+                  child: Text("Conferences", style: TextStyle(color: Colors.blue),),
+                ),
+                ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text("Create Conference"),
+                  onTap: (){ Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
+                  title: Text("Joined Conferences"),
+                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
+                  title: Text("Available Conferences"),
+                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                ),
+                Divider(
+                  color: Colors.blue,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+                  child: Text("Settings", style: TextStyle(color: Colors.blue),),
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text("Account Settings"),
+                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text("Logout"),
+                  onTap: (){ Navigator.pop(context); Navigator.pop(context); context.read<AuthController>().signOut(); },
+                )
+              ],
+            ),
           ),
-
         ],
       ),
     );
