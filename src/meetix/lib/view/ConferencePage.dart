@@ -12,7 +12,6 @@ import 'package:meetix/view/EditConferencePage.dart';
 import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:provider/provider.dart';
 
-import 'ConferenceListPage.dart';
 import 'CreateConferencePage.dart';
 import 'CreateProfilePage.dart';
 import 'MyWidgets.dart';
@@ -79,10 +78,6 @@ class _ConferencePageState extends State<ConferencePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(conference.name),
-        actions: <Widget> [
-          if (widget.hasProfile || isCreator)
-          _buildPopupMenu(context, conference)
-        ],
       ),
       body: _buildBody(context, conference),
       drawer: _buildDrawer(context, conference),
@@ -98,7 +93,7 @@ class _ConferencePageState extends State<ConferencePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 150,
+            height: 130,
             child: DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
@@ -114,7 +109,7 @@ class _ConferencePageState extends State<ConferencePage> {
                   ),
                   Padding (
                     padding: EdgeInsets.all(12.0),
-                    child: Text(widget._conference.name,
+                    child: Text(conference.name,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -127,6 +122,7 @@ class _ConferencePageState extends State<ConferencePage> {
               ),
             ),
           ),
+
           ListView(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -275,73 +271,6 @@ class _ConferencePageState extends State<ConferencePage> {
           color: Colors.blue,
         ),
       ],
-    );
-  }
-
-  Widget _buildPopupMenu(BuildContext context, Conference conference){
-    return PopupMenuButton(
-        onSelected: (newValue){
-          if(newValue == 0){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ViewProfileDetailsPage(
-                      widget._conference,
-                      context.watch<AuthController>().currentUser.uid,
-                      widget._firestore,
-                      widget._storage,
-                      hasProfile: widget.hasProfile,
-                    )
-                )
-            ).then((value) => setState(() {}));
-          }
-          else if(newValue == 1){
-            confirmDeleteDialog(context, conference, "D_PROFILE");
-          }
-          else if(newValue == 2){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference)));
-          }
-          else if(newValue == 3){
-            confirmDeleteDialog(context, conference, "D_CONFERENCE");
-          }
-        },
-        itemBuilder: (context) {
-          var list = List<PopupMenuEntry<Object>>();
-          if (widget.hasProfile) {
-            list.add(
-              PopupMenuItem(
-                child: Text("View/Edit My Profile"),
-                value: 0,
-              )
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Leave Conference", style: TextStyle(color: Colors.red),),
-                value: 1,
-              ),
-            );
-          }
-
-          if (isCreator) {
-            list.add(
-              PopupMenuDivider()
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Edit Conference"),
-                value: 2,
-              )
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Delete Conference", style: TextStyle(color: Colors.red),),
-                value: 3,
-              )
-            );
-          }
-
-          return list;
-        },
     );
   }
 
