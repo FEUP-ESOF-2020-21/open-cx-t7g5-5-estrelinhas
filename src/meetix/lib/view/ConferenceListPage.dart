@@ -8,6 +8,7 @@ import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
@@ -73,12 +74,16 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               title: Text("Create Conference"),
               onTap: (){
                 Navigator.pop(context); /* Close drawer */
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
+              },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text("Joined Conferences"),
-              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions)));
+              },
             ),
             ListTile(
               leading: Icon(Icons.list),

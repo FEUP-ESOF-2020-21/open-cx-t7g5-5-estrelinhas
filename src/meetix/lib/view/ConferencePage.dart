@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import 'CreateConferencePage.dart';
 import 'CreateProfilePage.dart';
+import 'MyJoinedConferencesPage.dart';
 import 'MyWidgets.dart';
 import 'ViewProfileDetailsPage.dart';
 
@@ -148,7 +149,11 @@ class _ConferencePageState extends State<ConferencePage> {
                 ListTile(
                   leading: Icon(Icons.list),
                   title: Text("Joined Conferences"),
-                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                  onTap: (){
+                    Navigator.pop(context); /* Close drawer */
+                    Navigator.pop(context); /* Leave conference workspace */
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions)));
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
