@@ -8,78 +8,50 @@ import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 
-class MyJoinedConferencesPage extends StatefulWidget {
+class ActiveConferencesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final FunctionsController _functions;
   final Function(int) onChangeConfTab;
 
-  MyJoinedConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
+  ActiveConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
 
   @override
-  _MyJoinedConferencesPageState createState() {
-    return _MyJoinedConferencesPageState();
+  _ActiveConferencesPageState createState() {
+    return _ActiveConferencesPageState();
   }
 }
 
-class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
+class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
   @override
   Widget build(BuildContext context) {
     return _buildBody(context);
   }
 
-
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getMyProfilesFromJoinedConferences(context.watch<AuthController>().currentUser.uid),
+      stream: widget._firestore.getConferences(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.size > 0) {
-            return _buildList(context, snapshot.data.docs);
-          } else {
-            return Center(child: Text("You have not joined any conference"));
-          }
-        } else if (snapshot.hasError) {
-          return Text("Error :(");
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildList(context, snapshot.data.docs);
       },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> conferences =  snapshot.map((data) => _buildConference(context, data.reference.parent.parent.id)).toList();
+    List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
     return ListView.separated(
       padding: EdgeInsets.zero,
       itemCount: conferences.length,
       separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
       itemBuilder: (context, index) => conferences[index],
-    );
-  }
-  
-  Widget _buildConference(BuildContext context, String conference_id){
-    return StreamBuilder<QuerySnapshot>(
-        stream: widget._firestore.getConferenceById(conference_id),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.size > 0)
-              return _buildListItem(context, snapshot.data.docs.first);
-            else {
-              return Center(child: Text("This conference does not exist!"));
-            }
-          } else if (snapshot.hasError) {
-            return Text("Error :(");
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }
     );
   }
 
@@ -132,4 +104,3 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
     );
   }
 }
-

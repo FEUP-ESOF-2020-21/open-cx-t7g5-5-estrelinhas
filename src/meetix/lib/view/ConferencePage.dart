@@ -6,6 +6,7 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
+import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/MatchedProfilesPage.dart';
 import 'package:meetix/view/TopProfilesPage.dart';
 import 'package:meetix/view/EditConferencePage.dart';
@@ -24,9 +25,9 @@ class ConferencePage extends StatefulWidget {
   final FunctionsController _functions;
   final Conference _conference;
   final bool hasProfile;
+  final Function(int) onChangeConfTab;
 
-  ConferencePage(this._firestore, this._storage, this._functions, this._conference,
-      {this.hasProfile = false});
+  ConferencePage(this._firestore, this._storage, this._functions, this._conference, {this.hasProfile = false, this.onChangeConfTab});
   @override
   _ConferencePageState createState() => _ConferencePageState();
 }
@@ -150,15 +151,17 @@ class _ConferencePageState extends State<ConferencePage> {
                   leading: Icon(Icons.list),
                   title: Text("Joined Conferences"),
                   onTap: (){
-                    Navigator.pop(context); /* Close drawer */
-                    Navigator.pop(context); /* Leave conference workspace */
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions)));
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(1);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
                   title: Text("Available Conferences"),
-                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(0);
+                  },
                 ),
                 Divider(
                   color: Colors.blue,

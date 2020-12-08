@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/ActiveConferencesPage.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
@@ -28,10 +29,12 @@ class ConferenceListPage extends StatefulWidget {
 }
 
 class _ConferenceListPageState extends State<ConferenceListPage> {
+  int _currentTab = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Meetix Conferences')),
+      appBar: AppBar(title: _AppTitle(context)),
       body: _buildBody(context),
       drawer: Drawer(
         child: ListView(
@@ -82,13 +85,16 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               title: Text("Joined Conferences"),
               onTap: (){
                 Navigator.pop(context); /* Close drawer */
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions)));
+                changeCurrentTab(1);
               },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text("Available Conferences"),
-              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                changeCurrentTab(0);
+              }
             ),
             Divider(
               color: Colors.blue,
@@ -114,72 +120,28 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    // Gets stream from Firestore with the conference info
-    return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferences(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
-      },
+    return IndexedStack(
+      index: _currentTab,
+      children: [
+        ActiveConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab),
+        MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab)
+      ],
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
-    return ListView.separated(
-      padding: EdgeInsets.zero,
-      itemCount: conferences.length,
-      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
-      itemBuilder: (context, index) => conferences[index],
+  Widget _AppTitle(BuildContext context) {
+    return IndexedStack(
+      index: _currentTab,
+      children: [
+        Text("Meetix Conferences"),
+        Text(context.watch<AuthController>().currentUser.displayName + "'s joined Conferences"),
+      ],
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final _conference = Conference.fromSnapshot(data);
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Displays conference icon, if null, displays initial
-            CustomAvatar(
-              imgURL: _conference.img,
-              source: widget._storage,
-              initials: _conference.name[0],
-            ),
-            SizedBox(width: 16.0,),
-            Text(_conference.name,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Expanded(child: SizedBox()),
-            Icon(Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget openConference(BuildContext context, Conference conference) {
-    return FutureBuilder(
-      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.size > 0) {
-            return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true,);
-          } else {
-            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
-          }
-        } else if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
-        } else {
-          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
-        }
-      },
-    );
+  changeCurrentTab(int tab){
+    setState(() {
+      _currentTab = tab;
+    });
   }
 }
