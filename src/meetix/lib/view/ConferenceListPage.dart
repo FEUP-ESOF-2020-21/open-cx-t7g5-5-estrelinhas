@@ -71,7 +71,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ListTile(
               leading: Icon(Icons.add),
               title: Text("Create Conference"),
-              onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
             ),
             ListTile(
               leading: Icon(Icons.list),

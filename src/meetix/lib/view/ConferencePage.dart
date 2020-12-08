@@ -138,7 +138,12 @@ class _ConferencePageState extends State<ConferencePage> {
                 ListTile(
                   leading: Icon(Icons.add),
                   title: Text("Create Conference"),
-                  onTap: (){ Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                  onTap: (){
+                    Navigator.pop(context); /* Close drawer */
+                    Navigator.pop(context); /* Close conference page */
+                    Navigator.pop(context); /* Close conference page */
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
@@ -246,18 +251,8 @@ class _ConferencePageState extends State<ConferencePage> {
             leading: Icon(Icons.person),
             title: Text("Edit Conference"),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          EditConferencePage(
-                            widget._firestore,
-                            widget._storage,
-                            widget._functions,
-                            conference,
-                          )
-                  )
-              ).then((value) => setState(() {}));
+              Navigator.pop(context); /* Close drawer */
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference,))).then((value) => setState(() {}));
             }
         ),
 
@@ -334,7 +329,6 @@ class _ConferencePageState extends State<ConferencePage> {
       },
     );
     await widget._functions.deleteConference(widget._conference.reference.id);
-    Navigator.pop(context);
     Navigator.pop(context); // Close dialog
     Navigator.pop(context); // Close drawer
     _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
@@ -356,7 +350,6 @@ class _ConferencePageState extends State<ConferencePage> {
       },
     );
     await widget._functions.deleteProfile(widget._conference.reference.id, context.read<AuthController>().currentUser.uid);
-    Navigator.pop(context);
     Navigator.pop(context); // Close dialog
     Navigator.pop(context); // Close drawer
     _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
