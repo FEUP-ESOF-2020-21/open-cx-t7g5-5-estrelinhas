@@ -311,7 +311,7 @@ class _SelectInterestsState extends State<SelectInterests> {
           if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests),
           RaisedButton(
             child: Text("Select Interests"),
-            onPressed: () => _showInterestsDialog(widget.conference.interests),
+            onPressed: () {FocusScope.of(context).unfocus(); _showInterestsDialog(widget.conference.interests);},
           ),
         ],
       ),
