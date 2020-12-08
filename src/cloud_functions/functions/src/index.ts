@@ -19,7 +19,7 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
     const userLikesRef = userRef.collection("likes")
 
     const matchesQuery = await userLikesRef.where("match", "==", true).get()
-    let matches : Array<String> = [];
+    const matches : Array<String> = [];
     matchesQuery.forEach(element => {
         matches.push(element.id)
     });
@@ -29,12 +29,12 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
     let interests : Array<String> = [];
     interests = userInterestsData? userInterestsData["interests"] : [];
     
-    let top : Array<Array<String>> = []
+    const top : Array<Array<String>> = []
     if (interests && interests.length > 0) {
         const profilesQuery = await profilesRef.where(FieldPath.documentId(), "!=", data.profileID).where("interests", "array-contains-any", interests).get()
         profilesQuery.forEach(profile => {
             if (!matches.includes(profile.id)) {
-                let profile_int = profile.data()["interests"]
+                const profile_int = profile.data()["interests"]
                 const common = profile_int.filter((interest : String) => interests.includes(interest))
                 if (common.length > 0) {
                     top.push([profile.id, common.length])
@@ -47,6 +47,14 @@ exports.getTop20 = functions.https.onCall(async (data, context) => {
 
     return top.slice(0, 5);
 });
+
+async function deleteDocumentRecursive(documentPath:String) {
+    await tools.firestore.delete(documentPath, {
+        project: process.env.GCLOUD_PROJECT,
+        recursive: true,
+        yes: true,
+    })
+}
 
 /**
  * Function that recursively deletes documents and subcollections of a conference or profile.
@@ -77,11 +85,7 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
             )
         }
 
-        await tools.firestore.delete(conferencePath, {
-            project: process.env.GCLOUD_PROJECT,
-            recursive: true,
-            yes: true,
-        })
+        await deleteDocumentRecursive(conferencePath)
 
         return "Deleted documents and files for conference " + data.conferenceID
     }
@@ -103,11 +107,7 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
             )
         }
 
-        await tools.firestore.delete(profilePath, {
-            project: process.env.GCLOUD_PROJECT,
-            recursive: true,
-            yes: true,
-        })
+        await deleteDocumentRecursive(profilePath)
 
         return "Deleted documents and files for profile " + data.profileID + " in conference " + data.conferenceID
     }
@@ -130,7 +130,7 @@ exports.editInterests = functions.firestore.document('conference/{confID}').onUp
     if (deletedInterests.length > 0) {
         const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
 
-        let batches : Array<Array<String>> = []
+        const batches : Array<Array<String>> = []
         let idx = 0
 
         while (idx < deletedInterests.length) {
@@ -138,7 +138,7 @@ exports.editInterests = functions.firestore.document('conference/{confID}').onUp
             idx += 10
         }
 
-        for (let batch of batches) {
+        for (const batch of batches) {
             const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
 
             hadInterest.forEach((profile) => {
@@ -185,6 +185,6 @@ exports.onDeleteProfile = functions.firestore.document('conference/{confID}/prof
 exports.onDeleteAccount = functions.auth.user().onDelete(async (user) => {
     const user_profiles = await db.collectionGroup('profiles').where('uid', '==', user.uid).get()
     user_profiles.forEach(profile => {
-        profile.ref.delete().catch((err) => console.log(err))
+        deleteDocumentRecursive(profile.ref.path).catch(err => console.log(err))
     })
 });

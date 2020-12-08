@@ -63,6 +63,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         await widget._storage.uploadFile(profileImgUrl, profileImg);
       }
 
+      if(profileImgUrl != widget._profile.img)
+        updates['img'] = profileImgUrl;
       if(_nameController.text.isNotEmpty && _nameController.text != widget._profile.name)
         updates['name'] = _nameController.text;
       if(_occupationController.text.isNotEmpty && _occupationController.text != widget._profile.occupation)
