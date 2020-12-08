@@ -37,7 +37,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           padding: EdgeInsets.zero,
           children: [
             Container(
-              height: 130,
+              height: 150,
               child: DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -72,6 +72,24 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               leading: Icon(Icons.add),
               title: Text("Create Conference"),
               onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Joined Conferences"),
+              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Available Conferences"),
+              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Account Settings"),
+              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
             ),
             ListTile(
               leading: Icon(Icons.logout),
