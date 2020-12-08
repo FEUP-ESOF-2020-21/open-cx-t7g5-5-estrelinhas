@@ -84,7 +84,11 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
             ),
             Divider(
-              color: Colors.black,
+              color: Colors.blue,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+              child: Text("Settings", style: TextStyle(color: Colors.blue),),
             ),
             ListTile(
               leading: Icon(Icons.settings),

@@ -93,7 +93,7 @@ class _ConferencePageState extends State<ConferencePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 130,
+            height: 140,
             child: DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
@@ -108,7 +108,7 @@ class _ConferencePageState extends State<ConferencePage> {
                     radius: 24,
                   ),
                   Padding (
-                    padding: EdgeInsets.all(12.0),
+                    padding: EdgeInsets.all(11.0),
                     child: Text(conference.name,
                       style: TextStyle(
                         fontSize: 18,
