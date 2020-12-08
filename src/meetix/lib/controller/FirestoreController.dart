@@ -13,6 +13,10 @@ class FirestoreController {
     return firestore.collection("conference");
   }
 
+  Stream<QuerySnapshot> getMyProfilesFromJoinedConferences(String profileID) {
+    return firestore.collectionGroup("profiles").where('uid', isEqualTo: profileID).snapshots();
+  }
+
   Stream<QuerySnapshot> getConferenceProfiles(Conference conference) {
     return conference.reference.collection("profiles").snapshots();
   }
