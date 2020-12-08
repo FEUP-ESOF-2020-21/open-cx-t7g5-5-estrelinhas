@@ -181,3 +181,10 @@ exports.onDeleteProfile = functions.firestore.document('conference/{confID}/prof
         profile.ref.delete().catch((err) => console.log(err))
     });
 });
+
+exports.onDeleteAccount = functions.auth.user().onDelete(async (user) => {
+    const user_profiles = await db.collectionGroup('profiles').where('uid', '==', user.uid).get()
+    user_profiles.forEach(profile => {
+        profile.ref.delete().catch((err) => console.log(err))
+    })
+});
