@@ -22,13 +22,28 @@ class AuthController {
 
   Future<String> signUp({String email, String password, String displayName}) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      var user = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password
-      ).then((value) => value.user.updateProfile(displayName: displayName));
+      );
+      await _auth.currentUser.updateProfile(displayName: displayName);
+      await _auth.currentUser.reload();
       return "Signed Up";
     } on FirebaseAuthException catch (e) {
       return e.message;
+    }
+  }
+
+  Future<String> deleteAccount({String password}) async {
+    try {
+      EmailAuthCredential credential = EmailAuthProvider.credential(email: currentUser.email, password: password);
+      await _auth.currentUser.reauthenticateWithCredential(credential);
+      // await _auth.signOut();
+      await _auth.currentUser.delete();
+      return "success";
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      return e.code;
     }
   }
 }

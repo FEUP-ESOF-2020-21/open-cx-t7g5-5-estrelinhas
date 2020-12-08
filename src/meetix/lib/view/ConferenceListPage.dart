@@ -55,7 +55,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
                     ),
                     Expanded(child: SizedBox()),
                     Text(
-                      "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
+                      "Welcome " + ((context.watch<AuthController>().currentUser.displayName != null)? context.watch<AuthController>().currentUser.displayName : "") + "!",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: TextStyle(
@@ -77,7 +77,12 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: (){ context.read<AuthController>().signOut(); },
-            )
+            ),
+            ListTile(
+              leading: Icon(Icons.delete_forever),
+              title: Text("Delete account"),
+              onTap: (){showDialog(context: context, child: DeleteAccountDialog(),);},
+            ),
           ],
         ),
       ),
