@@ -187,4 +187,8 @@ exports.onDeleteAccount = functions.auth.user().onDelete(async (user) => {
     user_profiles.forEach(profile => {
         deleteDocumentRecursive(profile.ref.path).catch(err => console.log(err))
     })
+    const user_conferences = await db.collection('conference').where('uid', '==', user.uid).get()
+    user_conferences.forEach(conference => {
+        deleteDocumentRecursive(conference.ref.path).catch(err => console.log(err))
+    })
 });

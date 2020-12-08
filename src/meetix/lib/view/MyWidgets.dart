@@ -580,6 +580,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         children: [
           Text('Are you sure you want to delete your account?'),
           SizedBox(height: 20,),
+          Text('This will also delete all profiles and conferences that you have created.', style: TextStyle(fontWeight: FontWeight.bold),),
+          SizedBox(height: 20,),
           Text('This action cannot be undone!', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
           TextField(
             controller: _passwordController,
