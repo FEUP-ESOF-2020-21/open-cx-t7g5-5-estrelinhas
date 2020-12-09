@@ -233,12 +233,13 @@ class TextFieldWidget extends StatefulWidget{
   @required final String hintText;
   @required final TextEditingController controller;
   final bool isValid;
+  final bool obscure;
   final FontWeight hintWeight;
   final TextInputType textInputType;
   final String defaultValue;
   final String errorText;
 
-  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information"});
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information", this.obscure=false});
 
   @override
   _TextFieldState createState() => _TextFieldState();
@@ -283,6 +284,7 @@ class _TextFieldState extends State<TextFieldWidget>{
           ),
           errorText: widget.isValid ? null : widget.errorText,
         ),
+        obscureText: widget.obscure,
       ),
     );
   }
@@ -608,4 +610,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
     );
   }
 }
+
+
+
+
 

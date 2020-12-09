@@ -46,4 +46,20 @@ class AuthController {
       return e.code;
     }
   }
+  Future<String> editAccount({String password, Map changes}) async{
+    try{
+      EmailAuthCredential credential = EmailAuthProvider.credential(email: currentUser.email, password: password);
+      await _auth.currentUser.reauthenticateWithCredential(credential);
+
+      if(changes['password']!=null) await _auth.currentUser.updatePassword(changes['password']);
+      if(changes['email']!=null) await _auth.currentUser.updateEmail(changes['email']);
+      if(changes['username']!=null) await _auth.currentUser.updateProfile(displayName:changes['username']);
+
+      return "success";
+    }
+    on FirebaseAuthException catch(e){
+      print(e.code);
+      return e.code;
+    }
+  }
 }
