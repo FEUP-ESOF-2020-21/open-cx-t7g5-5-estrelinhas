@@ -115,7 +115,9 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text("Account settings"),
-              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));},
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));
+                },
             ),
             ListTile(
               leading: Icon(Icons.logout),
