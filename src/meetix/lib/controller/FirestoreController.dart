@@ -9,6 +9,10 @@ class FirestoreController {
     return firestore.collection("conference").snapshots();
   }
 
+  Stream<QuerySnapshot> getActiveConferences() {
+    return firestore.collection("conference").where('end_date', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now())).snapshots();
+  }
+
   CollectionReference getConferenceCollection() {
     return firestore.collection("conference");
   }

@@ -133,7 +133,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
     return IndexedStack(
       index: _currentTab,
       children: [
-        Text("Meetix Conferences"),
+        Text("Available Conferences"),
         Text(context.watch<AuthController>().currentUser.displayName + "'s joined Conferences"),
       ],
     );

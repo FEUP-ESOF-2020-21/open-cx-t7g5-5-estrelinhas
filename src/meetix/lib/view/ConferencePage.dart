@@ -25,7 +25,7 @@ class ConferencePage extends StatefulWidget {
   final FunctionsController _functions;
   final Conference _conference;
   final bool hasProfile;
-  final Function(int) onChangeConfTab;
+  @required final Function(int) onChangeConfTab;
 
   ConferencePage(this._firestore, this._storage, this._functions, this._conference, {this.hasProfile = false, this.onChangeConfTab});
   @override

@@ -16,8 +16,9 @@ class CreateProfilePage extends StatefulWidget {
   final StorageController _storage;
   final Conference _conference;
   final FunctionsController _functions;
+  @required final Function(int) onChangeConfTab;
 
-  CreateProfilePage(this._firestore, this._storage,  this._functions, this._conference);
+  CreateProfilePage(this._firestore, this._storage,  this._functions, this._conference, {this.onChangeConfTab});
 
   @override
   _CreateProfilePageState createState() => _CreateProfilePageState();
@@ -65,7 +66,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
         'interests':_selectedInterests
       });
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true,)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true, onChangeConfTab: widget.onChangeConfTab)));
     }
   }
 
@@ -82,7 +83,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             children: [
               TextButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, onChangeConfTab: widget.onChangeConfTab)));
                 },
                 child: Text("Skip", style: TextStyle(color: Colors.grey),)
               ),

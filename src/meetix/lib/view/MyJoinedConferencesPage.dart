@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
-import 'package:meetix/view/CreateConferencePage.dart';
-import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +14,10 @@ class MyJoinedConferencesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final FunctionsController _functions;
-  final Function(int) onChangeConfTab;
+  @required final Function(int) onChangeConfTab;
 
-  MyJoinedConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
+  MyJoinedConferencesPage(this._firestore, this._storage, this._functions,
+      {this.onChangeConfTab});
 
   @override
   _MyJoinedConferencesPageState createState() {
@@ -33,11 +31,11 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
     return _buildBody(context);
   }
 
-
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getMyProfilesFromJoinedConferences(context.watch<AuthController>().currentUser.uid),
+      stream: widget._firestore.getMyProfilesFromJoinedConferences(
+          context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0) {
@@ -55,16 +53,22 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> conferences =  snapshot.map((data) => _buildConference(context, data.reference.parent.parent.id)).toList();
+    List<Widget> conferences = snapshot
+        .map((data) =>
+            _buildConference(context, data.reference.parent.parent.id))
+        .toList();
     return ListView.separated(
       padding: EdgeInsets.zero,
       itemCount: conferences.length,
-      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
+      separatorBuilder: (context, index) => Divider(
+        height: 0,
+        color: Colors.grey,
+      ),
       itemBuilder: (context, index) => conferences[index],
     );
   }
-  
-  Widget _buildConference(BuildContext context, String conference_id){
+
+  Widget _buildConference(BuildContext context, String conference_id) {
     return StreamBuilder<QuerySnapshot>(
         stream: widget._firestore.getConferenceById(conference_id),
         builder: (context, snapshot) {
@@ -79,8 +83,7 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
           } else {
             return Center(child: CircularProgressIndicator());
           }
-        }
-    );
+        });
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
@@ -88,7 +91,14 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ConferencePage(widget._firestore,
+                        widget._storage, widget._functions, _conference,
+                        hasProfile: true,
+                        onChangeConfTab: widget.onChangeConfTab)))
+            .then((value) => setState(() {}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,36 +110,21 @@ class _MyJoinedConferencesPageState extends State<MyJoinedConferencesPage> {
               source: widget._storage,
               initials: _conference.name[0],
             ),
-            SizedBox(width: 16.0,),
-            Text(_conference.name,
+            SizedBox(
+              width: 16.0,
+            ),
+            Text(
+              _conference.name,
               style: Theme.of(context).textTheme.headline6,
             ),
             Expanded(child: SizedBox()),
-            Icon(Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.grey,
+            ),
           ],
         ),
       ),
     );
   }
-
-  Widget openConference(BuildContext context, Conference conference) {
-    return FutureBuilder(
-      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.size > 0) {
-            return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true, onChangeConfTab: widget.onChangeConfTab);
-          } else {
-            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
-          }
-        } else if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
-        } else {
-          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
-        }
-      },
-    );
-  }
 }
-

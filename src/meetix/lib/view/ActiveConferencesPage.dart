@@ -18,7 +18,7 @@ class ActiveConferencesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final FunctionsController _functions;
-  final Function(int) onChangeConfTab;
+  @required final Function(int) onChangeConfTab;
 
   ActiveConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
 
@@ -37,10 +37,19 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferences(),
+      stream: widget._firestore.getActiveConferences(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0) {
+            return _buildList(context, snapshot.data.docs);
+          } else {
+            return Center(child: Text("There are no active conferences"));
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error :(");
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
       },
     );
   }
@@ -93,7 +102,7 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
           if (snapshot.data.size > 0) {
             return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true, onChangeConfTab: widget.onChangeConfTab);
           } else {
-            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
+            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference, onChangeConfTab: widget.onChangeConfTab);
           }
         } else if (snapshot.hasError) {
           return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
