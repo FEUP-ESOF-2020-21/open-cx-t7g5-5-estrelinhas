@@ -5,9 +5,13 @@ admin.initializeApp()
 import { FieldPath, FieldValue } from '@google-cloud/firestore'
 
 const tools = require('firebase-tools');
+const algolia = require('algoliasearch');
+const env = functions.config();
 
 
 const db = admin.firestore()
+const algolia_client = algolia(env.algolia.appid, env.algolia.apikey)
+const conferences_index = algolia_client.initIndex('conference_search')
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -150,15 +154,30 @@ exports.editInterests = functions.firestore.document('conference/{confID}').onUp
     }
 });
 
-exports.onDeleteConference = functions.firestore.document('conference/{confID}').onDelete((change, context) => {
-    const bucket = admin.storage().bucket();
+exports.onDeleteConference = functions.firestore.document('conference/{confID}').onWrite(async (change, context) => {
+    // ON UPDATE
+    if (change.before && change.after) {
+        const record = change.after.data()
+        if (record) {
+            record.objectID = context.params.confID
+            record.startDate_timestamp = record.start_date.seconds
+            conferences_index.saveObject(record)
+        }
+    }
 
-    bucket.deleteFiles({
-        prefix: 'conferences/' + context.params.confID,
-    }, function(err) {
-        if (err)
-            console.log(err)
-    },)
+    // ON DELETE
+    if (change.before && !change.after) {
+        await conferences_index.deleteObject(context.params.confID)
+
+        const bucket = admin.storage().bucket();
+
+        bucket.deleteFiles({
+            prefix: 'conferences/' + context.params.confID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
+    }
 });
 
 exports.onDeleteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onDelete(async (change, context) => {
