@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import 'CreateConferencePage.dart';
 import 'CreateProfilePage.dart';
+import 'EditAccountPage.dart';
 import 'MyJoinedConferencesPage.dart';
 import 'MyWidgets.dart';
 import 'ViewProfileDetailsPage.dart';
@@ -141,9 +142,8 @@ class _ConferencePageState extends State<ConferencePage> {
                   leading: Icon(Icons.add),
                   title: Text("Create Conference"),
                   onTap: (){
-                    Navigator.pop(context); /* Close drawer */
-                    Navigator.pop(context); /* Close conference page */
-                    Navigator.pop(context); /* Close conference page */
+                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                    widget.onChangeConfTab(2);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
                   },
                 ),
@@ -180,14 +180,14 @@ class _ConferencePageState extends State<ConferencePage> {
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),
-                  title: Text("Account Settings"),
-                  //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+                  title: Text("Account settings"),
+                  onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));},
                 ),
                 ListTile(
                   leading: Icon(Icons.logout),
                   title: Text("Logout"),
-                  onTap: (){ Navigator.pop(context); Navigator.pop(context); context.read<AuthController>().signOut(); },
-                )
+                  onTap: (){ Navigator.popUntil(context, ModalRoute.withName("/")); context.read<AuthController>().signOut(); },
+                ),
               ],
             ),
           ),

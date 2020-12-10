@@ -76,7 +76,8 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               leading: Icon(Icons.add),
               title: Text("Create Conference"),
               onTap: (){
-                Navigator.pop(context); /* Close drawer */
+                Navigator.pop(context);
+                changeCurrentTab(2);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
               },
             ),
@@ -113,21 +114,14 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text("Account Settings"),
-              //onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
               title: Text("Account settings"),
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));},
-            
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: (){ context.read<AuthController>().signOut(); },
             ),
-
           ],
         ),
       ),
