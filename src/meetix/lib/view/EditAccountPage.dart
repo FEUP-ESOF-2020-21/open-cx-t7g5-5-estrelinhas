@@ -120,50 +120,52 @@ Widget _buildBody(BuildContext context) {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Center(
-        child: Column(
-          mainAxisSize:MainAxisSize.min,
-          children: [
-            TextFieldWidget(
-              labelText: "Username",
-              hintText: context.watch<AuthController>().currentUser.displayName,
-              hintWeight: FontWeight.w400,
-              controller: _usernameController,
-              isValid: _usernameValid,
-              defaultValue: context.watch<AuthController>().currentUser.displayName,
-              errorText: "Must be at least 3 characters/numbers, no symbols",
-            ),
-            TextFieldWidget(
-              labelText: "Email",
-              hintText: context.watch<AuthController>().currentUser.email,
-              hintWeight: FontWeight.w400,
-              controller: _emailController,
-              textInputType: TextInputType.emailAddress,
-              isValid: _emailValid,
-              defaultValue: context.watch<AuthController>().currentUser.email,
-              errorText: "Must be a valid email and not used by another account",
-            ),
-            TextFieldWidget(
-              labelText: "Current Password",
-              hintWeight: FontWeight.w400,
-              controller: _currentpasswordController,
-              textInputType: TextInputType.visiblePassword,
-              isValid: _currentpasswordValid,
-              obscure: true,
-              errorText: "Wrong password",
-            ),
-            TextFieldWidget(
-              labelText: "New Password",
-              hintWeight: FontWeight.w400,
-              controller: _newpasswordController,
-              textInputType: TextInputType.visiblePassword,
-              isValid: _newpasswordValid,
-              obscure: true,
-              errorText: "Invalid password, password must be at least 6 characters",
-            ),
-            Text("Edit the fields you want to change.\nYou must always input your current password", textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height:30.0),
-            RaisedButton(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          SizedBox(height: 30,),
+          TextFieldWidget(
+            labelText: "Username",
+            hintText: context.watch<AuthController>().currentUser.displayName,
+            hintWeight: FontWeight.w400,
+            controller: _usernameController,
+            isValid: _usernameValid,
+            defaultValue: context.watch<AuthController>().currentUser.displayName,
+            errorText: "Must be at least 3 characters/numbers, no symbols",
+          ),
+          TextFieldWidget(
+            labelText: "Email",
+            hintText: context.watch<AuthController>().currentUser.email,
+            hintWeight: FontWeight.w400,
+            controller: _emailController,
+            textInputType: TextInputType.emailAddress,
+            isValid: _emailValid,
+            defaultValue: context.watch<AuthController>().currentUser.email,
+            errorText: "Must be a valid email and not used by another account",
+          ),
+          TextFieldWidget(
+            labelText: "Current Password",
+            hintWeight: FontWeight.w400,
+            controller: _currentpasswordController,
+            textInputType: TextInputType.visiblePassword,
+            isValid: _currentpasswordValid,
+            obscure: true,
+            errorText: "Wrong password",
+          ),
+          TextFieldWidget(
+            labelText: "New Password",
+            hintWeight: FontWeight.w400,
+            controller: _newpasswordController,
+            textInputType: TextInputType.visiblePassword,
+            isValid: _newpasswordValid,
+            obscure: true,
+            errorText: "Invalid password, password must be at least 6 characters",
+          ),
+          Text("Edit the fields you want to change.\nYou must always input your current password", textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height:30.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: RaisedButton(
                 color: Color.fromRGBO(179, 0, 0, 1.0),
                 child: Container(
                   child: Row(
@@ -176,9 +178,9 @@ Widget _buildBody(BuildContext context) {
                   ),
                 ),
                 onPressed: (){showDialog(context: context, child: DeleteAccountDialog(),);},
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     ),
   );

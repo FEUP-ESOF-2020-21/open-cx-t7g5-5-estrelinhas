@@ -69,7 +69,7 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){print("UPDATING");}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

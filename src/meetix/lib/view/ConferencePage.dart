@@ -182,8 +182,8 @@ class _ConferencePageState extends State<ConferencePage> {
                   leading: Icon(Icons.settings),
                   title: Text("Account settings"),
                   onTap: (){
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions)),  ModalRoute.withName("/"));
-                    },
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions)));
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.logout),
@@ -204,7 +204,7 @@ class _ConferencePageState extends State<ConferencePage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-            child: Text("Conferences", style: TextStyle(color: Colors.blue),),
+            child: Text("This Conference", style: TextStyle(color: Colors.blue),),
           ),
           ListTile(
             leading: Icon(Icons.person),
