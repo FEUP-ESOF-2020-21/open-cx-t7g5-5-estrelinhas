@@ -60,7 +60,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
 
       body: _buildBody(context, profile),
 
-      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile,),
+      floatingActionButton: LikeEditButton(widget._conference, profile, widget._firestore, widget._storage, hasProfile: widget.hasProfile, onSetState: (){setState(() {});},),
     );
   }
 

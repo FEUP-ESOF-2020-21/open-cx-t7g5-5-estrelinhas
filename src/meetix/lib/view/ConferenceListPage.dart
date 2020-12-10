@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/ActiveConferencesPage.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
-
+import 'package:meetix/view/EditAccountPage.dart';
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
+import 'MyCreatedConferencesPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -27,17 +29,19 @@ class ConferenceListPage extends StatefulWidget {
 }
 
 class _ConferenceListPageState extends State<ConferenceListPage> {
+  int _currentTab = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Meetix Conferences')),
+      appBar: AppBar(title: _AppTitle(context)),
       body: _buildBody(context),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             Container(
-              height: 130,
+              height: 150,
               child: DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -55,7 +59,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
                     ),
                     Expanded(child: SizedBox()),
                     Text(
-                      "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
+                      (context.watch<AuthController>().currentUser.displayName == null)? "Welcome!" : "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: TextStyle(
@@ -71,13 +75,55 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ListTile(
               leading: Icon(Icons.add),
               title: Text("Create Conference"),
-              onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
+              onTap: (){
+                Navigator.pop(context);
+                changeCurrentTab(2);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Available Conferences"),
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                changeCurrentTab(0);
+              }
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Joined Conferences"),
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                changeCurrentTab(1);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text("Created Conferences"),
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                changeCurrentTab(2);
+              },
+            ),
+            Divider(
+              color: Colors.blue,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+              child: Text("Settings", style: TextStyle(color: Colors.blue),),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Account settings"),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));
+                },
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: (){ context.read<AuthController>().signOut(); },
-            )
+            ),
           ],
         ),
       ),
@@ -85,72 +131,30 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    // Gets stream from Firestore with the conference info
-    return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getConferences(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
-      },
+    return IndexedStack(
+      index: _currentTab,
+      children: [
+        ActiveConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab),
+        MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab),
+        MyCreatedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab)
+      ],
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<Widget> conferences =  snapshot.map((data) => _buildListItem(context, data)).toList();
-    return ListView.separated(
-      padding: EdgeInsets.zero,
-      itemCount: conferences.length,
-      separatorBuilder: (context, index) => Divider(height: 0, color: Colors.grey,),
-      itemBuilder: (context, index) => conferences[index],
+  Widget _AppTitle(BuildContext context) {
+    return IndexedStack(
+      index: _currentTab,
+      children: [
+        Text("Available Conferences"),
+        Text(context.watch<AuthController>().currentUser.displayName + "'s Joined Conferences"),
+        Text(context.watch<AuthController>().currentUser.displayName + "'s Created Conferences"),
+      ],
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final _conference = Conference.fromSnapshot(data);
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Displays conference icon, if null, displays initial
-            CustomAvatar(
-              imgURL: _conference.img,
-              source: widget._storage,
-              initials: _conference.name[0],
-            ),
-            SizedBox(width: 16.0,),
-            Text(_conference.name,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Expanded(child: SizedBox()),
-            Icon(Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget openConference(BuildContext context, Conference conference) {
-    return FutureBuilder(
-      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.size > 0) {
-            return ConferencePage(widget._firestore, widget._storage,  widget._functions, conference, hasProfile: true,);
-          } else {
-            return CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference);
-          }
-        } else if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
-        } else {
-          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
-        }
-      },
-    );
+  changeCurrentTab(int tab){
+    setState(() {
+      _currentTab = tab;
+    });
   }
 }

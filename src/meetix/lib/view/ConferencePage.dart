@@ -6,13 +6,18 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
+import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/MatchedProfilesPage.dart';
 import 'package:meetix/view/TopProfilesPage.dart';
 import 'package:meetix/view/EditConferencePage.dart';
 import 'package:meetix/view/LikedYouProfilesPage.dart';
 import 'package:provider/provider.dart';
 
-import 'ConferenceListPage.dart';
+import 'CreateConferencePage.dart';
+import 'CreateProfilePage.dart';
+import 'EditAccountPage.dart';
+import 'MyJoinedConferencesPage.dart';
+import 'MyWidgets.dart';
 import 'ViewProfileDetailsPage.dart';
 
 class ConferencePage extends StatefulWidget {
@@ -21,9 +26,9 @@ class ConferencePage extends StatefulWidget {
   final FunctionsController _functions;
   final Conference _conference;
   final bool hasProfile;
+  @required final Function(int) onChangeConfTab;
 
-  ConferencePage(this._firestore, this._storage, this._functions, this._conference,
-      {this.hasProfile = false});
+  ConferencePage(this._firestore, this._storage, this._functions, this._conference, {this.hasProfile = false, this.onChangeConfTab});
   @override
   _ConferencePageState createState() => _ConferencePageState();
 }
@@ -75,84 +80,211 @@ class _ConferencePageState extends State<ConferencePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(onPressed: _toConferenceListRefresh),
         title: Text(conference.name),
-        actions: <Widget> [
-          if (widget.hasProfile || isCreator)
-          _buildPopupMenu(context, conference)
-        ],
       ),
       body: _buildBody(context, conference),
-
+      drawer: _buildDrawer(context, conference),
       bottomNavigationBar: _buildNavigationBar(),
 
     );
   }
 
-  Widget _buildPopupMenu(BuildContext context, Conference conference){
-    return PopupMenuButton(
-        onSelected: (newValue){
-          if(newValue == 0){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ViewProfileDetailsPage(
-                      widget._conference,
-                      context.watch<AuthController>().currentUser.uid,
-                      widget._firestore,
-                      widget._storage,
-                      hasProfile: widget.hasProfile,
-                    )
-                )
-            ).then((value) => setState(() {}));
-          }
-          else if(newValue == 1){
-            confirmDeleteDialog(context, conference, "D_PROFILE");
-          }
-          else if(newValue == 2){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference)));
-          }
-          else if(newValue == 3){
-            confirmDeleteDialog(context, conference, "D_CONFERENCE");
-          }
-        },
-        itemBuilder: (context) {
-          var list = List<PopupMenuEntry<Object>>();
-          if (widget.hasProfile) {
-            list.add(
-              PopupMenuItem(
-                child: Text("View/Edit My Profile"),
-                value: 0,
-              )
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Leave Conference", style: TextStyle(color: Colors.red),),
-                value: 1,
+  Widget _buildDrawer(BuildContext context, Conference conference){
+    return Drawer(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 140,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
-            );
-          }
+              child: Row (
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:  <Widget>[
+                  CustomAvatar(
+                    imgURL: conference.img,
+                    source: widget._storage,
+                    initials: conference.name[0],
+                    radius: 24,
+                  ),
+                  Padding (
+                    padding: EdgeInsets.all(11.0),
+                    child: Text(conference.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ),
+          ),
 
-          if (isCreator) {
-            list.add(
-              PopupMenuDivider()
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Edit Conference"),
-                value: 2,
-              )
-            );
-            list.add(
-              PopupMenuItem(
-                child: Text("Delete Conference", style: TextStyle(color: Colors.red),),
-                value: 3,
-              )
-            );
-          }
+          Expanded(child:
+            ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                widget.hasProfile ? _ListProfileTile(context, conference) : _ListCreateProfileTile(context, conference),
+                if(isCreator) _ListStaffTile(context, conference),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+                  child: Text("Conferences", style: TextStyle(color: Colors.blue),),
+                ),
+                ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text("Create Conference"),
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                    widget.onChangeConfTab(2);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions)));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
+                  title: Text("Available Conferences"),
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(0);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
+                  title: Text("Joined Conferences"),
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(1);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
+                  title: Text("Created Conferences"),
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(2);
+                  },
+                ),
+                Divider(
+                  color: Colors.blue,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+                  child: Text("Settings", style: TextStyle(color: Colors.blue),),
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text("Account settings"),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions)));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text("Logout"),
+                  onTap: (){ Navigator.popUntil(context, ModalRoute.withName("/")); context.read<AuthController>().signOut(); },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-          return list;
-        },
+  Widget _ListProfileTile(BuildContext context, Conference conference) {
+      return Column (
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+            child: Text("This Conference", style: TextStyle(color: Colors.blue),),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text("My Profile"),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewProfileDetailsPage(
+                            widget._conference,
+                            context.watch<AuthController>().currentUser.uid,
+                            widget._firestore,
+                            widget._storage,
+                            hasProfile: widget.hasProfile,
+                          )
+                  )
+              ).then((value) => setState(() {}));
+            }
+          ),
+          ListTile(
+              leading: Icon(Icons.delete),
+              title: Text("Leave Conference"),
+              onTap: () {
+                confirmDeleteDialog(context, conference, "D_PROFILE");
+              }
+          ),
+          Divider(
+            color: Colors.blue,
+          ),
+        ],
+      );
+  }
+
+  Widget _ListCreateProfileTile(BuildContext context, Conference conference) {
+    return Column (
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        ListTile(
+            leading: Icon(Icons.add),
+            title: Text("Join Conference"),
+            onTap: () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference))).then((value) => setState(() {}));
+            }
+        ),
+        Divider(
+          color: Colors.blue,
+        ),
+      ],
+    );
+  }
+
+  Widget _ListStaffTile(BuildContext context, Conference conference) {
+    return Column (
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
+          child: Text("Staff", style: TextStyle(color: Colors.blue),),
+        ),
+        ListTile(
+            leading: Icon(Icons.person),
+            title: Text("Edit Conference"),
+            onTap: () {
+              Navigator.pop(context); /* Close drawer */
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EditConferencePage(widget._firestore, widget._storage, widget._functions, conference,))).then((value) => setState(() {}));
+            }
+        ),
+
+        ListTile(
+            leading: Icon(Icons.delete),
+            title: Text("Delete Conference"),
+            onTap: () {
+              confirmDeleteDialog(context, conference, "D_CONFERENCE");
+            }
+        ),
+        Divider(
+          color: Colors.blue,
+        ),
+      ],
     );
   }
 
@@ -215,8 +347,8 @@ class _ConferencePageState extends State<ConferencePage> {
       },
     );
     await widget._functions.deleteConference(widget._conference.reference.id);
-    Navigator.pop(context);
     Navigator.pop(context); // Close dialog
+    Navigator.pop(context); // Close drawer
     _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
   }
   
@@ -236,8 +368,8 @@ class _ConferencePageState extends State<ConferencePage> {
       },
     );
     await widget._functions.deleteProfile(widget._conference.reference.id, context.read<AuthController>().currentUser.uid);
-    Navigator.pop(context);
     Navigator.pop(context); // Close dialog
+    Navigator.pop(context); // Close drawer
     _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
   }
 
@@ -273,7 +405,7 @@ class _ConferencePageState extends State<ConferencePage> {
             content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Text("Are you sure you want to delete your profile?"),
+                    Text("Are you sure you want to delete your profile for this conference?"),
                   ],
                 )
             ),

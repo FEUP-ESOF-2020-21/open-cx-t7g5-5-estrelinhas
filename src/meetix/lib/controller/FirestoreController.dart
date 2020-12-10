@@ -9,8 +9,20 @@ class FirestoreController {
     return firestore.collection("conference").snapshots();
   }
 
+  Stream<QuerySnapshot> getActiveConferences() {
+    return firestore.collection("conference").where('end_date', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now())).snapshots();
+  }
+
+  Stream<QuerySnapshot> getCreatedConferences(String id) {
+    return firestore.collection("conference").where('uid', isEqualTo: id).snapshots();
+  }
+
   CollectionReference getConferenceCollection() {
     return firestore.collection("conference");
+  }
+
+  Stream<QuerySnapshot> getMyProfilesFromJoinedConferences(String profileID) {
+    return firestore.collectionGroup("profiles").where('uid', isEqualTo: profileID).snapshots();
   }
 
   Stream<QuerySnapshot> getConferenceProfiles(Conference conference) {

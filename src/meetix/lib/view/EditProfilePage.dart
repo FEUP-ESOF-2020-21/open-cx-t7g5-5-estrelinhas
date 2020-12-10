@@ -50,11 +50,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   submitForm() async{
     setState(() {
-      (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
-      (_occupationController.text.isEmpty || _occupationController.text.length >=3) ? _occValid = true : _occValid = false;
-      (_locationController.text.isEmpty || _locationController.text.length >= 3)? _locationValid = true : _locationValid = false;
-      (_emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = true : _emailValid = false;
-      (_phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = true : _phoneValid = false;
+      _nameController.text = _nameController.text.trim();
+      _occupationController.text = _occupationController.text.trim();
+      _locationController.text = _locationController.text.trim();
+      _emailController.text = _emailController.text.trim();
+      _phoneController.text = _phoneController.text.trim();
+
+      _nameValid = _nameController.text.isEmpty || _nameController.text.length >= 3;
+      _occValid = true;
+      _locationValid = true;
+      _emailValid = _emailController.text.isEmpty || RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+      _phoneValid = _phoneController.text.isEmpty || RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text);
     });
 
     if(_nameValid && _occValid && _locationValid && _emailValid && _phoneValid){
@@ -63,6 +69,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         await widget._storage.uploadFile(profileImgUrl, profileImg);
       }
 
+      if(profileImgUrl != widget._profile.img)
+        updates['img'] = profileImgUrl;
       if(_nameController.text.isNotEmpty && _nameController.text != widget._profile.name)
         updates['name'] = _nameController.text;
       if(_occupationController.text.isNotEmpty && _occupationController.text != widget._profile.occupation)

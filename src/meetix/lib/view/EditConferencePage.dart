@@ -62,16 +62,21 @@ class _EditConferencePageState extends State<EditConferencePage> {
 
   submitForm() {
     setState(() {
-      (_nameController.text.isEmpty || _nameController.text.length >= 3)? _nameValid = true : _nameValid = false;
+      _nameController.text = _nameController.text.trim();
+
+      _nameValid = _nameController.text.isEmpty || _nameController.text.length >= 3;
       _startDateValid = _startDate.isBefore(_endDate);
       _endDateValid = _endDate.isAfter(_startDate);
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
+      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
       if(profileImg != null){
         profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
       }
 
+      if(profileImgUrl != _conference.img)
+        updates['img'] = profileImgUrl;
       if(_nameController.text.isNotEmpty && _nameController.text != _conference.name)
         updates['name'] = _nameController.text;
       if(_startDateController.text.isNotEmpty && _startDateController.text.isNotEmpty)

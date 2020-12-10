@@ -16,8 +16,9 @@ class CreateProfilePage extends StatefulWidget {
   final StorageController _storage;
   final Conference _conference;
   final FunctionsController _functions;
+  @required final Function(int) onChangeConfTab;
 
-  CreateProfilePage(this._firestore, this._storage,  this._functions, this._conference);
+  CreateProfilePage(this._firestore, this._storage,  this._functions, this._conference, {this.onChangeConfTab});
 
   @override
   _CreateProfilePageState createState() => _CreateProfilePageState();
@@ -42,11 +43,17 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
   submitForm() async {
     setState(() {
-      (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
-      (_occupationController.text.isEmpty) ? _occValid = false : _occValid = true;
-      (_locationController.text.isEmpty)? _locationValid = false : _locationValid = true;
-      (_emailController.text.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = false : _emailValid = true;
-      (_phoneController.text.isEmpty || !RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = false : _phoneValid = true;
+      _nameController.text = _nameController.text.trim();
+      _occupationController.text = _occupationController.text.trim();
+      _locationController.text = _locationController.text.trim();
+      _emailController.text = _emailController.text.trim();
+      _phoneController.text = _phoneController.text.trim();
+
+      _nameValid = _nameController.text.isNotEmpty && _nameController.text.length >= 3;
+      _occValid = _occupationController.text.isNotEmpty;
+      _locationValid = _locationController.text.isNotEmpty;
+      _emailValid = _emailController.text.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+      _phoneValid = _phoneController.text.isNotEmpty && RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text);
     });
 
     if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {
@@ -65,7 +72,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
         'interests':_selectedInterests
       });
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true,)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, hasProfile: true, onChangeConfTab: widget.onChangeConfTab)));
     }
   }
 
@@ -82,7 +89,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
             children: [
               TextButton(
                 onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConferencePage(widget._firestore, widget._storage, widget._functions, widget._conference, onChangeConfTab: widget.onChangeConfTab)));
                 },
                 child: Text("Skip", style: TextStyle(color: Colors.grey),)
               ),
