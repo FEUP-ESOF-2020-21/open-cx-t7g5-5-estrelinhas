@@ -6,7 +6,7 @@ import '../test_driver/steps/test_steps.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [Glob(r"test_driver/features/Login.feature")]
     ..reporters = [ProgressReporter()]
     ..stepDefinitions = [CheckGivenWidgets(),ClickLoginButton()]
     ..restartAppBetweenScenarios = true
