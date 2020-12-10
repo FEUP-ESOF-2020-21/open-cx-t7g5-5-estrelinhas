@@ -149,6 +149,14 @@ class _ConferencePageState extends State<ConferencePage> {
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
+                  title: Text("Available Conferences"),
+                  onTap: (){
+                    Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
+                    widget.onChangeConfTab(0);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.list),
                   title: Text("Joined Conferences"),
                   onTap: (){
                     Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
@@ -157,10 +165,10 @@ class _ConferencePageState extends State<ConferencePage> {
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
-                  title: Text("Available Conferences"),
+                  title: Text("Created Conferences"),
                   onTap: (){
                     Navigator.popUntil(context, ModalRoute.withName("/")); /* Go to main page */
-                    widget.onChangeConfTab(0);
+                    widget.onChangeConfTab(2);
                   },
                 ),
                 Divider(

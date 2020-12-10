@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
+import 'MyCreatedConferencesPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -82,6 +83,14 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ),
             ListTile(
               leading: Icon(Icons.list),
+              title: Text("Available Conferences"),
+              onTap: (){
+                Navigator.pop(context); /* Close drawer */
+                changeCurrentTab(0);
+              }
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
               title: Text("Joined Conferences"),
               onTap: (){
                 Navigator.pop(context); /* Close drawer */
@@ -90,11 +99,11 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ),
             ListTile(
               leading: Icon(Icons.list),
-              title: Text("Available Conferences"),
+              title: Text("Created Conferences"),
               onTap: (){
                 Navigator.pop(context); /* Close drawer */
-                changeCurrentTab(0);
-              }
+                changeCurrentTab(2);
+              },
             ),
             Divider(
               color: Colors.blue,
@@ -124,7 +133,8 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       index: _currentTab,
       children: [
         ActiveConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab),
-        MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab)
+        MyJoinedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab),
+        MyCreatedConferencesPage(widget._firestore, widget._storage, widget._functions, onChangeConfTab: changeCurrentTab)
       ],
     );
   }
@@ -134,7 +144,8 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       index: _currentTab,
       children: [
         Text("Available Conferences"),
-        Text(context.watch<AuthController>().currentUser.displayName + "'s joined Conferences"),
+        Text(context.watch<AuthController>().currentUser.displayName + "'s Joined Conferences"),
+        Text(context.watch<AuthController>().currentUser.displayName + "'s Created Conferences"),
       ],
     );
   }
