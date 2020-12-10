@@ -49,6 +49,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
+      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
       DocumentReference docRef = await widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
         'name':_nameController.text,
         'img': profileImgUrl,
