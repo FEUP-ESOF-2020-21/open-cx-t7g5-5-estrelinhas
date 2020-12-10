@@ -32,6 +32,7 @@ class _SignInPageState extends State<SignInPage> {
       child: Column(
         children: [
           TextField(
+            key: Key("emailField"),
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -39,6 +40,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
           TextField(
+            key: Key("passwordField"),
             controller: _passwordController,
             keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(
@@ -72,6 +74,7 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
+      key: Key("signInButton"),
       onPressed: (){
         context.read<AuthController>().signIn(
             email: email.text.trim(),

@@ -20,7 +20,7 @@ class ConferenceListPage extends StatefulWidget {
   final StorageController _storage;
   final FunctionsController _functions;
 
-  ConferenceListPage(this._firestore, this._storage, this._functions);
+  ConferenceListPage(this._firestore, this._storage, this._functions): super(key: Key("HomePage"));
 
   @override
   _ConferenceListPageState createState() {
