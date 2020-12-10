@@ -870,9 +870,51 @@ _Acceptance Tests_
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
 When I click on "Account settings" button of the drawer menu
-Then the app shows me my account
-When I change my email or password with valid information and I click on "Save" button
+Then the app shows me my account editable
+When I change my email, password or username with valid information and the current password is correct and I click on "Save changes" button
 Then the app updates my account
+```
+```gherkin
+Scenario: Edit account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account editable
+When I change my email, password or username with invalid information and the current password is correct and I click on "Save changes" button
+Then the app does not allow me to update my account and shows me an error telling me what's wrong
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account editable
+When I leave some fields blank and I click on "Save changes" button
+Then these fields will not be updated
+```
+```gherkin
+Scenario: Edit account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account editable
+When I edit some fields to the same values they were before and I click on "Save changes" button
+Then these fields will not be updated
+```
+```gherkin
+Scenario: Edit account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account editable
+When I edit the email and this new email is already being used by another user and I click on "Save changes" button
+Then the app will not allow me to change my email and shows me an error telling me why
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account editable
+When I edit the password and it's a weak password and I click on "Save changes" button
+Then the app will not allow me to change my password and shows me an error telling me why
 ```
 
 _Value/Effort_
@@ -1082,9 +1124,20 @@ Given I’m logged-in and I'm in the conferences list page
 When I click on "Account settings" button of the drawer menu
 Then the app shows me my account
 When I click on "Delete Account" button
-Then the app shows me an alert dialog that asks for my confirmation
+Then the app shows me an alert dialog that asks for my confirmation and password
 When I press the "Delete" button
-Then the app deletes my account and all my information
+Then the app deletes my account and all my information (photos, likes, etc.)
+```
+
+```gherkin
+Scenario: Deleting account
+Given I’m logged-in and I'm in the conferences list page
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account
+When I click on "Delete Account" button
+Then the app shows me an alert dialog that asks for my confirmation and password
+When I press the "Delete" button and the password is not correct or empty
+Then the app does not allow me to delete my account and shows me an error telling me why
 ```
 
 ```gherkin
@@ -1094,8 +1147,19 @@ When I click on "Account settings" button of the drawer menu
 Then the app shows me my account
 When I click on "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation
-When I press the "Delete" button
+When I press the "Cancel" button
 Then I expect the system to remain the same
+```
+
+```gherkin
+Scenario: Deleting account
+Given I’m logged-in and I'm in the conferences list page and I'm staff in some conferences
+When I click on "Account settings" button of the drawer menu
+Then the app shows me my account
+When I click on "Delete Account" button
+Then the app shows me an alert dialog that asks for my confirmation and password
+When I press the "Delete" button
+Then the app deletes my account and all my information (photos, likes, etc.) and also all the conferences I've created and all the information corresponding to these conferences
 ```
 
 _Value/Effort_
@@ -1160,8 +1224,28 @@ For the prototype the main story was #4 which states that 'As a conference atten
 
 # Implementation
 
+// TODO
 # Test
+
+In order to test the activities and assure quality, we decided to run some automated tests using gherkin. 
+
+// TODO 
+
+In this section it is only expected to include the following:
+
+test plan describing the list of features to be tested and the testing methods and tools;
+test case specifications to verify the functionalities, using unit tests and acceptance tests.
 
 # Configuration and change management
 
+To control and maintain the integrity of out project's components(code, models, documents), configuration and change management are key activities.
+
+To manage feature requests, bux fixes, and improvements, we used GitHub issues, following the GitHub flow.
+
+
+
 # Project management
+
+The planning and management of our project were made using the Github Projects tool: https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/projects/1.
+
+Here we registered our tasks, assigned them to the team members, added estimations to tasks, and monitored their progress. This tool showed itself to be suitable for keeping track of our project.
