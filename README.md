@@ -360,7 +360,7 @@ Effort: L
 
 ### **Story 3: View profile details**
 
-As an user, I want to be able to open a person’s profile to see its information, so that I can decide if I'm interested in this profile.
+As an user, I want to be able to open a person’s profile to see its information, so that I can see my conference profile or another person's profile and decide if I'm interested or not.
 
 _User interface mockups_
 
@@ -370,9 +370,16 @@ _User interface mockups_
 _Acceptance Tests_
 
 ```gherkin
+Scenario: Visualize my conference profile
+Given I’m logged-in, I have clicked on a conference and I’m on a screen that lists conference profiles
+When I open the app drawer and click the "My Profile" button
+Then the app opens my profile for that conference
+```
+
+```gherkin
 Scenario: Visualize a person’s profile 
 Given I’m logged-in, I have clicked on a conference and I’m on a screen that lists conference profiles
-When I click someone's profile
+When I click on someone's profile
 Then the app opens the person's profile and shows me their information
 ```
 
@@ -512,15 +519,15 @@ _Acceptance Tests_
 ```gherkin
 Scenario: View all conferences
 Given I’m logged-in
-When I click the button to search for active conferences
+When I open the app drawer and I click the "Available conferences" button
 Then the app shows me a list of conferences available
 ```
 
 ```gherkin
 Scenario: View all conferences having no conferences happening
 Given I’m logged-in and no conferences are happening
-When I click the button to search for active conferences
-Then I expect to see no conferences available
+When I open the app drawer and I click the "Available conferences" button
+Then I expect to see a message telling me that there are no active conferences
 ```
 
 _Value/Effort_
@@ -545,7 +552,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Creating a conference
 Given I’m logged-in
-When I click the ‘Create conference’ button on the app drawer
+When I open the app drawer and I click the "Create conference" button
 Then the app takes me to a form where I enter the conference details
 When I finish inputting data
 Then the app saves the conference and shows me the conference list page
@@ -630,7 +637,7 @@ Scenario: Editing my profile’s information
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I fill the form with all valid information that I want to change and I click the 'Save changes' button
+When I fill the form with all valid information that I want to change and I click the "Save changes" button
 Then I expect the system to save my new information
 ```
 
@@ -639,7 +646,7 @@ Scenario: Editing my profile’s information and leaving some fields blank
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I fill the form and leave some fields blank and I click the 'Save changes' button
+When I fill the form and leave some fields blank and I click the "Save changes" button
 Then I expect to see those fields remained the same
 ```
 
@@ -648,7 +655,7 @@ Scenario: Editing my profile’s information
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I click the 'Cancel' button
+When I click the "Cancel" button
 Then I expect the system to not save any new information
 ```
 
@@ -673,27 +680,27 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Edit conference
 Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I fill the form with all valid information that I want to change and I click the 'Save changes' button
+When I fill the form with all valid information that I want to change and I click the "Save changes" button
 Then the app saves the changes
 ```
 
 ```gherkin
 Scenario: Edit conference and leaving some fields blank
 Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I fill the form and leave some fields blank and I click the 'Save changes' button
+When I fill the form and leave some fields blank and I click the "Save changes" button
 Then I expect to see those fields remained the same
 ```
 
 ```gherkin
 Scenario: Edit conference
 Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I click the 'Cancel' button
+When I click the "Cancel" button
 Then I expect the system to not save any new information
 ```
 
@@ -718,7 +725,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Leaving a conference
 Given I’m logged-in and I've opened a conference that I've joined
-When I press the "Leave conference" button of the top pop-up menu
+When I open the app drawer and I press the "Leave conference" button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Leave" button
 Then the app deletes my registration and profile for this conference and takes me to the conferences list page
@@ -727,7 +734,7 @@ Then the app deletes my registration and profile for this conference and takes m
 ```gherkin
 Scenario: Leaving a conference
 Given I’m logged-in and I've opened a conference that I've joined
-When I press the "Leave conference" button of the top pop-up menu
+When I open the app drawer and I press the "Leave conference" button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Cancel" button
 Then I expect the system to remain the same
@@ -754,7 +761,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Deleting a conference
 Given I’m logged-in and I've opened a conference that I've created
-When I press the "Delete conference” button of the top pop-up menu
+When I open the app drawer and I press the "Delete conference” button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Delete" button
 Then the app deletes this conference and takes me to the conferences list page
@@ -763,7 +770,7 @@ Then the app deletes this conference and takes me to the conferences list page
 ```gherkin
 Scenario: Deleting a conference
 Given I’m logged-in and I've opened a conference that I've created
-When I press the "Delete conference” button of the top pop-up menu
+When I open the app drawer and I press the "Delete conference” button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Cancel" button
 Then I expect the system to remain the same
@@ -790,7 +797,7 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
+When I click on the "Sign up" button of the init menu
 Given my email is valid and has no account associated with yet
 When I enter a password and press the button register
 Then I expect my account to be created
@@ -798,7 +805,7 @@ Then I expect my account to be created
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
+When I click on the "Sign up" button of the init menu
 Given my email is already associated with an account
 When I try to press the button register
 Then I expect to not be able to create the account with a message warning me why
@@ -806,7 +813,7 @@ Then I expect to not be able to create the account with a message warning me why
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
+When I click on the "Sign up" button of the init menu
 Given my email is not valid
 When I try to press the button register
 Then I expect to not be able to create the account with a message warning me why
@@ -833,17 +840,17 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Login
-When I click on the "Login" button of the init menu
+When I click on the "Sign in" button of the init menu
 Given a correct email and password combination
-When I press the "Login" button
+When I press the "Sign in" button
 Then I expect to be able to login the account
 ```
 
 ```gherkin
 Scenario: Login
-When I click on the "Login" button of the init menu
+When I click on the "Sign in" button of the init menu
 Given either one of my email or password isn’t valid
-When I press the "Login" button
+When I press the "Sign in" button
 Then I expect to not be able to login the account, with a message warning me why
 ```
 
@@ -869,7 +876,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I change my email, password or username with valid information and the current password is correct and I click on "Save changes" button
 Then the app updates my account
@@ -877,7 +884,7 @@ Then the app updates my account
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I change my email, password or username with invalid information and the current password is correct and I click on "Save changes" button
 Then the app does not allow me to update my account and shows me an error telling me what's wrong
@@ -886,7 +893,7 @@ Then the app does not allow me to update my account and shows me an error tellin
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I leave some fields blank and I click on "Save changes" button
 Then these fields will not be updated
@@ -894,7 +901,7 @@ Then these fields will not be updated
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I edit some fields to the same values they were before and I click on "Save changes" button
 Then these fields will not be updated
@@ -902,7 +909,7 @@ Then these fields will not be updated
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I edit the email and this new email is already being used by another user and I click on "Save changes" button
 Then the app will not allow me to change my email and shows me an error telling me why
@@ -911,7 +918,7 @@ Then the app will not allow me to change my email and shows me an error telling 
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account editable
 When I edit the password and it's a weak password and I click on "Save changes" button
 Then the app will not allow me to change my password and shows me an error telling me why
@@ -991,9 +998,9 @@ Effort: S
 
 ---
 
-### **Story 19: See joined conferences**
+### **Story 19: See joined/created conferences**
 
-As a conference attendee, I want to be able to see the conferences I have joined and switch between them, so that I can network in multiple conferences.
+As a conference user, I want to be able to see the conferences I have joined/created and switch between them, so that I can network in multiple conferences.
 
 _User interface mockups_
 
@@ -1003,22 +1010,34 @@ _User interface mockups_
 _Acceptance Tests_
 
 ```gherkin
-Scenario: Seeing and switching between conferences
-Given I’m logged-in and I have a joined a conference
-When I open the sidebar and I click on the "active conferences" button
-Then the app shows me the conferences that I've joined and are currently happening
-When I click on the "joined conferences" button
-Then the app shows me the conferences that I've joined but have not yet started
-When I click on the "past conferences" button
-Then the app shows me the conferences that I've joined and already ended
-When I choose a conference in any of those parts
-Then the apps switches me to this conference’s profile workspace
+Scenario: See joined conferences
+Given I’m logged-in
+When I open the app drawer and I click on the "Joined conferences" button
+Then the app shows me all the conferences that I've joined
+When I click on the conference event
+Then the apps switches me to this conference’s workspace
 ```
 
 ```gherkin
 Scenario: See joined conferences
-Given I’m logged-in and I have clicked a conference without creating a profile,
-When I open the side bar menu
+Given I’m logged-in and I have joined conferences without creating a profile,
+When I open the app drawer and I click on the "Joined conferences" button
+Then the app shows me a message that I have not joined any conferences
+```
+
+```gherkin
+Scenario: See created conferences
+Given I’m logged-in
+When I open the app drawer and I click on the "Created conferences" button
+Then the app shows me all the conferences that I've created
+When I click on the conference event
+Then the apps switches me to this conference’s workspace
+```
+
+```gherkin
+Scenario: See created conferences
+Given I’m logged-in and I have not created any conferences,
+When I open the app drawer and I click on the "Created conferences" button
 Then the app shows me a message that I have not joined any conferences
 ```
 
@@ -1121,7 +1140,7 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Deleting account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account
 When I click on "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation and password
@@ -1132,7 +1151,7 @@ Then the app deletes my account and all my information (photos, likes, etc.)
 ```gherkin
 Scenario: Deleting account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account
 When I click on "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation and password
@@ -1143,7 +1162,7 @@ Then the app does not allow me to delete my account and shows me an error tellin
 ```gherkin
 Scenario: Deleting account
 Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account
 When I click on "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation
@@ -1154,7 +1173,7 @@ Then I expect the system to remain the same
 ```gherkin
 Scenario: Deleting account
 Given I’m logged-in and I'm in the conferences list page and I'm staff in some conferences
-When I click on "Account settings" button of the drawer menu
+When I open the app drawer and I click on "Account settings" button
 Then the app shows me my account
 When I click on "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation and password
