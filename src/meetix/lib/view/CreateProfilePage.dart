@@ -42,11 +42,17 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
 
   submitForm() async {
     setState(() {
-      (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
-      (_occupationController.text.isEmpty) ? _occValid = false : _occValid = true;
-      (_locationController.text.isEmpty)? _locationValid = false : _locationValid = true;
-      (_emailController.text.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text)) ? _emailValid = false : _emailValid = true;
-      (_phoneController.text.isEmpty || !RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text)) ? _phoneValid = false : _phoneValid = true;
+      _nameController.text = _nameController.text.trim();
+      _occupationController.text = _occupationController.text.trim();
+      _locationController.text = _locationController.text.trim();
+      _emailController.text = _emailController.text.trim();
+      _phoneController.text = _phoneController.text.trim();
+
+      _nameValid = _nameController.text.isNotEmpty && _nameController.text.length >= 3;
+      _occValid = _occupationController.text.isNotEmpty;
+      _locationValid = _locationController.text.isNotEmpty;
+      _emailValid = _emailController.text.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+      _phoneValid = _phoneController.text.isNotEmpty && RegExp(r"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$").hasMatch(_phoneController.text);
     });
 
     if (_nameValid && _occValid && _locationValid && _emailValid && _phoneValid) {

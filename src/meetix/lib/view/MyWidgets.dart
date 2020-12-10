@@ -233,12 +233,13 @@ class TextFieldWidget extends StatefulWidget{
   @required final String hintText;
   @required final TextEditingController controller;
   final bool isValid;
+  final bool obscure;
   final FontWeight hintWeight;
   final TextInputType textInputType;
   final String defaultValue;
   final String errorText;
 
-  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information"});
+  TextFieldWidget({this.labelText, this.hintText, this.hintWeight=FontWeight.w100, this.controller, this.isValid=true, this.textInputType=TextInputType.text, this.defaultValue="", this.errorText="Invalid information", this.obscure=false});
 
   @override
   _TextFieldState createState() => _TextFieldState();
@@ -283,6 +284,7 @@ class _TextFieldState extends State<TextFieldWidget>{
           ),
           errorText: widget.isValid ? null : widget.errorText,
         ),
+        obscureText: widget.obscure,
       ),
     );
   }
@@ -311,7 +313,7 @@ class _SelectInterestsState extends State<SelectInterests> {
           if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests),
           RaisedButton(
             child: Text("Select Interests"),
-            onPressed: () => _showInterestsDialog(widget.conference.interests),
+            onPressed: () {FocusScope.of(context).unfocus(); _showInterestsDialog(widget.conference.interests);},
           ),
         ],
       ),
@@ -542,3 +544,74 @@ class ProfileListView extends StatelessWidget {
     );
   }
 }
+
+class DeleteAccountDialog extends StatefulWidget {
+  @override
+  _DeleteAccountDialogState createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
+  final TextEditingController _passwordController = new TextEditingController();
+  bool _passwordValid = true;
+
+  updateValid(cond) {
+    setState(() {
+      _passwordValid = cond;
+    });
+  }
+
+  deleteAccount() async {
+    updateValid(_passwordController.text.isNotEmpty);
+    if (_passwordValid) {
+      String code = await context.read<AuthController>().deleteAccount(
+          password: _passwordController.text);
+      if (code == 'wrong-password')
+        updateValid(false);
+      if (code == 'success')
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Delete account"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Are you sure you want to delete your account?'),
+          SizedBox(height: 20,),
+          Text('This will also delete all profiles and conferences that you have created.', style: TextStyle(fontWeight: FontWeight.bold),),
+          SizedBox(height: 20,),
+          Text('This action cannot be undone!', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
+          TextField(
+            controller: _passwordController,
+            keyboardType: TextInputType.visiblePassword,
+            decoration: InputDecoration(
+              labelText: "Insert your password",
+              errorText: (_passwordValid)? null : "Wrong password!",
+            ),
+            obscureText: true,
+          ),
+        ],
+      ),
+      actions: [
+        FlatButton(
+          textColor: Colors.grey,
+          onPressed: () => Navigator.pop(context),
+          child: Text('Cancel'),
+        ),
+        FlatButton(
+          onPressed: deleteAccount,
+          child: Text('Delete'),
+        )
+      ],
+    );
+  }
+}
+
+
+
+
+

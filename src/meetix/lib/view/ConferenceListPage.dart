@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -9,7 +8,7 @@ import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
-
+import 'package:meetix/view/EditAccountPage.dart';
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 
@@ -55,7 +54,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
                     ),
                     Expanded(child: SizedBox()),
                     Text(
-                      "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
+                      (context.watch<AuthController>().currentUser.displayName == null)? "Welcome!" : "Welcome " + context.watch<AuthController>().currentUser.displayName + "!",
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: TextStyle(
@@ -74,10 +73,17 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => CreateConferencePage(widget._firestore, widget._storage, widget._functions))); },
             ),
             ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Account settings"),
+              onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => EditAccountPage(widget._firestore, widget._storage, widget._functions))).then((value) => setState((){}));},
+            
+            ),
+            ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: (){ context.read<AuthController>().signOut(); },
-            )
+            ),
+
           ],
         ),
       ),
