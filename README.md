@@ -38,10 +38,7 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Meetix is an app for easy online conference networking. Conferences sign up and add a list of topics related to the event. Attendees then create a profile, adding contact information and topics they are interested in. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections. 
-
-Meetix is an app for easy online conference 
-networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
+Meetix is an app for easy online conference networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
 
 ---
 
@@ -1091,7 +1088,7 @@ Effort: L/XL
 
 ### **Story 21: Search for active conferences**
 
-As a conference attendee, I want to be able to search for a specific conference by name, so that I can easily find what I'm looking for.
+As a conference attendee, I want to be able to search for a specific conference by name or interests, so that I can easily find what I'm looking for.
 
 _User interface mockups_
 
@@ -1103,20 +1100,12 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Searching for conferences
 Given I’m logged-in
-When I click the button to search for conferences to join
+When I click the button to search for active conferences to join
 Then the app shows me a page with a search bar
-When I click on the "Search bar" and insert a string,
-Then the app shows me all conferences matching the string
+When I click on the "Search bar" and insert a string to search for either the conference name or interests,
+Then the app shows me all active conferences matching the string, if any
 ```
 
-```gherkin
-Scenario: Searching for conferences
-Given I’m logged-in
-When I click the button to search for conferences to join
-Then the app shows me a page with a search bar
-When I input the name of a conference that does not exist
-Then I expect to see no results
-```
 
 _Value/Effort_
 
@@ -1221,15 +1210,26 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 
 TO DO : adicionar textinho
 
+
+
+
 ---
 
 ## Physical architecture
 
 ![Physical architecture](./img/physical_architecture.png)
 
+In this subsection it is documented the high-level physical structure decisions made in our software system (machines, connections, software components installed, and their dependencies).
+
 Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice, since it was recommended by the professors and is one of the most prominent mobile development frameworks.
 
 For the database server we chose Firebase as it is simple to setup and easy to integrate with Flutter.
+
+The user installs the Meetix app on his smartphone, serving as client and the app comunicates,through HTTPS requests, with the firebase server , where the database is stored, handling the comunication of the API with it, accesssing and adding all the information needed for the app's flow. 
+
+To allow the user to search through the database information, we connected to Algolia server, a full text search provider.
+
+
 
 ---
 
@@ -1243,7 +1243,7 @@ For the prototype the main story was #4 which states that 'As a conference atten
 
 # Implementation
 
-// TODO
+Changelogs for the 4 different product increments can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/releases)
 # Test
 
 In order to test the activities and assure quality, we decided to run some automated tests using gherkin. 
