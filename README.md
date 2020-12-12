@@ -1208,7 +1208,9 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 
 ![Package diagram](./img/package-diagram.png)
 
-TO DO : adicionar textinho
+In this diagram it shows that we organized our applications into three big packages, corresponding to the MVC architecture parts. Besides that, since the view part is the biggest in our application we decided to also divide it into packages.
+
+The first, meetix-widgets, is where we have the code for all the personalized widgets we've created. Then the login package has the pages that correspond to the account. There is, then, a conference package where all conference-related pages are kept. For last, the profiles package contains the pages that correspond to everything that concerns the profiles.
 
 
 
