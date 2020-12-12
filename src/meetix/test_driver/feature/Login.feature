@@ -1,6 +1,14 @@
 Feature: Login
-    User should be able to login if both the email and password are correct
-    Scenario: when email and password are in the specified format and login is clicked
+    As an user, I want to be able to login to the app, so that I can use all the available features.
+
+    Scenario: When email or password are incorrect and SignIn is clicked
+            Given I have "emailField" and "passwordField" and "signInButton"
+            When I fill "emailField" field with "teste@gmail.com"
+            And I fill "passwordField" field with "notapassword"
+            Then I tap the "signInButton" button
+            Then I expect to be in "SignInPage"
+
+    Scenario: When both email and password are correct and SignIn is clicked
         Given I have "emailField" and "passwordField" and "signInButton"
         When I fill "emailField" field with "teste@gmail.com"
         And I fill "passwordField" field with "password"
