@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class SignInPage extends StatefulWidget {
   final VoidCallback onSwitch;
 
-  SignInPage({@required this.onSwitch});
+  SignInPage({@required this.onSwitch}): super(key: Key("SignInPage"));
 
   @override
   State<StatefulWidget> createState() {

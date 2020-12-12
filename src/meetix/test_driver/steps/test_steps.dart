@@ -18,6 +18,17 @@ class CheckGivenWidgets
   RegExp get pattern => RegExp(r"I have {string} and {string} and {string}");
 }
 
+class CheckFieldWidget extends Then2WithWorld<String, String, FlutterWorld> {
+@override
+Future<void> executeStep(String field, String input) async {
+  final finder = find.byValueKey(field);
+  await FlutterDriverUtils.enterText(world.driver, finder, input);
+}
+
+@override
+RegExp get pattern => RegExp(r"I fill {string} field with {string}");
+}
+
 class ClickLoginButton extends Then1WithWorld<String, FlutterWorld> {
   @override
   Future<void> executeStep(String loginbtn) async {
@@ -27,4 +38,18 @@ class ClickLoginButton extends Then1WithWorld<String, FlutterWorld> {
 
   @override
   RegExp get pattern => RegExp(r"I tap the {string} button");
+}
+
+class ExpectToBeInPage extends Given1WithWorld<String, FlutterWorld> {
+  ExpectToBeInPage() : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
+
+  @override
+  RegExp get pattern => RegExp(r"I expect to be in {string}");
+
+  @override
+  Future<void> executeStep(String name) async {
+    //await FlutterDriverUtils.waitForFlutter(world.driver);
+    bool isInPage = await FlutterDriverUtils.isPresent(world.driver, find.byValueKey(name));
+    expectMatch(isInPage, true);
+  }
 }

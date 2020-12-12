@@ -9,7 +9,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  bool _signUp = true;
+  bool _signUp = false;
 
   void switchPage() {
     setState(() {

@@ -1,18 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ActiveConferencesPage.dart';
-import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
-import 'package:meetix/view/CreateProfilePage.dart';
-import 'package:meetix/view/MyWidgets.dart';
 import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
 import 'package:meetix/view/EditAccountPage.dart';
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
+
 import 'MyCreatedConferencesPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
@@ -20,7 +16,7 @@ class ConferenceListPage extends StatefulWidget {
   final StorageController _storage;
   final FunctionsController _functions;
 
-  ConferenceListPage(this._firestore, this._storage, this._functions): super(key: Key("HomePage"));
+  ConferenceListPage(this._firestore, this._storage, this._functions): super(key: Key("ConferenceListPage"));
 
   @override
   _ConferenceListPageState createState() {
