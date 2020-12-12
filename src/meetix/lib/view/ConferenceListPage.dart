@@ -118,6 +118,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
+              key: Key("logoutButton"),
               onTap: (){ context.read<AuthController>().signOut(); },
             ),
           ],
