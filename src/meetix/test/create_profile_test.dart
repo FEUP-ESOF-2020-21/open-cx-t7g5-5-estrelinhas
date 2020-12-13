@@ -9,6 +9,7 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
+import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 import 'package:mockito/mockito.dart';
@@ -40,6 +41,7 @@ class PageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     when(auth.currentUser).thenReturn(user);
     when(user.uid).thenReturn("user");
+    when(user.displayName).thenReturn("User");
 
     return MultiProvider(
       providers: [
@@ -65,6 +67,7 @@ void main() {
     var functions = MockFunctions();
 
     // Mocks for conference data
+    var conferencesQsnap = MockQSnapshot();
     var conference1 = MockConference();
     var conference1Qsnap = MockQSnapshot();
     var conference1Dref = MockDRef();
@@ -79,7 +82,7 @@ void main() {
     var conference3QDsnap = MockQDSnapshot();
 
     // Mocks for profile data
-    var profilesQsnap = MockQSnapshot();
+    var profilesQsnap1 = MockQSnapshot();
     var profilesQsnap2 = MockQSnapshot();
     var profile1QDsnap = MockQDSnapshot();
     var profile1Qsnap = MockQSnapshot();
@@ -114,15 +117,22 @@ void main() {
     when(conference3QDsnap.data()).thenReturn({'name':"MIEICference", 'start_date':Timestamp(1607578030, 0), 'end_date':Timestamp(1607888030, 0)});
     when(conference3QDsnap.reference).thenReturn(conference3Dref);
 
+    when(conferencesQsnap.size).thenReturn(3);
+    when(conferencesQsnap.docs).thenReturn([conference1QDsnap, conference2QDsnap, conference3QDsnap]);
+
     // Stream for getting conference info
     when(firestore.getConferenceById("1")).thenAnswer((_) {
       return Stream<MockQSnapshot>.value(conference1Qsnap);
     });
     when(firestore.getConferenceById("2")).thenAnswer((_) {
-      return Stream<MockQSnapshot>.value(conference1Qsnap);
+      return Stream<MockQSnapshot>.value(conference2Qsnap);
     });
     when(firestore.getConferenceById("3")).thenAnswer((_) {
-      return Stream<MockQSnapshot>.value(conference1Qsnap);
+      return Stream<MockQSnapshot>.value(conference3Qsnap);
+    });
+
+    when(firestore.getActiveConferences()).thenAnswer((_) {
+      return Stream<MockQSnapshot>.value(conferencesQsnap);
     });
 
     // PROFILES
@@ -149,10 +159,10 @@ void main() {
 
     // Stream and results for listing profiles
     when(firestore.getConferenceProfiles(any)).thenAnswer((_) {
-      return Stream<MockQSnapshot>.fromIterable([profilesQsnap, profilesQsnap2]);
+      return Stream<MockQSnapshot>.fromIterable([profilesQsnap1, profilesQsnap2]);
     });
-    when(profilesQsnap.size).thenReturn(3);
-    when(profilesQsnap.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap]);
+    when(profilesQsnap1.size).thenReturn(3);
+    when(profilesQsnap1.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap]);
     when(profilesQsnap2.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap, profile4QDsnap]);
 
     when(firestore.getProfileById(any, "1")).thenAnswer((_) {
@@ -183,10 +193,10 @@ void main() {
       await tester.pump(Duration.zero);
       verify(firestore.getConferenceProfiles(any)).called(1);
       expect(find.text("Adam"), findsOneWidget);
-      expect(find.text("Eve"), findsOneWidget);
-      expect(find.text("Steve"), findsOneWidget);
       expect(find.text("Software Developer"), findsOneWidget);
+      expect(find.text("Eve"), findsOneWidget);
       expect(find.text("Project Manager"), findsOneWidget);
+      expect(find.text("Steve"), findsOneWidget);
 
       await tester.pump(Duration.zero);
       expect(find.text("Carol"), findsOneWidget);
@@ -238,6 +248,17 @@ void main() {
     });
 
     testWidgets('View List of Conferences', (WidgetTester tester) async {
+      await tester.pumpWidget(PageWrapper(ConferenceListPage(firestore, storage, functions)));
+
+      await tester.pump(Duration.zero);
+      
+      expect(find.text("Available Conferences"), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward_ios_rounded), findsNWidgets(3));
+
+      verify(firestore.getActiveConferences()).called(1);
+      expect(find.text('Mockference'), findsOneWidget);
+      expect(find.text('ESOFerence'), findsOneWidget);
+      expect(find.text('MIEICference'), findsOneWidget);
 
     });
   });
