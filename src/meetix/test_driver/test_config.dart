@@ -7,7 +7,7 @@ import '../test_driver/steps/test_steps.dart';
 
 Future<void> main() {
   final steps = [
-    CheckGivenWidgets(), CheckFieldWidget(), ClickAButton(), ExpectToBeInPage(), CheckLoggedInAPage()
+    CheckGivenWidgets(), GivenInPage(), ExpectToBeInPage(), CheckLoggedInAPage()
   ];
 
   final config = FlutterTestConfiguration.DEFAULT(

@@ -29,38 +29,28 @@ class CheckLoggedInAPage extends Given1WithWorld<String, FlutterWorld> {
   RegExp get pattern => RegExp(r"I'm logged in and in {string}");
 }
 
-class CheckFieldWidget extends Then2WithWorld<String, String, FlutterWorld> {
-  @override
-  Future<void> executeStep(String field, String input) async {
-    final finder = find.byValueKey(field);
-    await FlutterDriverUtils.enterText(world.driver, finder, input);
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I fill {string} field with {string}");
-}
-
-class ClickAButton extends Then1WithWorld<String, FlutterWorld> {
-  @override
-  Future<void> executeStep(String loginbtn) async {
-    final loginfinder = find.byValueKey(loginbtn);
-    await FlutterDriverUtils.tap(world.driver, loginfinder);
-  }
-
-  @override
-  RegExp get pattern => RegExp(r"I tap the {string} button");
-}
-
-class ExpectToBeInPage extends Given1WithWorld<String, FlutterWorld> {
-  ExpectToBeInPage() : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
+class GivenInPage extends Given1WithWorld<String, FlutterWorld> {
+  GivenInPage() : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
 
   @override
   Future<void> executeStep(String name) async {
-    //await FlutterDriverUtils.waitForFlutter(world.driver);
     bool isInPage = await FlutterDriverUtils.isPresent(world.driver, find.byValueKey(name));
     expectMatch(isInPage, true);
   }
 
   @override
-  RegExp get pattern => RegExp(r"I expect to be in {string}");
+  RegExp get pattern => RegExp(r"I'm in {string} page");
+}
+
+class ExpectToBeInPage extends Then1WithWorld<String, FlutterWorld> {
+  ExpectToBeInPage() : super(StepDefinitionConfiguration()..timeout = Duration(seconds: 10));
+
+  @override
+  Future<void> executeStep(String name) async {
+    bool isInPage = await FlutterDriverUtils.isPresent(world.driver, find.byValueKey(name));
+    expectMatch(isInPage, true);
+  }
+
+  @override
+  RegExp get pattern => RegExp(r"I expect to be in {string} page");
 }
