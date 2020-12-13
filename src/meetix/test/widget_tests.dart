@@ -60,14 +60,15 @@ class PageWrapper extends StatelessWidget {
 
 
 void main() {
-  group('Profile List and Displaying Tests', () {
+  group('Profile and Conference List View', () {
     // Mocks for controllers
     var firestore = MockFirestore();
     var storage = MockStorage();
     var functions = MockFunctions();
 
     // Mocks for conference data
-    var conferencesQsnap = MockQSnapshot();
+    var conferencesQsnap1 = MockQSnapshot();
+    var conferencesQsnap2 = MockQSnapshot();
     var conference1 = MockConference();
     var conference1Qsnap = MockQSnapshot();
     var conference1Dref = MockDRef();
@@ -117,8 +118,10 @@ void main() {
     when(conference3QDsnap.data()).thenReturn({'name':"MIEICference", 'start_date':Timestamp(1607578030, 0), 'end_date':Timestamp(1607888030, 0)});
     when(conference3QDsnap.reference).thenReturn(conference3Dref);
 
-    when(conferencesQsnap.size).thenReturn(3);
-    when(conferencesQsnap.docs).thenReturn([conference1QDsnap, conference2QDsnap, conference3QDsnap]);
+    when(conferencesQsnap1.size).thenReturn(3);
+    when(conferencesQsnap1.docs).thenReturn([conference1QDsnap, conference2QDsnap, conference3QDsnap]);
+
+    when(conferencesQsnap2.size).thenReturn(0);
 
     // Stream for getting conference info
     when(firestore.getConferenceById("1")).thenAnswer((_) {
@@ -131,9 +134,6 @@ void main() {
       return Stream<MockQSnapshot>.value(conference3Qsnap);
     });
 
-    when(firestore.getActiveConferences()).thenAnswer((_) {
-      return Stream<MockQSnapshot>.value(conferencesQsnap);
-    });
 
     // PROFILES
     // Setting profile data
@@ -159,11 +159,11 @@ void main() {
 
     // Stream and results for listing profiles
     when(firestore.getConferenceProfiles(any)).thenAnswer((_) {
-      return Stream<MockQSnapshot>.fromIterable([profilesQsnap1, profilesQsnap2]);
+      return Stream<MockQSnapshot>.value(profilesQsnap1);
     });
     when(profilesQsnap1.size).thenReturn(3);
-    when(profilesQsnap1.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap]);
-    when(profilesQsnap2.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap, profile4QDsnap]);
+    when(profilesQsnap1.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap, profile4QDsnap]);
+    when(profilesQsnap2.size).thenReturn(0);
 
     when(firestore.getProfileById(any, "1")).thenAnswer((_) {
       return Stream<MockQSnapshot>.value(profile1Qsnap);
@@ -177,9 +177,14 @@ void main() {
     when(profile3Qsnap.size).thenReturn(1);
     when(profile3Qsnap.docs).thenReturn([profile3QDsnap]);
 
+
     // TESTS
-    // List of profiles
-    testWidgets('Conference Page Test', (WidgetTester tester) async {
+    // Displaying a list of profiles for a conference that has 4 profiles
+    testWidgets('View List of Profiles', (WidgetTester tester) async {
+      when(firestore.getActiveConferences()).thenAnswer((_) {
+        return Stream<MockQSnapshot>.value(conferencesQsnap1);
+      });
+
       await tester.pumpWidget(PageWrapper(ConferencePage(firestore, storage, functions, conference1)));
 
       await tester.pump(Duration.zero);
@@ -192,22 +197,46 @@ void main() {
 
       await tester.pump(Duration.zero);
       verify(firestore.getConferenceProfiles(any)).called(1);
+      expect(find.byIcon(Icons.connect_without_contact_rounded), findsNWidgets(4));
       expect(find.text("Adam"), findsOneWidget);
       expect(find.text("Software Developer"), findsOneWidget);
       expect(find.text("Eve"), findsOneWidget);
       expect(find.text("Project Manager"), findsOneWidget);
       expect(find.text("Steve"), findsOneWidget);
-
-      await tester.pump(Duration.zero);
       expect(find.text("Carol"), findsOneWidget);
       expect(find.text("Quality Assurance"), findsOneWidget);
     });
 
-    // Displaying a profile with all the fields
+    // Displaying a list of profiles for a conference that has 0 profiles
+    testWidgets('View List of Profiles No Profiles', (WidgetTester tester) async {
+      when(firestore.getConferenceProfiles(any)).thenAnswer((_) {
+        return Stream<MockQSnapshot>.value(profilesQsnap2);
+      });
+
+      await tester.pumpWidget(PageWrapper(ConferencePage(firestore, storage, functions, conference1)));
+
+      await tester.pump(Duration.zero);
+      expect(find.text("Mockference"), findsOneWidget);
+      expect(find.text("Profiles"), findsOneWidget);
+      expect(find.byIcon(Icons.person), findsOneWidget);
+      expect(find.byIcon(Icons.star), findsOneWidget);
+      expect(find.byIcon(Icons.favorite), findsOneWidget);
+      expect(find.byIcon(Icons.emoji_people), findsOneWidget);
+
+      await tester.pump(Duration.zero);
+      verify(firestore.getConferenceProfiles(any)).called(1);
+      expect(find.byIcon(Icons.connect_without_contact_rounded), findsNothing);
+      expect(find.text("No profiles"), findsOneWidget);
+    });
+
+    // Displaying a profile with all the information fields
     testWidgets('View Profile Details All Fields', (WidgetTester tester) async {
       await tester.pumpWidget(PageWrapper(ViewProfileDetailsPage(conference1, '1', firestore, storage)));
 
       await tester.pump(Duration.zero);
+      expect(find.byIcon(Icons.thumb_up_sharp), findsOneWidget);
+      expect(find.text('Like'), findsOneWidget);
+
       expect(find.text("Adam"), findsOneWidget);
       expect(find.text("Adam's Profile"), findsOneWidget);
       expect(find.text("Occupation"), findsOneWidget);
@@ -228,12 +257,13 @@ void main() {
       expect(find.text("Software Engineering"), findsOneWidget);
     });
 
-    // Displaying a profile with no fields
+    // Displaying a profile that has no information fields
     testWidgets('View Profile Details No Fields', (WidgetTester tester) async {
       await tester.pumpWidget(PageWrapper(ViewProfileDetailsPage(conference1, '3', firestore, storage)));
 
       await tester.pump(Duration.zero);
-
+      expect(find.byIcon(Icons.thumb_up_sharp), findsOneWidget);
+      expect(find.text('Like'), findsOneWidget);
       expect(find.text("Steve"), findsOneWidget);
       expect(find.text("Steve's Profile"), findsOneWidget);
       expect(find.text("Occupation"), findsNothing);
@@ -247,6 +277,7 @@ void main() {
       expect(find.text("Interests"), findsNothing);
     });
 
+    // Displaying a list of conferences given there are 3 conferences
     testWidgets('View List of Conferences', (WidgetTester tester) async {
       await tester.pumpWidget(PageWrapper(ConferenceListPage(firestore, storage, functions)));
 
@@ -260,6 +291,21 @@ void main() {
       expect(find.text('ESOFerence'), findsOneWidget);
       expect(find.text('MIEICference'), findsOneWidget);
 
+    });
+
+    // Displaying a list of conferences given there are 0 conferences
+    testWidgets('View List of Conferences No Conferences', (WidgetTester tester) async {
+      when(firestore.getActiveConferences()).thenAnswer((_) {
+        return Stream<MockQSnapshot>.value(conferencesQsnap2);
+      });
+
+      await tester.pumpWidget(PageWrapper(ConferenceListPage(firestore, storage, functions)));
+
+      await tester.pump(Duration.zero);
+      verify(firestore.getActiveConferences()).called(1);
+      expect(find.text("Available Conferences"), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward_ios_rounded), findsNothing);
+      expect(find.text('There are no active conferences'), findsOneWidget);
     });
   });
 }
