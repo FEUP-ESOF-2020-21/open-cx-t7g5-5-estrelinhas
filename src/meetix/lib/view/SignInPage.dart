@@ -53,6 +53,7 @@ class _SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               OutlineButton(
+                key: Key("signUpButton"),
                 onPressed: widget.onSwitch,
                 child: Text("Sign Up"),
               ),
@@ -79,7 +80,7 @@ class SignInButton extends StatelessWidget {
         context.read<AuthController>().signIn(
             email: email.text.trim(),
             password: password.text.trim()
-        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
+        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value, key: Key("warning")))); } );
       },
       child: Text("Sign In", style: TextStyle(color: Colors.white),),
       color: Theme.of(context).accentColor,

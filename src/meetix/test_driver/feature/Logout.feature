@@ -5,4 +5,4 @@ Feature: Logout
         Given I'm logged in and in "ConferenceListPage"
         When I open the drawer
         And I tap the "logoutButton" button
-        Then I expect to be in "SignInPage"
+        Then I expect to be in "SignInPage" page

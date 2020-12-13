@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class SignUpPage extends StatefulWidget {
   final VoidCallback onSwitch;
 
-  SignUpPage({@required this.onSwitch});
+  SignUpPage({@required this.onSwitch}): super(key: Key("SignUpPage"));
 
   @override
   State<StatefulWidget> createState() {
@@ -33,13 +33,15 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Column(
         children: [
           TextField(
+            key: Key("nameField"),
             controller: _nameController,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
-                labelText: "Name"
+              labelText: "Name"
             ),
           ),
           TextField(
+            key: Key("emailField"),
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -47,6 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           TextField(
+            key: Key("passwordField"),
             controller: _passwordController,
             keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(
@@ -80,12 +83,13 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
+      key: Key("signUpButton"),
       onPressed: (){
         context.read<AuthController>().signUp(
           email: email.text.trim(),
           password: password.text.trim(),
           displayName: displayName.text.trim()
-        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value))); } );
+        ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value, key: Key("warning")))); } );
       },
       child: Text("Sign Up", style: TextStyle(color: Colors.white),),
       color: Theme.of(context).accentColor,
