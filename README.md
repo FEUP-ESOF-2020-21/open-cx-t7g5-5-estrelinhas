@@ -1244,16 +1244,56 @@ For the prototype the main story was #4 which states that 'As a conference atten
 # Implementation
 
 // TODO
+
 # Test
 
-In order to test the activities and assure quality, we decided to run some automated tests using gherkin. 
+To ensure the application works as intended, we implemented automated tests using flutter's testing framework and the [flutter_gherkin](https://pub.dev/packages/flutter_gherkin) package.
 
-// TODO 
+## Test Plan
 
-In this section it is only expected to include the following:
+### Flutter Widget Tests
 
-test plan describing the list of features to be tested and the testing methods and tools;
-test case specifications to verify the functionalities, using unit tests and acceptance tests.
+We did not implement true unit tests, since our application offloads the bulk of the data processing needs to Firebase's Cloud Functions. Therefore, the unit tests we could implement in flutter, wouldn't be very meaningful, testing only getters for our model classes.
+
+We opted instead to use flutter's widget tests framework to test how elements are displayed and layed out.  These are component tests that provide more meaningful results since they allows us to know if the information we get from both Cloud Firestore and Cloud Functions requests is being handled propperly by the app.
+
+The features to be tested are the following:
+
+- Displaying a list of profiles
+- Displaying a profile
+- Displaying a list of conferences
+
+We decided to test these features because they cover the bulk of the user's activities when using the app. They also provide good coverage of the occasions where we are in fact displaying data from the aforementioned cloud services.
+
+### Flutter Gherkin Tests
+
+We used the flutter-gherkin (INSERT LINK) package to automate some of our acceptance tests.
+
+The features to be tested are the following:
+
+- Logging into the app
+- Logging out of the app
+- Signing up for the app
+
+We decided to test these features not necessarily because they are the most crucial to test, but because of the instability and limitations of the testing API. These were chosen as good proof-of-concept for automating acceptance tests since, while simple, they require user interaction through both taps and text input.
+
+## Test Case Specification
+
+### Flutter Widget Tests
+
+#### Displaying a list of profiles
+
+These tests verify that when given a list of mock profiles, the app correctly displays their information. We achieve this by veryfing if the app generates the correct text and icon elements for the given profiles. We also check that if the profile list is empty, the app displays the correct error.
+
+#### Displaying a profile
+
+These tests verify that when given a mock profile, the app correctly displays its information. We achieve this by veryfing if the app generates the correct text and icon elements for the given profile. We also check that if the profile has some fields with null values, the app does not display unwanted tags.
+
+#### Displaying a list of conferences
+
+These tests verify that when given a list of mock conferences, the app correctly displays their information. We achieve this by veryfing if the app generates the correct text and icon elements for the given conferences. We also check that if the conference list is empty, the app displays the correct error.
+
+
 
 # Configuration and change management
 
