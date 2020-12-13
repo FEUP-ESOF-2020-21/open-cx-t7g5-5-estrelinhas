@@ -10,7 +10,6 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:meetix/view/ConferencePage.dart';
-import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/ViewProfileDetailsPage.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -60,61 +59,118 @@ class PageWrapper extends StatelessWidget {
 
 void main() {
   group('Profile List and Displaying Tests', () {
+    // Mocks for controllers
     var firestore = MockFirestore();
-    var qsnap = MockQSnapshot();
-    var dref = MockDRef();
-    var qdsnap = MockQDSnapshot();
-
     var storage = MockStorage();
-
     var functions = MockFunctions();
 
-    var conference = MockConference();
-    var profile1 = MockProfile();
-    var profile2 = MockProfile();
-    var profile3 = MockProfile();
-    var profiles_qsnap = MockQSnapshot();
-    var profiles_qsnap_2 = MockQSnapshot();
-    var profile1_qdsnap = MockQDSnapshot();
-    var profile2_qdsnap = MockQDSnapshot();
-    var profile3_qdsnap = MockQDSnapshot();
-    var profile4_qdsnap = MockQDSnapshot();
+    // Mocks for conference data
+    var conference1 = MockConference();
+    var conference1Qsnap = MockQSnapshot();
+    var conference1Dref = MockDRef();
+    var conference1QDsnap = MockQDSnapshot();
+    var conference2 = MockConference();
+    var conference2Qsnap = MockQSnapshot();
+    var conference2Dref = MockDRef();
+    var conference2QDsnap = MockQDSnapshot();
+    var conference3 = MockConference();
+    var conference3Qsnap = MockQSnapshot();
+    var conference3Dref = MockDRef();
+    var conference3QDsnap = MockQDSnapshot();
 
-    when(conference.name).thenAnswer((_) => "Mockference");
-    when(conference.uid).thenReturn("user");
+    // Mocks for profile data
+    var profilesQsnap = MockQSnapshot();
+    var profilesQsnap2 = MockQSnapshot();
+    var profile1QDsnap = MockQDSnapshot();
+    var profile1Qsnap = MockQSnapshot();
+    var profile2QDsnap = MockQDSnapshot();
+    var profile3QDsnap = MockQDSnapshot();
+    var profile3Qsnap = MockQSnapshot();
+    var profile4QDsnap = MockQDSnapshot();
 
-    when(profile1.name).thenReturn("Adam");
-    when(profile1.uid).thenReturn("1");
-    when(profile2.name).thenReturn("Eve");
-    when(profile2.uid).thenReturn("2");
-    when(profile3.name).thenReturn("Steve");
-    when(profile3.uid).thenReturn("3");
+    // CONFERENCES
+    // Setting values for conference data
+    when(conference1.uid).thenReturn("user");
+    when(conference1.reference).thenReturn(conference1Dref);
+    when(conference1Dref.id).thenReturn("1");
+    when(conference1Qsnap.size).thenReturn(1);
+    when(conference1Qsnap.docs).thenReturn([conference1QDsnap]);
+    when(conference1QDsnap.data()).thenReturn({'name':"Mockference", 'start_date':Timestamp(1607878030, 0), 'end_date':Timestamp(1607888030, 0)});
+    when(conference1QDsnap.reference).thenReturn(conference1Dref);
 
-    when(conference.reference).thenReturn(dref);
-    when(dref.id).thenReturn("1");
-    when(qsnap.size).thenReturn(1);
-    when(qsnap.docs).thenReturn([qdsnap]);
-    when(qdsnap.data()).thenReturn({'name':"Mockference", 'start_date':Timestamp(1607878030, 0), 'end_date':Timestamp(1607888030, 0)});
-    when(qdsnap.reference).thenReturn(dref);
+    when(conference2.uid).thenReturn("user");
+    when(conference2.reference).thenReturn(conference2Dref);
+    when(conference2Dref.id).thenReturn("2");
+    when(conference2Qsnap.size).thenReturn(1);
+    when(conference2Qsnap.docs).thenReturn([conference2QDsnap]);
+    when(conference2QDsnap.data()).thenReturn({'name':"ESOFerence", 'start_date':Timestamp(1607678030, 0), 'end_date':Timestamp(1607888030, 0)});
+    when(conference2QDsnap.reference).thenReturn(conference2Dref);
 
+    when(conference3.uid).thenReturn("user");
+    when(conference3.reference).thenReturn(conference3Dref);
+    when(conference3Dref.id).thenReturn("3");
+    when(conference3Qsnap.size).thenReturn(1);
+    when(conference3Qsnap.docs).thenReturn([conference3QDsnap]);
+    when(conference3QDsnap.data()).thenReturn({'name':"MIEICference", 'start_date':Timestamp(1607578030, 0), 'end_date':Timestamp(1607888030, 0)});
+    when(conference3QDsnap.reference).thenReturn(conference3Dref);
+
+    // Stream for getting conference info
     when(firestore.getConferenceById("1")).thenAnswer((_) {
-      return Stream<MockQSnapshot>.value(qsnap);
+      return Stream<MockQSnapshot>.value(conference1Qsnap);
+    });
+    when(firestore.getConferenceById("2")).thenAnswer((_) {
+      return Stream<MockQSnapshot>.value(conference1Qsnap);
+    });
+    when(firestore.getConferenceById("3")).thenAnswer((_) {
+      return Stream<MockQSnapshot>.value(conference1Qsnap);
     });
 
+    // PROFILES
+    // Setting profile data
+    when(profile1QDsnap.data()).thenReturn({
+      'name':"Adam",
+      'occupation':"Software Developer",
+      'location':"Porto",
+      'email':"adam@email.com",
+      'phone':"111111111",
+      'interests':['Flutter', 'Dart', 'Software Engineering']
+    });
+    when(profile2QDsnap.data()).thenReturn({
+      'name':"Eve",
+      'occupation':"Project Manager"
+    });
+    when(profile3QDsnap.data()).thenReturn({
+      'name':"Steve"
+    });
+    when(profile4QDsnap.data()).thenReturn({
+      'name':"Carol",
+      'occupation':"Quality Assurance"
+    });
+
+    // Stream and results for listing profiles
     when(firestore.getConferenceProfiles(any)).thenAnswer((_) {
-      return Stream<MockQSnapshot>.fromIterable([profiles_qsnap, profiles_qsnap_2]);
+      return Stream<MockQSnapshot>.fromIterable([profilesQsnap, profilesQsnap2]);
     });
-    when(profiles_qsnap.size).thenReturn(3);
-    when(profiles_qsnap.docs).thenReturn([profile1_qdsnap, profile2_qdsnap, profile3_qdsnap]);
-    when(profiles_qsnap_2.docs).thenReturn([profile1_qdsnap, profile2_qdsnap, profile3_qdsnap, profile4_qdsnap]);
-    when(profile1_qdsnap.data()).thenReturn({'name':"Adam", 'occupation':"Software Developer"});
-    when(profile2_qdsnap.data()).thenReturn({'name':"Eve", 'occupation':"Project Manager"});
-    when(profile3_qdsnap.data()).thenReturn({'name':"Steve"});
-    when(profile4_qdsnap.data()).thenReturn({'name':"Carol", 'occupation':"Quality Assurance"});
+    when(profilesQsnap.size).thenReturn(3);
+    when(profilesQsnap.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap]);
+    when(profilesQsnap2.docs).thenReturn([profile1QDsnap, profile2QDsnap, profile3QDsnap, profile4QDsnap]);
 
+    when(firestore.getProfileById(any, "1")).thenAnswer((_) {
+      return Stream<MockQSnapshot>.value(profile1Qsnap);
+    });
+    when(profile1Qsnap.size).thenReturn(1);
+    when(profile1Qsnap.docs).thenReturn([profile1QDsnap]);
+
+    when(firestore.getProfileById(any, "3")).thenAnswer((_) {
+      return Stream<MockQSnapshot>.value(profile3Qsnap);
+    });
+    when(profile3Qsnap.size).thenReturn(1);
+    when(profile3Qsnap.docs).thenReturn([profile3QDsnap]);
+
+    // TESTS
     // List of profiles
     testWidgets('Conference Page Test', (WidgetTester tester) async {
-      await tester.pumpWidget(PageWrapper(ConferencePage(firestore, storage, functions, conference)));
+      await tester.pumpWidget(PageWrapper(ConferencePage(firestore, storage, functions, conference1)));
 
       await tester.pump(Duration.zero);
       expect(find.text("Mockference"), findsOneWidget);
@@ -137,9 +193,52 @@ void main() {
       expect(find.text("Quality Assurance"), findsOneWidget);
     });
 
-    // Displaying a profile
-    testWidgets('View Profile Details', (WidgetTester tester) async {
-      await tester.pumpWidget(PageWrapper(ViewProfileDetailsPage(conference, profile1.uid, firestore, storage)));
+    // Displaying a profile with all the fields
+    testWidgets('View Profile Details All Fields', (WidgetTester tester) async {
+      await tester.pumpWidget(PageWrapper(ViewProfileDetailsPage(conference1, '1', firestore, storage)));
+
+      await tester.pump(Duration.zero);
+      expect(find.text("Adam"), findsOneWidget);
+      expect(find.text("Adam's Profile"), findsOneWidget);
+      expect(find.text("Occupation"), findsOneWidget);
+      expect(find.text("Software Developer"), findsOneWidget);
+      expect(find.text("Location"), findsOneWidget);
+      expect(find.text("Porto"), findsOneWidget);
+      expect(find.text("E-mail"), findsOneWidget);
+      expect(find.text("adam@email.com"), findsOneWidget);
+      expect(find.text("Phone number"), findsOneWidget);
+      expect(find.text("111111111"), findsOneWidget);
+
+      final gesture = await tester.startGesture(Offset(100, 300));
+      await gesture.moveBy(const Offset(0, -200));
+      await tester.pump(Duration.zero);
+      expect(find.text("Interests"), findsOneWidget);
+      expect(find.text("Flutter"), findsOneWidget);
+      expect(find.text("Dart"), findsOneWidget);
+      expect(find.text("Software Engineering"), findsOneWidget);
+    });
+
+    // Displaying a profile with no fields
+    testWidgets('View Profile Details No Fields', (WidgetTester tester) async {
+      await tester.pumpWidget(PageWrapper(ViewProfileDetailsPage(conference1, '3', firestore, storage)));
+
+      await tester.pump(Duration.zero);
+
+      expect(find.text("Steve"), findsOneWidget);
+      expect(find.text("Steve's Profile"), findsOneWidget);
+      expect(find.text("Occupation"), findsNothing);
+      expect(find.text("Location"), findsNothing);
+      expect(find.text("E-mail"), findsNothing);
+      expect(find.text("Phone number"), findsNothing);
+
+      final gesture = await tester.startGesture(Offset(100, 300));
+      await gesture.moveBy(const Offset(0, -200));
+      await tester.pump(Duration.zero);
+      expect(find.text("Interests"), findsNothing);
+    });
+
+    testWidgets('View List of Conferences', (WidgetTester tester) async {
+
     });
   });
 }
