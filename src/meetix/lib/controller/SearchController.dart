@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchController {
   final search = Algolia.init(
@@ -7,9 +8,11 @@ class SearchController {
   );
 
   Future<List<AlgoliaObjectSnapshot>> searchConferences(String search_string) async {
-    var query = search.instance.index('conference_search').search(search_string);
+    var query = search.instance.index('conference_search')
+        .search(search_string)
+        .setNumericFilter('endDate_timestamp>'+Timestamp.now().seconds.toString());
+
     var results = await query.getObjects();
     return results.hits;
   }
-
 }
