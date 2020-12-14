@@ -373,9 +373,7 @@ class _ConferencePageState extends State<ConferencePage> {
       },
     );
     await widget._functions.deleteProfile(widget._conference.reference.id, context.read<AuthController>().currentUser.uid);
-    Navigator.pop(context); // Close dialog
-    Navigator.pop(context); // Close drawer
-    _toConferenceListRefresh(); // Go back to ConferenceListPage and refresh
+    Navigator.popUntil(context, ModalRoute.withName('/')); // Close dialog
   }
 
   confirmDeleteDialog(BuildContext context, Conference conference, String action) async {
