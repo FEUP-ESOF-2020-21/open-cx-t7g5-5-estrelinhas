@@ -123,50 +123,59 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
     }
 });
 
-exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
-    const oldConf = change.before.data()
-    const oldInterests : Array<String>  = oldConf.interests
-    const newConf = change.after.data()
-    const newInterests : Array<String> = newConf.interests
 
-    const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
-
-    if (deletedInterests.length > 0) {
-        const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
-
-        const batches : Array<Array<String>> = []
-        let idx = 0
-
-        while (idx < deletedInterests.length) {
-            batches.push(deletedInterests.slice(idx, idx + 10))
-            idx += 10
-        }
-
-        for (const batch of batches) {
-            const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
-
-            hadInterest.forEach((profile) => {
-                profiles.doc(profile.id).update({
-                    interests: FieldValue.arrayRemove(...batch),
-                }).catch((err) => console.log(err))
-            })
-        }
-    }
-});
+function addConfToAlgolia(data : FirebaseFirestore.DocumentData, confID : String) {
+    const record = Object()
+    record.objectID = confID
+    record.endDate_timestamp = data.end_date.seconds
+    record.name = data.name
+    record.interests = data.interests
+    conferences_index.saveObject(record)
+}
 
 exports.onDeleteConference = functions.firestore.document('conference/{confID}').onWrite(async (change, context) => {
-    // ON UPDATE
-    if (change.before && change.after) {
+    // ON CREATE OR UPDATE
+    if (change.after.exists) {
         const record = change.after.data()
-        if (record) {
-            record.objectID = context.params.confID
-            record.startDate_timestamp = record.start_date.seconds
-            conferences_index.saveObject(record)
+        if (record){
+            addConfToAlgolia(record, context.params.confID)
+        }
+    }
+
+    // ON UPDATE
+    if (change.before.exists && change.after.exists) {
+        const oldConf = change.before.data()
+        const oldInterests : Array<String>  = oldConf?.interests
+        const newConf = change.after.data()
+        const newInterests : Array<String> = newConf?.interests
+
+        const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
+
+        if (deletedInterests.length > 0) {
+            const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
+
+            const batches : Array<Array<String>> = []
+            let idx = 0
+
+            while (idx < deletedInterests.length) {
+                batches.push(deletedInterests.slice(idx, idx + 10))
+                idx += 10
+            }
+
+            for (const batch of batches) {
+                const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
+
+                hadInterest.forEach((profile) => {
+                    profiles.doc(profile.id).update({
+                        interests: FieldValue.arrayRemove(...batch),
+                    }).catch((err) => console.log(err))
+                })
+            }
         }
     }
 
     // ON DELETE
-    if (change.before && !change.after) {
+    if (change.before.exists && !change.after.exists) {
         await conferences_index.deleteObject(context.params.confID)
 
         const bucket = admin.storage().bucket();
