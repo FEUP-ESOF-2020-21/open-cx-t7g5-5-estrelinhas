@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/SearchController.dart';
@@ -9,6 +10,7 @@ import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
 import 'ConferencePage.dart';
+import 'CreateProfilePage.dart';
 
 class SearchConferencePage extends StatefulWidget {
   final onChangeConfTab;
@@ -21,6 +23,18 @@ class SearchConferencePage extends StatefulWidget {
 
 class _SearchConferencePageState extends State<SearchConferencePage> {
   var queryConferences = [];
+
+  var _firestore;
+  var _storage;
+  var _functions;
+
+  @override
+  void initState() {
+    super.initState();
+    _firestore = context.read<FirestoreController>();
+    _storage = context.read<StorageController>();
+    _functions = context.read<FunctionsController>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,8 @@ class _SearchConferencePageState extends State<SearchConferencePage> {
             child: TextField(
               style: TextStyle(fontSize: 20,),
               decoration: InputDecoration(
-                hintText: "Search by name or related interests",
+                prefixIcon: Icon(Icons.search),
+                hintText: "Search by name or interests",
               ),
               textInputAction: TextInputAction.search,
               autofocus: true,
@@ -85,17 +100,7 @@ class _SearchConferencePageState extends State<SearchConferencePage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConferencePage(
-                    context.watch<FirestoreController>(),
-                    context.watch<StorageController>(),
-                    context.watch<FunctionsController>(),
-                    _conference,
-                    hasProfile: true,
-                    onChangeConfTab: widget.onChangeConfTab)))
-            .then((value) => setState(() {}));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -122,6 +127,25 @@ class _SearchConferencePageState extends State<SearchConferencePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget openConference(BuildContext context, Conference conference) {
+    return FutureBuilder(
+      future: conference.reference.collection('profiles').where('uid', isEqualTo: context.watch<AuthController>().currentUser.uid).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.size > 0) {
+            return ConferencePage(_firestore, _storage,  _functions, conference, hasProfile: true, onChangeConfTab: widget.onChangeConfTab);
+          } else {
+            return CreateProfilePage(_firestore, _storage, _functions, conference, onChangeConfTab: widget.onChangeConfTab);
+          }
+        } else if (snapshot.hasError) {
+          return Scaffold(body: Center(child: Text(snapshot.error.toString()),),);
+        } else {
+          return Scaffold(body: Center(child: CircularProgressIndicator(),),);
+        }
+      },
     );
   }
 }
