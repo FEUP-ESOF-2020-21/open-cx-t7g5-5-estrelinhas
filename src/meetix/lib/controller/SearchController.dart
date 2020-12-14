@@ -15,4 +15,12 @@ class SearchController {
     var results = await query.getObjects();
     return results.hits;
   }
+
+  Future<List<AlgoliaObjectSnapshot>> searchProfiles(String confID, String profileID, String search_string) async {
+    var query = search.instance.index(confID + '_profiles')
+        .search(search_string);
+
+    var results = await query.getObjects();
+    return results.hits;
+  }
 }

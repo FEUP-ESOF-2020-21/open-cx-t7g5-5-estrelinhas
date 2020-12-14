@@ -8,6 +8,7 @@ import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
 import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/MatchedProfilesPage.dart';
+import 'package:meetix/view/SearchProfilePage.dart';
 import 'package:meetix/view/TopProfilesPage.dart';
 import 'package:meetix/view/EditConferencePage.dart';
 import 'package:meetix/view/LikedYouProfilesPage.dart';
@@ -85,7 +86,11 @@ class _ConferencePageState extends State<ConferencePage> {
       body: _buildBody(context, conference),
       drawer: _buildDrawer(context, conference),
       bottomNavigationBar: _buildNavigationBar(),
-
+      floatingActionButton: (_currentTab == 0)? FloatingActionButton(
+        onPressed: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => SearchProfilePage(conference, widget.hasProfile))); },
+        backgroundColor: Colors.orange,
+        child: Icon(Icons.search),
+      ) : null,
     );
   }
 
