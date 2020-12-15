@@ -878,6 +878,7 @@ Then the app shows me my account editable
 When I change my email, password or username with valid information and the current password is correct and I click on "Save changes" button
 Then the app updates my account
 ```
+
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
@@ -895,6 +896,7 @@ Then the app shows me my account editable
 When I leave some fields blank and I click on "Save changes" button
 Then these fields will not be updated
 ```
+
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
@@ -903,6 +905,7 @@ Then the app shows me my account editable
 When I edit some fields to the same values they were before and I click on "Save changes" button
 Then these fields will not be updated
 ```
+
 ```gherkin
 Scenario: Edit account
 Given I’m logged-in and I'm in the conferences list page
@@ -1182,7 +1185,7 @@ Effort: S
 
 ![Domain Model](./img/domain_model.png)
 
-The users of our app can either be attendees or staff. A staff is the person who creates the conference (1 - *). When users join a conference, they have to create a profile (1 - 1), that will be their profile in that conference (\* - 1) . Attendees can like other attendees (1 - *) and if the like is mutual they match (1 - *).
+The users of our app can either be attendees or staff. A staff is the person who creates the conference (1 - \*). When users join a conference, they have to create a profile (1 - 1), that will be their profile in that conference (\* - 1) . Attendees can like other attendees (1 - \*) and if the like is mutual they match (1 - *).
 
 ---
 
@@ -1212,9 +1215,6 @@ In this diagram it shows that we organized our applications into three big packa
 
 The first, meetix-widgets, is where we have the code for all the personalized widgets we've created. Then the login package has the pages that correspond to the account. There is, then, a conference package where all conference-related pages are kept. For last, the profiles package contains the pages that correspond to everything that concerns the profiles.
 
-
-
-
 ---
 
 ## Physical architecture
@@ -1227,11 +1227,9 @@ Before starting to implement the application, we needed to decide the programmin
 
 For the database server we chose Firebase as it is simple to setup and easy to integrate with Flutter.
 
-The user installs the Meetix app on his smartphone, serving as client and the app comunicates,through HTTPS requests, with the firebase server , where the database is stored, handling the comunication of the API with it, accesssing and adding all the information needed for the app's flow. 
+The user installs the Meetix app on his smartphone, serving as client and the app comunicates,through HTTPS requests, with the firebase server , where the database is stored, handling the comunication of the API with it, accesssing and adding all the information needed for the app's flow.
 
 To allow the user to search through the database information, we connected to Algolia server, a full text search provider.
-
-
 
 ---
 
@@ -1241,12 +1239,11 @@ To help on validating all the architectural, design and technological decisions 
 
 The prototype's role in our development proccess was about testing if the tool Flutter was adequate to do what we aimed to do and also about advancing the development of the app itself.
 
-For the prototype the main story was #4 which states that 'As a conference attendee, I want to be able to see the profiles that have matched with me'. The other ones serve as base for the app.
+For the prototype the main story was #6 which states that 'As a conference attendee, I want to be able to see the profiles that have matched with me'. The other ones serve as base for the app.
 
 # Implementation
 
 Changelogs for the 4 different product increments can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/releases)
-
 
 # Test
 
@@ -1296,15 +1293,11 @@ These tests verify that when given a mock profile, the app correctly displays it
 
 These tests verify that when given a list of mock conferences, the app correctly displays their information. We achieve this by veryfing if the app generates the correct text and icon elements for the given conferences. We also check that if the conference list is empty, the app displays the correct error.
 
-
-
 # Configuration and change management
 
 To control and maintain the integrity of out project's components(code, models, documents), configuration and change management are key activities.
 
 To manage feature requests, bux fixes, and improvements, we used GitHub issues, following the GitHub flow.
-
-
 
 # Project management
 
