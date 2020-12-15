@@ -133,9 +133,23 @@ function addConfToAlgolia(data : FirebaseFirestore.DocumentData, confID : String
     conferences_index.saveObject(record)
 }
 
-exports.onDeleteConference = functions.firestore.document('conference/{confID}').onWrite(async (change, context) => {
+exports.onWriteConference = functions.firestore.document('conference/{confID}').onWrite(async (change, context) => {
+    const conf_profile_idx = algolia_client.initIndex(context.params.confID+'_profiles')
+
+    // ON CREATE
+    if (!change.before.exists && change.after.exists) {
+        // Sets settings for the profiles search index
+        conf_profile_idx.setSettings({searchableAttributes : [
+            'name',
+            'interests',
+            'occupation',
+            'location',
+        ]})
+    }
+
     // ON CREATE OR UPDATE
     if (change.after.exists) {
+        // Adds the new/updated record to the conferences search index
         const record = change.after.data()
         if (record){
             addConfToAlgolia(record, context.params.confID)
@@ -144,6 +158,7 @@ exports.onDeleteConference = functions.firestore.document('conference/{confID}')
 
     // ON UPDATE
     if (change.before.exists && change.after.exists) {
+        // Removes interests that were removed in update from profiles that contained them
         const oldConf = change.before.data()
         const oldInterests : Array<String>  = oldConf?.interests
         const newConf = change.after.data()
@@ -176,8 +191,13 @@ exports.onDeleteConference = functions.firestore.document('conference/{confID}')
 
     // ON DELETE
     if (change.before.exists && !change.after.exists) {
+        // Detes record from conferences search index
         await conferences_index.deleteObject(context.params.confID)
 
+        // Deletes profile search index
+        await conf_profile_idx.delete()
+
+        // Deletes files in conference storage folder
         const bucket = admin.storage().bucket();
 
         bucket.deleteFiles({
@@ -189,25 +209,46 @@ exports.onDeleteConference = functions.firestore.document('conference/{confID}')
     }
 });
 
-exports.onDeleteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onDelete(async (change, context) => {
-    const bucket = admin.storage().bucket();
+exports.onWriteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onWrite(async (change, context) => {
+    const conf_profile_idx = algolia_client.initIndex(context.params.confID+'_profiles')
 
-    bucket.deleteFiles({
-        prefix: 'conferences/' + context.params.confID + "/profiles/" + context.params.profileID,
-    }, function(err) {
-        if (err)
-            console.log(err)
-    },)
+    // ON CREATE OR UPDATE
+    if (change.after.exists) {
+        const data = change.after.data()
+        if (data) {
+            const record = Object()
+            record.objectID = context.params.profileID
+            record.name = data.name
+            record.occupation = data.occupation
+            record.interests = data.interests
+            record.location = data.location
+            conf_profile_idx.saveObject(record)
+        }
+    }
 
-    const liked_profiles = await db.collectionGroup("likes")
-        .where("conference_id", "==", context.params.confID)
-        .where("uid", "==", context.params.profileID)
-        .get()
-    
-    
-    liked_profiles.forEach(profile => {
-        profile.ref.delete().catch((err) => console.log(err))
-    });
+    // ON DELETE
+    if (change.before.exists && !change.after.exists) {
+        conf_profile_idx.deleteObject(context.params.profileID);
+
+        const bucket = admin.storage().bucket();
+
+        bucket.deleteFiles({
+            prefix: 'conferences/' + context.params.confID + "/profiles/" + context.params.profileID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
+
+        const liked_profiles = await db.collectionGroup("likes")
+            .where("conference_id", "==", context.params.confID)
+            .where("uid", "==", context.params.profileID)
+            .get()
+        
+        
+        liked_profiles.forEach(profile => {
+            profile.ref.delete().catch((err) => console.log(err))
+        });
+    }
 });
 
 exports.onDeleteAccount = functions.auth.user().onDelete(async (user) => {
