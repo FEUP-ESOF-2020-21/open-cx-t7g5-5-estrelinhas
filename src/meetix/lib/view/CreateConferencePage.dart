@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/FirestoreController.dart';
 
 class CreateConferencePage extends StatefulWidget {
   final FirestoreController _firestore;

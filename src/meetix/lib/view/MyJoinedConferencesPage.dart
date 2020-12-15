@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
 
 class MyJoinedConferencesPage extends StatefulWidget {
   final FirestoreController _firestore;

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:meetix/model/Conference.dart';
 
 class StorageController {
   final storage = FirebaseStorage.instance;

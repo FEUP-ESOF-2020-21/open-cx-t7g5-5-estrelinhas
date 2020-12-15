@@ -6,7 +6,6 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/AllProfilesPage.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:meetix/view/MatchedProfilesPage.dart';
 import 'package:meetix/view/SearchProfilePage.dart';
 import 'package:meetix/view/TopProfilesPage.dart';
@@ -17,9 +16,9 @@ import 'package:provider/provider.dart';
 import 'CreateConferencePage.dart';
 import 'CreateProfilePage.dart';
 import 'EditAccountPage.dart';
-import 'MyJoinedConferencesPage.dart';
 import 'MyWidgets.dart';
 import 'ViewProfileDetailsPage.dart';
+
 
 class ConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
