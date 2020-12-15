@@ -1,17 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ActiveConferencesPage.dart';
-import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
-import 'package:meetix/view/CreateProfilePage.dart';
-import 'package:meetix/view/MyWidgets.dart';
 import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
 import 'package:meetix/view/EditAccountPage.dart';
-import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
 import 'MyCreatedConferencesPage.dart';
 
@@ -44,7 +39,7 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               height: 150,
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color.fromRGBO(255, 153, 102, 1),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,11 +101,11 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
               },
             ),
             Divider(
-              color: Colors.blue,
+              color: Color.fromRGBO(255, 153, 102, 1),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-              child: Text("Settings", style: TextStyle(color: Colors.blue),),
+              child: Text("Settings", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),),),
             ),
             ListTile(
               leading: Icon(Icons.settings),

@@ -50,6 +50,7 @@ class MeetixApp extends StatelessWidget {
   final StorageController storage = StorageController();
   final FunctionsController functions = FunctionsController();
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -65,6 +66,40 @@ class MeetixApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Meetix',
         home: LandingPage(firestore, storage, functions),
+        themeMode: ThemeMode.system,
+        theme: ThemeData(
+          // Define the default brightness and colors.
+          brightness: Brightness.light,
+          primaryColor: Color.fromRGBO(255, 153, 102, 1),
+          accentColor: Color.fromRGBO(255, 153, 102, 1),
+
+          appBarTheme: AppBarTheme(
+            color:Color.fromRGBO(255, 153, 102, 1),
+            iconTheme: IconThemeData(
+              color: Color.fromRGBO(64, 90, 125, 1),
+            ),
+            textTheme: TextTheme(
+              title: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.white,
+          ),
+
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Color.fromRGBO(255, 153, 102, 1),
+            selectedItemColor: Color.fromRGBO(255, 153, 102, 1),
+            selectedLabelStyle: TextStyle(color:Color.fromRGBO(255, 153, 102, 1),),
+            unselectedItemColor: Colors.grey,
+          ),
+          dividerTheme: DividerThemeData(
+            color:  Color.fromRGBO(255, 153, 102, 1),
+          ),
+        ),
       ),
     );
   }

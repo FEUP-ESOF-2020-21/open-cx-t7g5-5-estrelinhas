@@ -1,4 +1,10 @@
-import 'dart:io';
+import 'package:meetix/controller/AuthController.dart';
+import 'package:flutter/material.dart';
+import 'package:meetix/controller/FunctionsController.dart';
+import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/view/MyWidgets.dart';
+import 'package:provider/provider.dart';
+import '../controller/FirestoreController.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
@@ -105,7 +111,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),

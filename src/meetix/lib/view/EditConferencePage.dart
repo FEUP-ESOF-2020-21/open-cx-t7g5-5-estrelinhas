@@ -1,15 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
-import 'package:meetix/view/ConferencePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
-import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';
 import '../controller/FirestoreController.dart';
@@ -114,7 +109,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),

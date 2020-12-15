@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ConferencePage.dart';
-import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/CreateProfilePage.dart';
 import 'package:meetix/view/MyWidgets.dart';
-import 'package:meetix/view/MyJoinedConferencesPage.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Conference.dart';

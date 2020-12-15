@@ -96,7 +96,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Next", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Next", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),

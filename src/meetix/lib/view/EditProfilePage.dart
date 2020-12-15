@@ -110,7 +110,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),
