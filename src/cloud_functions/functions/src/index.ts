@@ -5,9 +5,13 @@ admin.initializeApp()
 import { FieldPath, FieldValue } from '@google-cloud/firestore'
 
 const tools = require('firebase-tools');
+const algolia = require('algoliasearch');
+const env = functions.config();
 
 
 const db = admin.firestore()
+const algolia_client = algolia(env.algolia.appid, env.algolia.apikey)
+const conferences_index = algolia_client.initIndex('conference_search')
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -119,67 +123,132 @@ exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context)
     }
 });
 
-exports.editInterests = functions.firestore.document('conference/{confID}').onUpdate(async (change, context) => {
-    const oldConf = change.before.data()
-    const oldInterests : Array<String>  = oldConf.interests
-    const newConf = change.after.data()
-    const newInterests : Array<String> = newConf.interests
 
-    const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
+function addConfToAlgolia(data : FirebaseFirestore.DocumentData, confID : String) {
+    const record = Object()
+    record.objectID = confID
+    record.endDate_timestamp = data.end_date.seconds
+    record.name = data.name
+    record.interests = data.interests
+    conferences_index.saveObject(record)
+}
 
-    if (deletedInterests.length > 0) {
-        const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
+exports.onWriteConference = functions.firestore.document('conference/{confID}').onWrite(async (change, context) => {
+    const conf_profile_idx = algolia_client.initIndex(context.params.confID+'_profiles')
 
-        const batches : Array<Array<String>> = []
-        let idx = 0
+    // ON CREATE
+    if (!change.before.exists && change.after.exists) {
+        // Sets settings for the profiles search index
+        conf_profile_idx.setSettings({searchableAttributes : [
+            'name',
+            'interests',
+            'occupation',
+            'location',
+        ]})
+    }
 
-        while (idx < deletedInterests.length) {
-            batches.push(deletedInterests.slice(idx, idx + 10))
-            idx += 10
+    // ON CREATE OR UPDATE
+    if (change.after.exists) {
+        // Adds the new/updated record to the conferences search index
+        const record = change.after.data()
+        if (record){
+            addConfToAlgolia(record, context.params.confID)
         }
+    }
 
-        for (const batch of batches) {
-            const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
+    // ON UPDATE
+    if (change.before.exists && change.after.exists) {
+        // Removes interests that were removed in update from profiles that contained them
+        const oldConf = change.before.data()
+        const oldInterests : Array<String>  = oldConf?.interests
+        const newConf = change.after.data()
+        const newInterests : Array<String> = newConf?.interests
 
-            hadInterest.forEach((profile) => {
-                profiles.doc(profile.id).update({
-                    interests: FieldValue.arrayRemove(...batch),
-                }).catch((err) => console.log(err))
-            })
+        const deletedInterests = oldInterests.filter(interest => !newInterests.includes(interest))
+
+        if (deletedInterests.length > 0) {
+            const profiles = db.collection("conference").doc(change.after.id).collection("profiles")
+
+            const batches : Array<Array<String>> = []
+            let idx = 0
+
+            while (idx < deletedInterests.length) {
+                batches.push(deletedInterests.slice(idx, idx + 10))
+                idx += 10
+            }
+
+            for (const batch of batches) {
+                const hadInterest = await profiles.where("interests", "array-contains-any", batch).get()
+
+                hadInterest.forEach((profile) => {
+                    profiles.doc(profile.id).update({
+                        interests: FieldValue.arrayRemove(...batch),
+                    }).catch((err) => console.log(err))
+                })
+            }
         }
+    }
+
+    // ON DELETE
+    if (change.before.exists && !change.after.exists) {
+        // Detes record from conferences search index
+        await conferences_index.deleteObject(context.params.confID)
+
+        // Deletes profile search index
+        await conf_profile_idx.delete()
+
+        // Deletes files in conference storage folder
+        const bucket = admin.storage().bucket();
+
+        bucket.deleteFiles({
+            prefix: 'conferences/' + context.params.confID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
     }
 });
 
-exports.onDeleteConference = functions.firestore.document('conference/{confID}').onDelete((change, context) => {
-    const bucket = admin.storage().bucket();
+exports.onWriteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onWrite(async (change, context) => {
+    const conf_profile_idx = algolia_client.initIndex(context.params.confID+'_profiles')
 
-    bucket.deleteFiles({
-        prefix: 'conferences/' + context.params.confID,
-    }, function(err) {
-        if (err)
-            console.log(err)
-    },)
-});
+    // ON CREATE OR UPDATE
+    if (change.after.exists) {
+        const data = change.after.data()
+        if (data) {
+            const record = Object()
+            record.objectID = context.params.profileID
+            record.name = data.name
+            record.occupation = data.occupation
+            record.interests = data.interests
+            record.location = data.location
+            conf_profile_idx.saveObject(record)
+        }
+    }
 
-exports.onDeleteProfile = functions.firestore.document('conference/{confID}/profiles/{profileID}').onDelete(async (change, context) => {
-    const bucket = admin.storage().bucket();
+    // ON DELETE
+    if (change.before.exists && !change.after.exists) {
+        conf_profile_idx.deleteObject(context.params.profileID);
 
-    bucket.deleteFiles({
-        prefix: 'conferences/' + context.params.confID + "/profiles/" + context.params.profileID,
-    }, function(err) {
-        if (err)
-            console.log(err)
-    },)
+        const bucket = admin.storage().bucket();
 
-    const liked_profiles = await db.collectionGroup("likes")
-        .where("conference_id", "==", context.params.confID)
-        .where("uid", "==", context.params.profileID)
-        .get()
-    
-    
-    liked_profiles.forEach(profile => {
-        profile.ref.delete().catch((err) => console.log(err))
-    });
+        bucket.deleteFiles({
+            prefix: 'conferences/' + context.params.confID + "/profiles/" + context.params.profileID,
+        }, function(err) {
+            if (err)
+                console.log(err)
+        },)
+
+        const liked_profiles = await db.collectionGroup("likes")
+            .where("conference_id", "==", context.params.confID)
+            .where("uid", "==", context.params.profileID)
+            .get()
+        
+        
+        liked_profiles.forEach(profile => {
+            profile.ref.delete().catch((err) => console.log(err))
+        });
+    }
 });
 
 exports.onDeleteAccount = functions.auth.user().onDelete(async (user) => {

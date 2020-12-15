@@ -501,6 +501,21 @@ class ProfileListView extends StatelessWidget {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final profile = Profile.fromSnapshot(data);
 
+    return ProfileListItem(profile, _conference, _firestore, _storage, hasProfile);
+  }
+}
+
+class ProfileListItem extends StatelessWidget {
+  final profile;
+  final _conference;
+  final _firestore;
+  final _storage;
+  final hasProfile;
+
+  ProfileListItem(this.profile, this._conference, this._firestore, this._storage, this.hasProfile);
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -544,6 +559,7 @@ class ProfileListView extends StatelessWidget {
     );
   }
 }
+
 
 class DeleteAccountDialog extends StatefulWidget {
   @override
