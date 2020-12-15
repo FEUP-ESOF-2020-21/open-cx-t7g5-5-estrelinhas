@@ -82,7 +82,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
             if (profile.phone != null) ...[
               _buildInfo(context, "Phone number", profile.phone),
             ],
-            if (profile.interests != null) ...[
+            if (profile.interests.isNotEmpty) ...[
               _buildInterests(context, profile.interests),
             ],
             SizedBox(height:20.0),
