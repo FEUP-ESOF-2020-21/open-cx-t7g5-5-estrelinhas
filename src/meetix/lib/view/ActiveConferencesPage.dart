@@ -44,7 +44,9 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: Text("Loading"));
+
+          // return Center(child: CircularProgressIndicator());
         }
       },
     );

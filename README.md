@@ -38,10 +38,7 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Meetix is an app for easy online conference networking. Conferences sign up and add a list of topics related to the event. Attendees then create a profile, adding contact information and topics they are interested in. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections. 
-
-Meetix is an app for easy online conference 
-networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
+Meetix is an app for easy online conference networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
 
 ---
 
@@ -1091,7 +1088,7 @@ Effort: L/XL
 
 ### **Story 21: Search for active conferences**
 
-As a conference attendee, I want to be able to search for a specific conference by name, so that I can easily find what I'm looking for.
+As a conference attendee, I want to be able to search for a specific conference by name or interests, so that I can easily find what I'm looking for.
 
 _User interface mockups_
 
@@ -1103,20 +1100,12 @@ _Acceptance Tests_
 ```gherkin
 Scenario: Searching for conferences
 Given I’m logged-in
-When I click the button to search for conferences to join
+When I click the button to search for active conferences to join
 Then the app shows me a page with a search bar
-When I click on the "Search bar" and insert a string,
-Then the app shows me all conferences matching the string
+When I click on the "Search bar" and insert a string to search for either the conference name or interests,
+Then the app shows me all active conferences matching the string, if any
 ```
 
-```gherkin
-Scenario: Searching for conferences
-Given I’m logged-in
-When I click the button to search for conferences to join
-Then the app shows me a page with a search bar
-When I input the name of a conference that does not exist
-Then I expect to see no results
-```
 
 _Value/Effort_
 
@@ -1219,7 +1208,12 @@ We decided to use the MVC architecture pattern which splits the code in three pa
 
 ![Package diagram](./img/package-diagram.png)
 
-TO DO : adicionar textinho
+In this diagram it shows that we organized our applications into three big packages, corresponding to the MVC architecture parts. Besides that, since the view part is the biggest in our application we decided to also divide it into packages.
+
+The first, meetix-widgets, is where we have the code for all the personalized widgets we've created. Then the login package has the pages that correspond to the account. There is, then, a conference package where all conference-related pages are kept. For last, the profiles package contains the pages that correspond to everything that concerns the profiles.
+
+
+
 
 ---
 
@@ -1227,9 +1221,17 @@ TO DO : adicionar textinho
 
 ![Physical architecture](./img/physical_architecture.png)
 
+In this subsection it is documented the high-level physical structure decisions made in our software system (machines, connections, software components installed, and their dependencies).
+
 Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice, since it was recommended by the professors and is one of the most prominent mobile development frameworks.
 
 For the database server we chose Firebase as it is simple to setup and easy to integrate with Flutter.
+
+The user installs the Meetix app on his smartphone, serving as client and the app comunicates,through HTTPS requests, with the firebase server , where the database is stored, handling the comunication of the API with it, accesssing and adding all the information needed for the app's flow. 
+
+To allow the user to search through the database information, we connected to Algolia server, a full text search provider.
+
+
 
 ---
 
@@ -1243,17 +1245,58 @@ For the prototype the main story was #4 which states that 'As a conference atten
 
 # Implementation
 
-// TODO
+Changelogs for the 4 different product increments can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/releases)
+
+
 # Test
 
-In order to test the activities and assure quality, we decided to run some automated tests using gherkin. 
+To ensure the application works as intended, we implemented automated tests using flutter's testing framework and the [flutter_gherkin](https://pub.dev/packages/flutter_gherkin) package.
 
-// TODO 
+## Test Plan
 
-In this section it is only expected to include the following:
+### Flutter Widget Tests
 
-test plan describing the list of features to be tested and the testing methods and tools;
-test case specifications to verify the functionalities, using unit tests and acceptance tests.
+We did not implement true unit tests, since our application offloads the bulk of the data processing needs to Firebase's Cloud Functions. Therefore, the unit tests we could implement in flutter, wouldn't be very meaningful, testing only getters for our model classes.
+
+We opted instead to use flutter's widget tests framework to test how elements are displayed and layed out.  These are component tests that provide more meaningful results since they allows us to know if the information we get from both Cloud Firestore and Cloud Functions requests is being handled propperly by the app.
+
+The features to be tested are the following:
+
+- Displaying a list of profiles
+- Displaying a profile
+- Displaying a list of conferences
+
+We decided to test these features because they cover the bulk of the user's activities when using the app. They also provide good coverage of the occasions where we are in fact displaying data from the aforementioned cloud services.
+
+### Flutter Gherkin Tests
+
+We used the flutter-gherkin (INSERT LINK) package to automate some of our acceptance tests.
+
+The features to be tested are the following:
+
+- Logging into the app
+- Logging out of the app
+- Signing up for the app
+
+We decided to test these features not necessarily because they are the most crucial to test, but because of the instability and limitations of the testing API. These were chosen as good proof-of-concept for automating acceptance tests since, while simple, they require user interaction through both taps and text input.
+
+## Test Case Specification
+
+### Flutter Widget Tests
+
+#### Displaying a list of profiles
+
+These tests verify that when given a list of mock profiles, the app correctly displays their information. We achieve this by veryfing if the app generates the correct text and icon elements for the given profiles. We also check that if the profile list is empty, the app displays the correct error.
+
+#### Displaying a profile
+
+These tests verify that when given a mock profile, the app correctly displays its information. We achieve this by veryfing if the app generates the correct text and icon elements for the given profile. We also check that if the profile has some fields with null values, the app does not display unwanted tags.
+
+#### Displaying a list of conferences
+
+These tests verify that when given a list of mock conferences, the app correctly displays their information. We achieve this by veryfing if the app generates the correct text and icon elements for the given conferences. We also check that if the conference list is empty, the app displays the correct error.
+
+
 
 # Configuration and change management
 

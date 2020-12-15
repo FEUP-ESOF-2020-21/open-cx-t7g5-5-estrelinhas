@@ -6,6 +6,7 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ActiveConferencesPage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/MyJoinedConferencesPage.dart';
+import 'package:meetix/view/SearchConferencePage.dart';
 import 'package:provider/provider.dart';
 import 'package:meetix/view/EditAccountPage.dart';
 
@@ -124,6 +125,14 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
           ],
         ),
       ),
+      floatingActionButton:
+        (_currentTab == 0)? FloatingActionButton(
+          backgroundColor: Colors.orange,
+          child: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchConferencePage(onChangeConfTab: changeCurrentTab)));
+          },
+        ) : null,
     );
   }
 
