@@ -70,6 +70,9 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
           children: <Widget>[
             SizedBox(height:10.0),
             _buildAva(context, profile),
+            if (profile.interests.isNotEmpty) ...[
+              _buildInterests(context, profile.interests),
+            ],
             if (profile.occupation != null) ...[
               _buildInfo(context, "Occupation", profile.occupation),
             ],
@@ -82,10 +85,8 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
             if (profile.phone != null) ...[
               _buildInfo(context, "Phone number", profile.phone),
             ],
-            if (profile.interests.isNotEmpty) ...[
-              _buildInterests(context, profile.interests),
-            ],
-            SizedBox(height:20.0),
+
+            SizedBox(height:10.0),
           ]
       );
   }
@@ -96,7 +97,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
-            SizedBox(height:50.0),
+            SizedBox(height:30.0),
             Text(labelText,
               style: Theme.of(context).textTheme.overline,
               textScaleFactor: 1.5,
@@ -164,7 +165,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
                           fontSize:20.0
                       ),),
                       SizedBox(width:5.0),
-                      Icon(Icons.support_agent_sharp, color:Colors.blue)
+                      Icon(Icons.support_agent_sharp, color: Color.fromRGBO(255, 153, 102, 1))
                     ],
                   ),
                 ),
@@ -182,7 +183,7 @@ class _ViewProfileDetailsPageState extends State<ViewProfileDetailsPage> {
                           fontSize:20.0
                       ),),
                       SizedBox(width:5.0),
-                      Icon(Icons.person, color:Colors.pink)
+                      Icon(Icons.person, color:Color.fromRGBO(255, 195, 0, 1))
                     ],
                   ),
                 ),
@@ -284,7 +285,8 @@ class _LikeEditButtonState extends State<LikeEditButton> {
       icon: (_match)? Icon(Icons.emoji_people) : Icon(Icons.thumb_up_sharp),
       label: (_liked) ? ((_match)? Text("Match") : Text("Liked")) : Text("Like"),
       backgroundColor: (!widget.hasProfile) ? Colors.grey :
-      (_liked) ? (_match)? Colors.pink : Colors.green : Colors.blue,
+      (_liked) ? (_match)? Color.fromRGBO(160, 88, 232,1) : Color.fromRGBO(116, 179, 105, 1) : Color.fromRGBO(64, 90, 125, 1),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
     );
   }
 
@@ -298,7 +300,7 @@ class _LikeEditButtonState extends State<LikeEditButton> {
       },
       icon: Icon(Icons.edit, color: Colors.white,),
       label: Text("Edit"),
-      backgroundColor: Colors.purple,
+      backgroundColor: Color.fromRGBO(255, 195, 0, 1),
     );
   }
 }

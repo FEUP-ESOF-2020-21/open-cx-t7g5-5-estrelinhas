@@ -349,7 +349,7 @@ class _SelectInterestsState extends State<SelectInterests> {
                   ),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text("Submit"),
+                      child: Text("Submit", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1))),
                       onPressed: () {
                         setState(() {
                           widget.selectedInterests = _currentSelection;
@@ -400,7 +400,7 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
                 radius: 65,
                 imgURL: widget.profileImgUrl,
                 source: widget.storage,
-                borderColor: Theme.of(context).scaffoldBackgroundColor
+                borderColor: Color.fromRGBO(255, 153, 102, 1),
               )
             ),
             Positioned(
@@ -409,8 +409,8 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
               child: AvatarWithBorder(
                 border: 4,
                 icon: Icon(Icons.edit, color: Colors.white),
-                borderColor: Theme.of(context).scaffoldBackgroundColor,
-                backgroundColor: Theme.of(context).accentColor,
+                borderColor: Color.fromRGBO(255, 153, 102, 1),
+                backgroundColor: Color.fromRGBO(255, 153, 102, 1),
               ),
             ),
           ],
@@ -427,7 +427,7 @@ class _ShowAvatarEditState extends State<ShowAvatarEdit>{
     var permissionStatus = await Permission.photos.status;
 
     if(permissionStatus.isGranted){
-      image = await _picker.getImage(source: ImageSource.gallery);
+      image = await _picker.getImage(source: ImageSource.gallery, imageQuality:70, maxWidth: 400, maxHeight: 400);
       if(image != null){
         File file = File(image.path);
 
@@ -616,11 +616,11 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         FlatButton(
           textColor: Colors.grey,
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
+          child: Text('Cancel', style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),)),
         ),
         FlatButton(
           onPressed: deleteAccount,
-          child: Text('Delete'),
+          child: Text('Delete', style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),)),
         )
       ],
     );

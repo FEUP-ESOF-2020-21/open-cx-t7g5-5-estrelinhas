@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
-
 import 'MyWidgets.dart';
 
 class AllProfilesPage extends StatefulWidget {

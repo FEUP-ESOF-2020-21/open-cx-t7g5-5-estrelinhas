@@ -103,7 +103,7 @@ class _ConferencePageState extends State<ConferencePage> {
             height: 140,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromRGBO(255, 153, 102, 1),
               ),
               child: Row (
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +140,7 @@ class _ConferencePageState extends State<ConferencePage> {
                 if(isCreator) _ListStaffTile(context, conference),
                 Padding(
                   padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-                  child: Text("Conferences", style: TextStyle(color: Colors.blue),),
+                  child: Text("Conferences", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),),),
                 ),
                 ListTile(
                   leading: Icon(Icons.add),
@@ -175,12 +175,10 @@ class _ConferencePageState extends State<ConferencePage> {
                     widget.onChangeConfTab(2);
                   },
                 ),
-                Divider(
-                  color: Colors.blue,
-                ),
+                Divider(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-                  child: Text("Settings", style: TextStyle(color: Colors.blue),),
+                  child: Text("Settings", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),),),
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),
@@ -208,7 +206,7 @@ class _ConferencePageState extends State<ConferencePage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-            child: Text("This Conference", style: TextStyle(color: Colors.blue),),
+            child: Text("This Conference", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),),),
           ),
           ListTile(
             leading: Icon(Icons.person),
@@ -236,9 +234,7 @@ class _ConferencePageState extends State<ConferencePage> {
                 confirmDeleteDialog(context, conference, "D_PROFILE");
               }
           ),
-          Divider(
-            color: Colors.blue,
-          ),
+          Divider(),
         ],
       );
   }
@@ -254,9 +250,7 @@ class _ConferencePageState extends State<ConferencePage> {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfilePage(widget._firestore, widget._storage, widget._functions, conference))).then((value) => setState(() {}));
             }
         ),
-        Divider(
-          color: Colors.blue,
-        ),
+        Divider(),
       ],
     );
   }
@@ -267,7 +261,7 @@ class _ConferencePageState extends State<ConferencePage> {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.fromLTRB(14.0, 10.0, 10.0, 10.0),
-          child: Text("Staff", style: TextStyle(color: Colors.blue),),
+          child: Text("Staff", style: TextStyle(color: Color.fromRGBO(255, 153, 102, 1),),),
         ),
         ListTile(
             leading: Icon(Icons.person),
@@ -285,9 +279,7 @@ class _ConferencePageState extends State<ConferencePage> {
               confirmDeleteDialog(context, conference, "D_CONFERENCE");
             }
         ),
-        Divider(
-          color: Colors.blue,
-        ),
+        Divider(),
       ],
     );
   }
@@ -330,8 +322,6 @@ class _ConferencePageState extends State<ConferencePage> {
           _currentTab = index;
         });
       },
-      unselectedItemColor: Colors.grey,
-      selectedItemColor: Colors.blue,
     );
   }
 
@@ -393,11 +383,11 @@ class _ConferencePageState extends State<ConferencePage> {
             actions: <Widget>[
               FlatButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cancel"),
+                child: Text("Cancel", style:TextStyle(color: Color.fromRGBO(255, 153, 102, 1))),
               ),
               FlatButton(
                 onPressed: () => _actionDeleteConference(context),
-                child: Text("Delete"),
+                child: Text("Delete", style:TextStyle(color: Color.fromRGBO(255, 153, 102, 1))),
               ),
             ],
           );
@@ -414,11 +404,11 @@ class _ConferencePageState extends State<ConferencePage> {
             actions: <Widget>[
               FlatButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("Cancel"),
+                child: Text("Cancel", style:TextStyle(color: Color.fromRGBO(255, 153, 102, 1))),
               ),
               FlatButton(
                 onPressed: () => _actionDeleteProfile(context),
-                child: Text("Delete"),
+                child: Text("Delete", style:TextStyle(color: Color.fromRGBO(255, 153, 102, 1))),
               ),
             ],
           );

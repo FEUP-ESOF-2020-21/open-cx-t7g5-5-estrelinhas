@@ -83,7 +83,7 @@ class SignInButton extends StatelessWidget {
         ).then((value) { Scaffold.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.remove); Scaffold.of(context).showSnackBar(SnackBar(content: Text(value, key: Key("warning")))); } );
       },
       child: Text("Sign In", style: TextStyle(color: Colors.white),),
-      color: Theme.of(context).accentColor,
+      color: Color.fromRGBO(255, 153, 102, 1),
     );
   }
 }

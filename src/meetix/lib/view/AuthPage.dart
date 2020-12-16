@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import 'SignInPage.dart';
 import 'SignUpPage.dart';
 

@@ -88,7 +88,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Create", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Create", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),

@@ -8,6 +8,7 @@ import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/MyWidgets.dart';
 
+
 class EditConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
@@ -108,7 +109,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),
