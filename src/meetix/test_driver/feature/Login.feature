@@ -12,7 +12,7 @@ Feature: Login
 
     Scenario: Login when both email and password are correct
         Given I'm in "SignInPage" page
-        And I have "emailField" and "passwordField" and "signInButton"
+        And I have "emailField" and "passwordField" and "signInButton"x\
         When I fill the "emailField" field with "teste@gmail.com"
         And I fill the "passwordField" field with "password"
         When I tap the "signInButton" button
