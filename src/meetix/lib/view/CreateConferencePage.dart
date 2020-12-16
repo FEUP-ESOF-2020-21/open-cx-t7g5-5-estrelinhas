@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/FirestoreController.dart';
 
 class CreateConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -46,6 +46,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
       _startDateController.text = _startDateController.text.trim();
       _endDateController.text = _endDateController.text.trim();
       _interestsController.text = _interestsController.text.trim();
+      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
 
       _nameValid = _nameController.text.isNotEmpty && _nameController.text.length >= 3;
       _startDateValid = _startDateController.text.isNotEmpty && _startDate.isBefore(_endDate);
@@ -54,7 +55,6 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
-      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
       DocumentReference docRef = await widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
         'name':_nameController.text,
         'img': profileImgUrl,

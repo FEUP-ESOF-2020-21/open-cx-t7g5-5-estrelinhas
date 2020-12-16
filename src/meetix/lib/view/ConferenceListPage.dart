@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/ActiveConferencesPage.dart';
 import 'package:meetix/view/CreateConferencePage.dart';
 import 'package:meetix/view/MyJoinedConferencesPage.dart';
+import 'package:meetix/view/SearchConferencePage.dart';
 import 'package:provider/provider.dart';
 import 'package:meetix/view/EditAccountPage.dart';
-import '../controller/FirestoreController.dart';
 import 'MyCreatedConferencesPage.dart';
 
 class ConferenceListPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class ConferenceListPage extends StatefulWidget {
   final StorageController _storage;
   final FunctionsController _functions;
 
-  ConferenceListPage(this._firestore, this._storage, this._functions);
+  ConferenceListPage(this._firestore, this._storage, this._functions): super(key: Key("ConferenceListPage"));
 
   @override
   _ConferenceListPageState createState() {
@@ -117,11 +118,20 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
+              key: Key("logoutButton"),
               onTap: (){ context.read<AuthController>().signOut(); },
             ),
           ],
         ),
       ),
+      floatingActionButton:
+        (_currentTab == 0)? FloatingActionButton(
+          backgroundColor: Colors.orange,
+          child: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchConferencePage(onChangeConfTab: changeCurrentTab)));
+          },
+        ) : null,
     );
   }
 

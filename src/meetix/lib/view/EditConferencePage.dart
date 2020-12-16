@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/view/MyWidgets.dart';
 
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
 
 class EditConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -58,6 +58,7 @@ class _EditConferencePageState extends State<EditConferencePage> {
   submitForm() {
     setState(() {
       _nameController.text = _nameController.text.trim();
+      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
 
       _nameValid = _nameController.text.isEmpty || _nameController.text.length >= 3;
       _startDateValid = _startDate.isBefore(_endDate);
@@ -65,7 +66,6 @@ class _EditConferencePageState extends State<EditConferencePage> {
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
-      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
       if(profileImg != null){
         profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
       }

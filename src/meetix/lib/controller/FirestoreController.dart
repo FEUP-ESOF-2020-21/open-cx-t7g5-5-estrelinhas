@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../model/Conference.dart';
+import 'package:meetix/model/Conference.dart';
 
 class FirestoreController {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;

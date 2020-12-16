@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
+import 'package:meetix/controller/SearchController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/AuthPage.dart';
-import 'view/ConferenceListPage.dart';
+import 'package:meetix/view/ConferenceListPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -60,7 +61,19 @@ class MeetixApp extends StatelessWidget {
         ),
         StreamProvider(
             create: (context) => context.read<AuthController>().authStateChanges,
-        )
+        ),
+        Provider(
+            create: (context) => SearchController(),
+        ),
+        Provider(
+            create: (context) => firestore,
+        ),
+        Provider(
+            create: (context) => storage,
+        ),
+        Provider(
+            create: (context) => functions,
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

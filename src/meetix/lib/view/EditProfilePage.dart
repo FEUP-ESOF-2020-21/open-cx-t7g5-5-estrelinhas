@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:meetix/controller/FirestoreController.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/view/MyWidgets.dart';
 
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
 
 class EditProfilePage extends StatefulWidget {
   final FirestoreController _firestore;
