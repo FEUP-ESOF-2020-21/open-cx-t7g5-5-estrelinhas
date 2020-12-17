@@ -14,7 +14,9 @@ Welcome to the documentation pages of the Meetix of **openCX**!
   * [Physical architecture](#Physical-architecture)
   * [Prototype](#Prototype)
 * [Implementation](#Implementation)
-* [Test](#Test)
+* Test
+  * [Test Plan](#Test-Plan)
+  * [Test Case Specification](#Test-Case-Specification)
 * [Configuration and change management](#Configuration-and-change-management)
 * [Project management](#Project-management)
 
@@ -1276,6 +1278,8 @@ The features to be tested are the following:
 - Signing up for the app
 
 We decided to test these features not necessarily because they are the most crucial to test, but because of the instability and limitations of the testing API. These were chosen as a good proof-of-concept for automating acceptance tests since, while simple, they require user interaction through both taps and text input.
+
+In order to succesfully run these tests the user must be logged out, open the terminal in the _meetix_ folder and run `dart test_driver/test_config.dart` in the terminal 
 
 ## Test Case Specification
 
