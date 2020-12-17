@@ -1210,27 +1210,27 @@ We decided to use the MVC architecture pattern which splits the code into three 
 
 ![Package diagram](./img/package-diagram.png)
 
-In this diagram it shows that we organized our applications into three big packages, corresponding to the MVC architecture parts. Besides that, since the view part is the biggest in our application we decided to also divide it into packages.
+Our application has three big packages, corresponding to the MVC architecture parts. We also divided the view package into smaller, more manageable, sub-packages, divided by functionality.
 
-The first, meetix-widgets, is where we have the code for all the personalized widgets we've created. Then the login package has the pages that correspond to the account. There is, then, a conference package where all conference-related pages are kept. For last, the profiles package contains the pages that correspond to everything that concerns the profiles.
+The meetix-widgets package contains widgets implementing custom elements that are reused in the other packages.
 
 ---
 
 ## Physical architecture
 
-![Physical architecture](./img/physical_architecture.png)
-
 In this subsection, it is documented the high-level physical structure decisions made in our software system (machines, connections, software components installed, and their dependencies).
 
 Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice since it was recommended by the professors and is one of the most prominent mobile development frameworks.
 
-For the database server, we chose Firebase as it is simple to set up and easy to integrate with Flutter.
+The following diagram details the physical architecture of our project:
 
-The user installs the Meetix app on his smartphone, serving as a client and the app communicates, through HTTPS requests, with the firebase server where the database is stored, handling the communication of the API with it, accessing and adding all the information needed for the app's flow.
+![Physical architecture](./img/physical_architecture.png)
 
-To avoid large data processing workloads in the app, causing it to use more battery and provide a worse overall user experience, we offloaded some logic to the backend using Firebase Cloud Functions. Namely, we use this component for the interest matching algorithm. We also use it for ensuring data integrity, using functions as triggers for our database.
+For the backend, we chose Firebase as it is simple to set up and easy to integrate with Flutter. To avoid large data processing workloads in the app, we offloaded some logic to the backend using Cloud Functions - namely the interest matching algorithm. We also use it to ensure data integrity, using functions as database triggers.
 
-To allow the user to search through the database information, we connected to the Algolia server, a full-text search provider. This allows us to not perform heavy workloads locally on the device and provide more comprehensive search results.
+To allow the user to search through the database information, we connected to the Algolia server, a full-text search provider. This allows us to avoid heavy workloads on the device and provide more comprehensive search results.
+
+Communication with these services uses HTTPS requests. Therefore, to use our app, the user needs an internet connection.
 
 ---
 
