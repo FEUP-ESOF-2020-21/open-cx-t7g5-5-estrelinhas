@@ -151,8 +151,8 @@ class _ConferenceListPageState extends State<ConferenceListPage> {
       index: _currentTab,
       children: [
         Text("Available Conferences"),
-        Text(context.watch<AuthController>().currentUser.displayName + "'s Joined Conferences"),
-        Text(context.watch<AuthController>().currentUser.displayName + "'s Created Conferences"),
+        Text("Joined Conferences"),
+        Text("Created Conferences"),
       ],
     );
   }

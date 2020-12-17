@@ -311,7 +311,8 @@ class _SelectInterestsState extends State<SelectInterests> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if(widget.selectedInterests.isNotEmpty) InterestsWrap(widget.selectedInterests),
-          RaisedButton(
+          OutlineButton(
+            highlightedBorderColor: Color.fromRGBO(255, 153, 102, 1),
             child: Text("Select Interests"),
             onPressed: () {FocusScope.of(context).unfocus(); _showInterestsDialog(widget.conference.interests);},
           ),

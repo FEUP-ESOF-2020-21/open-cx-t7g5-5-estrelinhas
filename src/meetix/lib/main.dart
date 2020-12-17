@@ -39,7 +39,9 @@ class StartApp extends StatelessWidget {
 
         // Otherwise, show something whilst waiting for initialization to complete
         return Container(
-          decoration: BoxDecoration(color: Colors.deepPurple),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(255, 153, 102, 1),
+          ),
         );
       },
     );
