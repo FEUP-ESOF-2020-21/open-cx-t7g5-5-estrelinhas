@@ -18,6 +18,10 @@ const conferences_index = algolia_client.initIndex('conference_search')
 //
 
 exports.getTop20 = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        return;
+    }
+
     const profilesRef = db.collection("conference").doc(data.conferenceID).collection("profiles")
     const userRef = profilesRef.doc(data.profileID)
     const userLikesRef = userRef.collection("likes")
@@ -69,6 +73,10 @@ async function deleteDocumentRecursive(documentPath:String) {
  * data.type - delete conference or profile
  */
 exports.deleteConferenceOrProfile = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        return;
+    }
+
     const conferencePath = "/conference/" + data.conferenceID
     const conferenceRef = db.doc(conferencePath)
     const conferenceData = (await conferenceRef.get()).data()
