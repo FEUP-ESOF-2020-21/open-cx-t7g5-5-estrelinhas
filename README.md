@@ -853,6 +853,14 @@ When I press the "Sign in" button
 Then I expect to not be able to log in to the account, with a message warning me why
 ```
 
+```gherkin
+Scenario: Log out
+When I open the app drawer
+Given I am logged in
+When I press the "Logout" button
+Then I expect the app to terminate my session and take me back to the "Sign In" page
+```
+
 _Value/Effort_
 
 Value: Should Have
@@ -1051,9 +1059,9 @@ Effort: XL
 
 ---
 
-### **Story 20: Search/Filter all profiles**
+### **Story 20: Search all profiles**
 
-As a user, I want to be able to search/filter all the profiles for a given conference, so that I can have a selected view according to what I'm looking for.
+As a user, I want to be able to search all the profiles for a given conference, so that I can have a selected view according to what I'm looking for.
 
 _User interface mockups_
 
@@ -1063,31 +1071,20 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Search profiles
-Given I’m logged in and I have joined a conference,
+Given I’m logged in and I have joined a conference
 When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
-When I click on the "Search bar" and insert a string,
-Then the app shows me all profiles matching the string
-```
-
-```gherkin
-Scenario: Filter profiles
-Given I’m logged in and I have joined a conference,
-When I click on the "Profiles" button located at the bottom of the screen
-Then the app shows me all profiles for this conference
-When I click on the "Filter button"
-Then the app shows me all filters
-When I click "Filter"
-Then the app shows me all profiles matching the applied filters
-When I click on a profile,
-Then the system sends me to the person’s profile
+When I click on the "Search" button
+Then the app shows me a page with a search bar
+When I click on th "Search bar" and insert a string containing a name, interest, occupation or location
+Then the app shows me all profiles with fields that match the string
 ```
 
 _Value/Effort_
 
 Value: Could Have
 
-Effort: L/XL
+Effort: XL
 
 ---
 
@@ -1116,7 +1113,7 @@ _Value/Effort_
 
 Value: Could Have
 
-Effort: S/M
+Effort: L
 
 ---
 
@@ -1231,7 +1228,9 @@ For the database server, we chose Firebase as it is simple to set up and easy to
 
 The user installs the Meetix app on his smartphone, serving as a client and the app communicates, through HTTPS requests, with the firebase server where the database is stored, handling the communication of the API with it, accessing and adding all the information needed for the app's flow.
 
-To allow the user to search through the database information, we connected to the Algolia server, a full-text search provider.
+To avoid large data processing workloads in the app, causing it to use more battery and provide a worse overall user experience, we offloaded some logic to the backend using Firebase Cloud Functions. Namely, we use this component for the interest matching algorithm. We also use it for ensuring data integrity, using functions as triggers for our database.
+
+To allow the user to search through the database information, we connected to the Algolia server, a full-text search provider. This allows us to not perform heavy workloads locally on the device and provide more comprehensive search results.
 
 ---
 
@@ -1241,7 +1240,7 @@ To help on validating all the architectural, design, and technological decisions
 
 The prototype's role in our development process was about testing if the tool Flutter was adequate to do what we aimed to do and also about advancing the development of the app itself.
 
-For the prototype, the main story was #6 which states that 'As a conference attendee, I want to be able to see the profiles that have matched with me'. The other ones serve as the base for the app.
+Our prototype implemented a simplified version of [user story 17](#story-17-see-all-profiles), showing a list of names on a page. We later integrated this with firebase to also test if the backend solution would be adequate.
 
 # Implementation
 
@@ -1279,7 +1278,7 @@ The features to be tested are the following:
 
 We decided to test these features not necessarily because they are the most crucial to test, but because of the instability and limitations of the testing API. These were chosen as a good proof-of-concept for automating acceptance tests since, while simple, they require user interaction through both taps and text input.
 
-In order to succesfully run these tests the user must be logged out, open the terminal in the _meetix_ folder and run `dart test_driver/test_config.dart` in the terminal 
+In order to succesfully run these tests the user must be logged out, open the terminal in the _meetix_ folder and run `dart test_driver/test_config.dart` in the terminal. 
 
 ## Test Case Specification
 

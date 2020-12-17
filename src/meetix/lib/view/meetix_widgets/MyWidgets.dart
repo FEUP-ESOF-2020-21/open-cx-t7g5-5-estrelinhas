@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:meetix/controller/AuthController.dart';
 
-import 'ViewProfileDetailsPage.dart';
+import '../profiles/ViewProfileDetailsPage.dart';
 
 
 class CustomAvatar extends StatelessWidget {

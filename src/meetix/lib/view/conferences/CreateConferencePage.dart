@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
 

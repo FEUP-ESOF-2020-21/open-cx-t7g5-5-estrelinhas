@@ -9,9 +9,9 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
-import 'package:meetix/view/ConferencePage.dart';
-import 'package:meetix/view/ViewProfileDetailsPage.dart';
+import 'package:meetix/view/conferences/ConferenceListPage.dart';
+import 'package:meetix/view/conferences/ConferencePage.dart';
+import 'package:meetix/view/profiles/ViewProfileDetailsPage.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 

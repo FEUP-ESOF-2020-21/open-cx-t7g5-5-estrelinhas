@@ -6,8 +6,8 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/SearchController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/AuthPage.dart';
-import 'package:meetix/view/ConferenceListPage.dart';
+import 'package:meetix/view/auth/AuthPage.dart';
+import 'package:meetix/view/conferences/ConferenceListPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {

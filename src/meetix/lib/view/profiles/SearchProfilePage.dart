@@ -5,7 +5,7 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 import 'package:provider/provider.dart';
 import 'package:meetix/controller/SearchController.dart';
 

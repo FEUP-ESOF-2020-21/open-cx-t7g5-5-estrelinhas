@@ -6,11 +6,11 @@ import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/SearchController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
-import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
 import 'ConferencePage.dart';
-import 'CreateProfilePage.dart';
+import '../profiles/CreateProfilePage.dart';
 
 class SearchConferencePage extends StatefulWidget {
   final onChangeConfTab;

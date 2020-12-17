@@ -5,26 +5,27 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
-import 'package:meetix/view/ConferencePage.dart';
-import 'package:meetix/view/CreateProfilePage.dart';
-import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/conferences/ConferencePage.dart';
+import 'package:meetix/view/profiles/CreateProfilePage.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 import 'package:provider/provider.dart';
 
-class ActiveConferencesPage extends StatefulWidget {
+
+class MyCreatedConferencesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final FunctionsController _functions;
   @required final Function(int) onChangeConfTab;
 
-  ActiveConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
+  MyCreatedConferencesPage(this._firestore, this._storage, this._functions, {this.onChangeConfTab});
 
   @override
-  _ActiveConferencesPageState createState() {
-    return _ActiveConferencesPageState();
+  _MyCreatedConferencesPageState createState() {
+    return _MyCreatedConferencesPageState();
   }
 }
 
-class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
+class _MyCreatedConferencesPageState extends State<MyCreatedConferencesPage> {
   @override
   Widget build(BuildContext context) {
     return _buildBody(context);
@@ -33,20 +34,18 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
   Widget _buildBody(BuildContext context) {
     // Gets stream from Firestore with the conference info
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getActiveConferences(),
+      stream: widget._firestore.getCreatedConferences(context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0) {
             return _buildList(context, snapshot.data.docs);
           } else {
-            return Center(child: Text("There are no active conferences"));
+            return Center(child: Text("You have not created any conference"));
           }
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
-          return Center(child: Text("Loading"));
-
-          // return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -67,7 +66,7 @@ class _ActiveConferencesPageState extends State<ActiveConferencesPage> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){print("UPDATING");}));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => openConference(context, _conference))).then((value) => setState((){}));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

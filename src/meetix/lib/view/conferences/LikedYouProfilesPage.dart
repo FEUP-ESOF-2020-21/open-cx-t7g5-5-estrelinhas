@@ -5,24 +5,26 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
 import 'package:provider/provider.dart';
-import 'MyWidgets.dart';
 
-class MatchedProfilesPage extends StatefulWidget {
+import '../meetix_widgets/MyWidgets.dart';
+
+
+class LikedYouProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
   final bool hasProfile;
 
-  MatchedProfilesPage(this._firestore, this._storage, this._conference,
+  LikedYouProfilesPage(this._firestore, this._storage, this._conference,
       {this.hasProfile = false});
 
   @override
-  _MatchedProfilesPageState createState() {
-    return _MatchedProfilesPageState();
+  _LikedYouProfilesPageState createState() {
+    return _LikedYouProfilesPageState();
   }
 }
 
-class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
+class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
   @override
   Widget build(BuildContext context) {
     return _buildBody(context, widget._conference);
@@ -30,13 +32,14 @@ class _MatchedProfilesPageState extends State<MatchedProfilesPage> {
 
   Widget _buildBody(BuildContext context, Conference conference) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getMatches(conference, context.watch<AuthController>().currentUser.uid),
+      stream: widget._firestore.getLikedYouProfiles(
+          conference, context.watch<AuthController>().currentUser.uid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.size > 0)
             return ProfileListView(widget._firestore, widget._storage, widget._conference, widget.hasProfile, snapshot.data.docs, fromQuery: true,);
           else {
-            return Center(child: Text("No profiles have matched yours"));
+            return Center(child: Text("No profiles have liked you :("));
           }
         } else if (snapshot.hasError) {
           return Text("Error :(");

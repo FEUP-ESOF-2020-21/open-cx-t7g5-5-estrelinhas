@@ -5,19 +5,19 @@ import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
-import 'package:meetix/view/AllProfilesPage.dart';
-import 'package:meetix/view/MatchedProfilesPage.dart';
-import 'package:meetix/view/SearchProfilePage.dart';
-import 'package:meetix/view/TopProfilesPage.dart';
-import 'package:meetix/view/EditConferencePage.dart';
-import 'package:meetix/view/LikedYouProfilesPage.dart';
+import 'package:meetix/view/conferences/AllProfilesPage.dart';
+import 'package:meetix/view/conferences/MatchedProfilesPage.dart';
+import 'package:meetix/view/profiles/SearchProfilePage.dart';
+import 'package:meetix/view/conferences/TopProfilesPage.dart';
+import 'package:meetix/view/conferences/EditConferencePage.dart';
+import 'package:meetix/view/conferences/LikedYouProfilesPage.dart';
 import 'package:provider/provider.dart';
 
 import 'CreateConferencePage.dart';
-import 'CreateProfilePage.dart';
-import 'EditAccountPage.dart';
-import 'MyWidgets.dart';
-import 'ViewProfileDetailsPage.dart';
+import '../profiles/CreateProfilePage.dart';
+import '../auth/EditAccountPage.dart';
+import '../meetix_widgets/MyWidgets.dart';
+import '../profiles/ViewProfileDetailsPage.dart';
 
 
 class ConferencePage extends StatefulWidget {

@@ -3,12 +3,12 @@ import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/ActiveConferencesPage.dart';
-import 'package:meetix/view/CreateConferencePage.dart';
-import 'package:meetix/view/MyJoinedConferencesPage.dart';
-import 'package:meetix/view/SearchConferencePage.dart';
+import 'package:meetix/view/conferences/ActiveConferencesPage.dart';
+import 'package:meetix/view/conferences/CreateConferencePage.dart';
+import 'package:meetix/view/conferences/MyJoinedConferencesPage.dart';
+import 'package:meetix/view/conferences/SearchConferencePage.dart';
 import 'package:provider/provider.dart';
-import 'package:meetix/view/EditAccountPage.dart';
+import 'package:meetix/view/auth/EditAccountPage.dart';
 import 'MyCreatedConferencesPage.dart';
 
 class ConferenceListPage extends StatefulWidget {

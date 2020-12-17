@@ -6,7 +6,7 @@ import 'package:meetix/model/Conference.dart';
 import 'package:meetix/model/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/MyWidgets.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 
 
 class EditProfilePage extends StatefulWidget {

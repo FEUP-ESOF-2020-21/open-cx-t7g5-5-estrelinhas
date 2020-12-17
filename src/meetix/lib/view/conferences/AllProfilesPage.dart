@@ -1,30 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
 import 'package:meetix/model/Conference.dart';
-import 'package:provider/provider.dart';
+import '../meetix_widgets/MyWidgets.dart';
 
-import 'MyWidgets.dart';
-
-
-class LikedYouProfilesPage extends StatefulWidget {
+class AllProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final Conference _conference;
   final bool hasProfile;
 
-  LikedYouProfilesPage(this._firestore, this._storage, this._conference,
+  AllProfilesPage(this._firestore, this._storage, this._conference,
       {this.hasProfile = false});
 
   @override
-  _LikedYouProfilesPageState createState() {
-    return _LikedYouProfilesPageState();
+  _AllProfilesPageState createState() {
+    return _AllProfilesPageState();
   }
 }
 
-class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
+class _AllProfilesPageState extends State<AllProfilesPage> {
   @override
   Widget build(BuildContext context) {
     return _buildBody(context, widget._conference);
@@ -32,15 +28,13 @@ class _LikedYouProfilesPageState extends State<LikedYouProfilesPage> {
 
   Widget _buildBody(BuildContext context, Conference conference) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget._firestore.getLikedYouProfiles(
-          conference, context.watch<AuthController>().currentUser.uid),
+      stream: widget._firestore.getConferenceProfiles(conference),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.size > 0)
-            return ProfileListView(widget._firestore, widget._storage, widget._conference, widget.hasProfile, snapshot.data.docs, fromQuery: true,);
-          else {
-            return Center(child: Text("No profiles have liked you :("));
-          }
+          if (snapshot.data.size == 0)
+            return Center(child: Text("No profiles"));
+          else
+            return ProfileListView(widget._firestore, widget._storage, widget._conference, widget.hasProfile, snapshot.data.docs, fromQuery: false,);
         } else if (snapshot.hasError) {
           return Text("Error :(");
         } else {
