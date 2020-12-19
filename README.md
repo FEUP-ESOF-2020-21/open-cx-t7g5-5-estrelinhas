@@ -1280,6 +1280,8 @@ We decided to test these features not necessarily because they are the most cruc
 
 In order to succesfully run these tests the user must be logged out, open the terminal in the *test_driver* folder and run `dart test_config.dart` in the terminal. 
 
+### Manual Tests
+During the development of our app, every time a new feature was added, its robustness was checked using its acceptance tests. 
 ## Test Case Specification
 
 ### Flutter Widget Tests
@@ -1310,6 +1312,9 @@ These tests verify that when the user is logged in and on a page that lists conf
 #### Signing up for the app
 
 These tests verify that when the user tries to create an account with an invalid email, the account is not created. We achieved this by verifying that when the user inserts an email that is already associated with an existing account or inserts a badly formatted email, the app stays on the "Sign Up" page and the respective warning message is shown.
+
+### Manual Tests
+These tests verify if the workflow of our app is as intended. We achieved this by trying to do both valid and invalid actions. Anytime a feature was added to the flow of the app, we also tested the full current flow of the app.
 
 # Configuration and change management
 
