@@ -14,7 +14,9 @@ Welcome to the documentation pages of the Meetix of **openCX**!
   * [Physical architecture](#Physical-architecture)
   * [Prototype](#Prototype)
 * [Implementation](#Implementation)
-* [Test](#Test)
+* Test
+  * [Test Plan](#Test-Plan)
+  * [Test Case Specification](#Test-Case-Specification)
 * [Configuration and change management](#Configuration-and-change-management)
 * [Project management](#Project-management)
 
@@ -38,10 +40,7 @@ Rita Peixoto  | up201806257@fe.up.pt
 
 ## Product Vision
 
-Meetix is an app for easy online conference networking. Conferences sign up and add a list of topics related to the event. Attendees then create a profile, adding contact information and topics they are interested in. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections. 
-
-Meetix is an app for easy online conference 
-networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
+Meetix is an app for easy online conference networking. The app allows attendees to see and like each other's profiles and get notified when they match, providing meaningful connections.
 
 ---
 
@@ -53,9 +52,9 @@ Meetix sets out to solve this problem with an incredibly simple approach.
 
 **Conference organizers** can register their event in less than 30 seconds. Just add basic information and relevant topics and you're up and running.
 
-Same goes for **attendees** - no complex forms or weird links. Find your conference and create a profile with relevant contact info and interests. A few taps later, you're able to see, filter and like other profiles and get notified when you match with someone.
+The same goes for **attendees** - no complex forms or weird links. Find your conference and create a profile with relevant contact info and interests. A few taps later, you're able to see, filter and like other profiles and get notified when you match with someone.
 
-Meetix focuses on meaningful connections, no bells and whistles.
+Meetix focuses on meaningful connections, no bells, and whistles.
 
 ---
 
@@ -69,7 +68,7 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** In order to use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply of choosing an e-mail and password for future logins.
+* **Description:** To use the app, all users must create an account before adhering to any conference and setting up a personal profile for that conference. This process consists simply of choosing an e-mail and password for future logins.
 
 * **Preconditions and Postconditions:** The only precondition is to have the app installed on the device. Since this use case assumes the user has no account prior to this step, the program is left in a state where it requires the user to create an account.
 
@@ -86,9 +85,9 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** In order to use the app, all users must login before adhering to any conference. This process consists simply of inputting the correct e-mail and password combination to access the user's account.
+* **Description:** In order to use the app, all users must log in before adhering to any conference. This process consists simply of inputting the correct e-mail and password combination to access the user's account.
 
-* **Preconditions and Postconditions:** The only precondition is to have already an account in the app. Afterward, the app is completly available for the user.
+* **Preconditions and Postconditions:** The only precondition is to have already an account in the app. Afterward, the app is completely available for the user.
 
 * **Normal Flow:**
   1. User provides an e-mail.
@@ -96,15 +95,15 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Alternative Flows and Exceptions:**
   E-mail and password combination correct.
-  If this condition isn't met, the user will not be able to login the app.
+  If this condition isn't met, the user will not be able to log in to the app.
   
 ### Create conference
 
 * **Actor:** Conference Staff
 
-* **Description:** In order to an attendee join a conference, the conference must already exists and be available in the app. The process of creating a conference consists of inputting the data for that conference.
+* **Description:** For an attendee to join a conference, the conference must already exist and be available in the app. The process of creating a conference consists of inputting the data for that conference.
 
-* **Preconditions and Postconditions:** The only precondition is to be logged in the app. When the creation of the conference is done successfully, then it appears on the available conferences to the other users.
+* **Preconditions and Postconditions:** The only precondition is to be logged in to the app. When the creation of the conference is done successfully, then it appears on the available conferences to the other users.
 
 * **Normal Flow:**
   1. Staff provides a name.
@@ -116,9 +115,9 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** In order to fully use the app, an user must join a conference. This process consists on clicking on available conferences on the menu search conferences, creating the profile for that conference and selecting of the topics list their interests.
+* **Description:** In order to fully use the app, a user must join a conference. This process consists of clicking on available conferences on the menu search conferences, creating the profile for that conference, and selecting the topics they’re interested in.
 
-* **Preconditions and Postconditions:** The only precondition is to be logged in the app. Then the user has full acess to all available features such as joining a conference. After joining and creating the profile, the user can enter the conference workspace.
+* **Preconditions and Postconditions:** The only precondition is to be logged in to the app. Then the user has full access to all available features such as joining a conference. After joining and creating the profile, the user can enter the conference workspace.
 
 * **Normal Flow:**
   1. The user selects a conference.
@@ -129,16 +128,16 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** If they wish so, the user can change the information displayed on their conference profile, with possibility to add, remove or change any attributes on their profile.
+* **Description:** If they wish so, the user can change the information displayed on their conference profile, with the possibility to add, remove, or change any attributes on their profile.
 
-* **Preconditions and Postconditions:** To edit a profile, the user must be in the conference workspace and in their profile choose the edit button. Now that the profile was updated the user experience will be adjusted to their new information.
+* **Preconditions and Postconditions:** To edit a profile, the user must be in the conference workspace, and in their profile choose the edit button. Now that the profile was updated the user experience will be adjusted to their new information.
 
 * **Normal Flow:**
 
   1. User opens the conference workspace and on their profile page, clicks the edit button.
   2. A form with the current information and possibilities to add new information or remove information will open.
   3. The user will edit their profile according to their will.
-  4. The user hits save and their information will appear updated throughout the all app.
+  4. The user hits save and their information will appear updated throughout the app.
 
 * **Alternative Flows and Exceptions:** If the user does not wish to update can click the cancel button. The inserted information needs to be valid to be saved.
 
@@ -173,9 +172,9 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 * **Actor:** User
 
-* **Description:** When in a list of profiles of the conference or when searching for profiles, it’s possible for the user to open someone’s profile.
+* **Description:** When in a list of profiles of the conference or when searching for profiles, the user can open someone’s profile.
 
-* **Preconditions and Postconditions:** The user must be in a conference workspace searching/viewing list of profiles. After opening the profile, the user is able to see the display of the profile with the corresponding information.
+* **Preconditions and Postconditions:** The user must be in a conference workspace searching/viewing the list of profiles. After opening the profile, the user can see the display of the profile with the corresponding information.
 
 * **Normal Flow:**
 
@@ -264,7 +263,7 @@ Meetix focuses on meaningful connections, no bells and whistles.
 
 ### **Story 1: Join a conference and create a profile**
 
-As a conference attendee, I want to be able to join a conference and create my conference profile, so that I can use the app main features.
+As a conference attendee, I want to be able to join a conference and create my conference profile, so that I can use the app's main features.
 
 _User interface mockups_
 
@@ -298,7 +297,7 @@ Effort: M
 
 ### **Story 2: Select profile interests**
 
-As a conference attendee, I want to be able to choose the topics I’m interested in, so that I can see profiles that have similar interests to mine.
+As a conference attendee, I want to be able to choose the topics I’m interested in so that I can see profiles that have similar interests to mine.
 
 _User interface mockups_
 
@@ -312,7 +311,7 @@ Given I’m trying to join a conference
 When I'm filling the form with my information
 Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
 When I choose the interests and click the "Submit" button
-Then I expect to see the choosen interests in the form 
+Then I expect to see the chosen interests in the form 
 When I click on the "Next" button
 Then the system saves my information for matching purposes
 ```
@@ -325,7 +324,7 @@ Then the system opens an alert dialog where it allows me to choose the topics of
 When I do not choose any interests and click the "Submit" button
 Then I expect to see no interests in the form 
 When I click on the "Next" button
-Then the system saves my information even though I can't use all the funcitionalities of the app
+Then the system saves my information even though I can't use all the functionalities of the app
 ```
 
 ```gherkin
@@ -334,7 +333,7 @@ Given I’m trying to edit my profile
 When I'm changing the interests field 
 Then the system opens an alert dialog where it allows me to choose the topics of the conference I’m interested in
 When I choose the interests and click the "Submit" button
-Then I expect to see the choosen interests in the form 
+Then I expect to see the chosen interests in the form 
 When I click on the "Save changes" button
 Then the system saves my new information 
 ```
@@ -347,7 +346,7 @@ Then the system opens an alert dialog where it allows me to choose the topics of
 When I choose no interests and click the "Submit" button
 Then I expect to see no interests in the form 
 When I click on the "Save changes" button
-Then the system saves my information even though I can't use all the funcitionalities of the app 
+Then the system saves my information even though I can't use all the functionalities of the app 
 ```
 
 _Value/Effort_
@@ -360,7 +359,7 @@ Effort: L
 
 ### **Story 3: View profile details**
 
-As an user, I want to be able to open a person’s profile to see its information, so that I can decide if I'm interested in this profile.
+As a user, I want to be able to open a person’s profile to see its information, so that I can see my conference profile or another person's profile and decide if I'm interested or not.
 
 _User interface mockups_
 
@@ -370,9 +369,16 @@ _User interface mockups_
 _Acceptance Tests_
 
 ```gherkin
+Scenario: Visualize my conference profile
+Given I’m logged in, I have clicked on a conference and I’m on a screen that lists conference profiles
+When I open the app drawer and click the "My Profile" button
+Then the app opens my profile for that conference
+```
+
+```gherkin
 Scenario: Visualize a person’s profile 
-Given I’m logged-in, I have clicked on a conference and I’m on a screen that lists conference profiles
-When I click someone's profile
+Given I’m logged in, I have clicked on a conference and I’m on a screen that lists conference profiles
+When I click on someone's profile
 Then the app opens the person's profile and shows me their information
 ```
 
@@ -396,14 +402,14 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Like a person’s profile
-Given I’m logged-in, I have joined a conference and I’m in someone's profile
+Given I’m logged in, I have joined a conference and I’m in someone's profile
 When I click the "Like" button,
-Then the app registers the action and shows my profile in the other user's "Liked Me" page, and changes the button to "Liked"
+Then the app registers the action and shows my profile on the other user's "Liked Me" page, and changes the button to "Liked"
 ```
 
 ```gherkin
 Scenario: Like a person’s profile without having a personal profile
-Given I’m logged-in, I have clicked on a conference without creating a profile, and I’m in someone's profile
+Given I’m logged in, I have clicked on a conference without creating a profile, and I’m in someone's profile
 When I click the "Liked" button,
 Then the app shows me a message that I have to create a profile to like someone's profile
 ```
@@ -428,7 +434,7 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: See top 20 profiles
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Top 20" button located at bottom of the screen
 Then the app shows me the top 20 profiles for this conference with whom I have the most interests in common
 When I click on a profile,
@@ -437,14 +443,14 @@ Then the system sends me to the person’s profile
 
 ```gherkin
 Scenario: See top 20 profiles having no interests selected
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Top 20" button located at bottom of the screen and have no interests selected
 Then the app shows me a message that there are no profiles to show
 ```
 
 ```gherkin
 Scenario: See top 20 profiles without having a personal profile
-Given I’m logged-in and I have clicked on a conference without creating a profile,
+Given I’m logged in and I have clicked on a conference without creating a profile,
 When I click on the "Top 20" button located at bottom of the screen
 Then the app shows me a message that there are no profiles to show
 ```
@@ -469,7 +475,7 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: See profiles that I've matched with
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Matches" button located at bottom of the screen
 Then the app shows me the profiles that matched with me
 When I click on a profile,
@@ -478,14 +484,14 @@ Then the system sends me to the person’s profile
 
 ```gherkin
 Scenario: See profiles that I've matched with without having matches 
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Matches" button located at bottom of the screen and I have no matches
 Then the app shows me a message that I have no matches
 ```
 
 ```gherkin
 Scenario: See profiles that I've matched with without having a personal profile
-Given I’m logged-in and I have clicked a conference without creating a profile,
+Given I’m logged in and I have clicked a conference without creating a profile,
 When I click on the "Matches" button located at bottom of the screen
 Then the app shows me a message that I have no matches
 ```
@@ -500,7 +506,7 @@ Effort: M
 
 ### **Story 7: View list of active conferences**
 
-As an user, I want to be able to view all active conferences, so that I might join them.
+As a user, I want to be able to view all active conferences, so that I might join them.
 
 _User interface mockups_
 
@@ -511,16 +517,16 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: View all conferences
-Given I’m logged-in
-When I click the button to search for active conferences
+Given I’m logged in
+When I open the app drawer and I click the "Available conferences" button
 Then the app shows me a list of conferences available
 ```
 
 ```gherkin
 Scenario: View all conferences having no conferences happening
-Given I’m logged-in and no conferences are happening
-When I click the button to search for active conferences
-Then I expect to see no conferences available
+Given I’m logged in and no conferences are happening
+When I open the app drawer and I click the "Available conferences" button
+Then I expect to see a message telling me that there are no active conferences
 ```
 
 _Value/Effort_
@@ -544,8 +550,8 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Creating a conference
-Given I’m logged-in
-When I click the ‘Create conference’ button on the app drawer
+Given I’m logged in
+When I open the app drawer and I click the "Create conference" button
 Then the app takes me to a form where I enter the conference details
 When I finish inputting data
 Then the app saves the conference and shows me the conference list page
@@ -585,7 +591,7 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Seeing who liked my profile
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Liked You" button located at bottom of the screen
 Then the app shows me the profiles that liked mine
 When I click on a profile,
@@ -594,14 +600,14 @@ Then the system sends me to the person’s profile
 
 ```gherkin
 Scenario: Seeing who liked my profile and having no other attendee liking me
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference,
 When I click on the "Liked You" button located at bottom of the screen
 Then the app shows me a message that I have no other attendee liking me
 ```
 
 ```gherkin
 Scenario: See who liked my profile without having a personal profile
-Given I’m logged-in and I have clicked a conference without creating a profile
+Given I’m logged in and I have clicked a conference without creating a profile
 When I click on the "Liked You" button located at bottom of the screen
 Then the app shows me a message that I have no other attendee liking me
 ```
@@ -630,7 +636,7 @@ Scenario: Editing my profile’s information
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I fill the form with all valid information that I want to change and I click the 'Save changes' button
+When I fill the form with all valid information that I want to change and I click the "Save changes" button
 Then I expect the system to save my new information
 ```
 
@@ -639,7 +645,7 @@ Scenario: Editing my profile’s information and leaving some fields blank
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I fill the form and leave some fields blank and I click the 'Save changes' button
+When I fill the form and leave some fields blank and I click the "Save changes" button
 Then I expect to see those fields remained the same
 ```
 
@@ -648,7 +654,7 @@ Scenario: Editing my profile’s information
 Given I’m in my profile
 When I click on the edit button
 Then I can edit my information
-When I click the 'Cancel' button
+When I click the "Cancel" button
 Then I expect the system to not save any new information
 ```
 
@@ -662,7 +668,7 @@ Effort: M
 
 ### **Story 11: Edit conference**
 
-As conference staff, I want to be able to edit the conference I have created and change dates and topics, so that all the information is up to date.
+As conference staff, I want to be able to edit the conference I have created and change dates and topics so that all the information is up to date.
 
 _User interface mockups_
 
@@ -672,28 +678,28 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Edit conference
-Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've created
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I fill the form with all valid information that I want to change and I click the 'Save changes' button
+When I fill the form with all valid information that I want to change and I click the "Save changes" button
 Then the app saves the changes
 ```
 
 ```gherkin
 Scenario: Edit conference and leaving some fields blank
-Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've created
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I fill the form and leave some fields blank and I click the 'Save changes' button
+When I fill the form and leave some fields blank and I click the "Save changes" button
 Then I expect to see those fields remained the same
 ```
 
 ```gherkin
 Scenario: Edit conference
-Given I’m logged-in and I've opened a conference that I've created
-When I click on the "Edit conference" button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've created
+When I open the app drawer and I click on the "Edit conference" button
 Then the app shows a form to edit conference details
-When I click the 'Cancel' button
+When I click the "Cancel" button
 Then I expect the system to not save any new information
 ```
 
@@ -707,7 +713,7 @@ Effort: M
 
 ### **Story 12: Leave conference**
 
-As a conference attendee, I want to be able to leave a conference that I have joined, so that I'm no longer an attendee for this conference and my profile is deleted.
+As a conference attendee, I want to be able to leave a conference that I have joined so that I'm no longer an attendee for this conference and my profile is deleted.
 
 _User interface mockups_
 
@@ -717,8 +723,8 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Leaving a conference
-Given I’m logged-in and I've opened a conference that I've joined
-When I press the "Leave conference" button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've joined
+When I open the app drawer and I press the "Leave conference" button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Leave" button
 Then the app deletes my registration and profile for this conference and takes me to the conferences list page
@@ -726,8 +732,8 @@ Then the app deletes my registration and profile for this conference and takes m
 
 ```gherkin
 Scenario: Leaving a conference
-Given I’m logged-in and I've opened a conference that I've joined
-When I press the "Leave conference" button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've joined
+When I open the app drawer and I press the "Leave conference" button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Cancel" button
 Then I expect the system to remain the same
@@ -753,8 +759,8 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Deleting a conference
-Given I’m logged-in and I've opened a conference that I've created
-When I press the "Delete conference” button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've created
+When I open the app drawer and I press the "Delete conference” button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Delete" button
 Then the app deletes this conference and takes me to the conferences list page
@@ -762,8 +768,8 @@ Then the app deletes this conference and takes me to the conferences list page
 
 ```gherkin
 Scenario: Deleting a conference
-Given I’m logged-in and I've opened a conference that I've created
-When I press the "Delete conference” button of the top pop-up menu
+Given I’m logged in and I've opened a conference that I've created
+When I open the app drawer and I press the "Delete conference” button
 Then the app shows me an alert dialog that asks for my confirmation
 When I press the "Cancel" button
 Then I expect the system to remain the same
@@ -779,7 +785,7 @@ Effort: S
 
 ### **Story 14: Create account**
 
-As an user, I create an account in Meetix, so that I have access to all the available features.
+As a user, I create an account in Meetix, so that I have access to all the available features.
 
 _User interface mockups_
 
@@ -790,15 +796,15 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
-Given my email is valid and has no account associated with yet
+When I click on the "Sign up" button of the init menu
+Given my email is valid and has no account associated with it yet
 When I enter a password and press the button register
 Then I expect my account to be created
 ```
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
+When I click on the "Sign up" button of the init menu
 Given my email is already associated with an account
 When I try to press the button register
 Then I expect to not be able to create the account with a message warning me why
@@ -806,7 +812,7 @@ Then I expect to not be able to create the account with a message warning me why
 
 ```gherkin
 Scenario: Trying to create an account
-When I click on the "Register" button of the init menu
+When I click on the "Sign up" button of the init menu
 Given my email is not valid
 When I try to press the button register
 Then I expect to not be able to create the account with a message warning me why
@@ -822,7 +828,7 @@ Effort: M
 
 ### **Story 15: Login**
 
-As an user, I want to be able to login to the app, so that I can use all the available features.
+As a user, I want to be able to log in to the app, so that I can use all the available features.
 
 _User interface mockups_
 
@@ -832,19 +838,27 @@ _User interface mockups_
 _Acceptance Tests_
 
 ```gherkin
-Scenario: Login
-When I click on the "Login" button of the init menu
+Scenario: Log in
+When I click on the "Sign in" button of the init menu
 Given a correct email and password combination
-When I press the "Login" button
-Then I expect to be able to login the account
+When I press the "Sign in" button
+Then I expect to be able to log in to the account
 ```
 
 ```gherkin
-Scenario: Login
-When I click on the "Login" button of the init menu
+Scenario: Log in
+When I click on the "Sign in" button of the init menu
 Given either one of my email or password isn’t valid
-When I press the "Login" button
-Then I expect to not be able to login the account, with a message warning me why
+When I press the "Sign in" button
+Then I expect to not be able to log in to the account, with a message warning me why
+```
+
+```gherkin
+Scenario: Log out
+When I open the app drawer
+Given I am logged in
+When I press the "Logout" button
+Then I expect the app to terminate my session and take me back to the "Sign In" page
 ```
 
 _Value/Effort_
@@ -857,7 +871,7 @@ Effort: S
 
 ### **Story 16: Edit account**
 
-As an user, I want to be able to edit my account (change email/password), so that I can change my information.
+As a user, I want to be able to edit my account (change email/password), so that I can change my information.
 
 _User interface mockups_
 
@@ -868,11 +882,56 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Edit account
-Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
-Then the app shows me my account
-When I change my email or password with valid information and I click on "Save" button
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I change my email, password, or username with valid information and the current password is correct and I click on the "Save changes" button
 Then the app updates my account
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I change my email, password, or username with invalid information and the current password is correct and I click on the "Save changes" button
+Then the app does not allow me to update my account and shows me an error telling me what's wrong
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I leave some fields blank and I click on the "Save changes" button
+Then these fields will not be updated
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I edit some fields to the same values they were before and I click on the "Save changes" button
+Then these fields will not be updated
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I edit the email and this new email is already being used by another user and I click on the "Save changes" button
+Then the app will not allow me to change my email and shows me an error telling me why
+```
+
+```gherkin
+Scenario: Edit account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account editable
+When I edit the password and it's a weak password and I click on the "Save changes" button
+Then the app will not allow me to change my password and shows me an error telling me why
 ```
 
 _Value/Effort_
@@ -885,7 +944,7 @@ Effort: S
 
 ### **Story 17: See all profiles**
 
-As an user, I want to be able to see all the profiles for a given conference, so that I can find profiles that interest me.
+As a user, I want to be able to see all the profiles for a given conference, so that I can find profiles that interest me.
 
 _User interface mockups_
 
@@ -895,15 +954,15 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: See all profiles
-Given I’m logged-in and I have clicked on a conference,
+Given I’m logged in and I have clicked on a conference,
 When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
 ```
 
 ```gherkin
 Scenario: See all profiles and having no profiles for that conference created
-Given I’m logged-in and I have clicked on a conference,
-When I click on the "Profiles" button located at the bottom of the screen and there's no profiles for that conference
+Given I’m logged in and I have clicked on a conference,
+When I click on the "Profiles" button located at the bottom of the screen and there are no profiles for that conference
 Then the app shows me a message that there are no profiles for this conference 
 ```
 
@@ -917,7 +976,7 @@ Effort: S
 
 ### **Story 18: View profile (Staff)**
 
-As a conference staff, I want to see my profile with something that signals that I'm the conference staff, so that users can also see that I'm the one who created the conference.
+As a conference staff, I want to see my profile with something that signals that I'm the conference staff so that users can also see that I'm the one who created the conference.
 
 _User interface mockups_
 
@@ -931,7 +990,7 @@ Given I'm in a conference workspace and I'm viewing users' profiles
 When the user id matches the conference creator id 
 Then the app shows me a conference staff profile
 When I'm viewing a conference staff profile
-Then the system shows me a profile similar to others users with something that signals that user is a conference staff.
+Then the system shows me a profile similar to other users with something that signals that the user is a conference staff.
 ```
 
 ```gherkin
@@ -949,9 +1008,9 @@ Effort: S
 
 ---
 
-### **Story 19: See joined conferences**
+### **Story 19: See joined/created conferences**
 
-As a conference attendee, I want to be able to see the conferences I have joined and switch between them, so that I can network in multiple conferences.
+As a conference user, I want to be able to see the conferences I have joined/created and switch between them so that I can network in multiple conferences.
 
 _User interface mockups_
 
@@ -961,22 +1020,34 @@ _User interface mockups_
 _Acceptance Tests_
 
 ```gherkin
-Scenario: Seeing and switching between conferences
-Given I’m logged-in and I have a joined a conference
-When I open the sidebar and I click on the "active conferences" button
-Then the app shows me the conferences that I've joined and are currently happening
-When I click on the "joined conferences" button
-Then the app shows me the conferences that I've joined but have not yet started
-When I click on the "past conferences" button
-Then the app shows me the conferences that I've joined and already ended
-When I choose a conference in any of those parts
-Then the apps switches me to this conference’s profile workspace
+Scenario: See joined conferences
+Given I’m logged in
+When I open the app drawer and I click on the "Joined conferences" button
+Then the app shows me all the conferences that I've joined
+When I click on the conference event
+Then the app switches me to this conference’s workspace
 ```
 
 ```gherkin
 Scenario: See joined conferences
-Given I’m logged-in and I have clicked a conference without creating a profile,
-When I open the side bar menu
+Given I’m logged in and I have joined conferences without creating a profile,
+When I open the app drawer and I click on the "Joined conferences" button
+Then the app shows me a message that I have not joined any conferences
+```
+
+```gherkin
+Scenario: See created conferences
+Given I’m logged in
+When I open the app drawer and I click on the "Created conferences" button
+Then the app shows me all the conferences that I've created
+When I click on the conference event
+Then the app switches me to this conference’s workspace
+```
+
+```gherkin
+Scenario: See created conferences
+Given I’m logged in and I have not created any conferences,
+When I open the app drawer and I click on the "Created conferences" button
 Then the app shows me a message that I have not joined any conferences
 ```
 
@@ -988,9 +1059,9 @@ Effort: XL
 
 ---
 
-### **Story 20: Search/Filter all profiles**
+### **Story 20: Search all profiles**
 
-As an user, I want to be able to search/filter all the profiles for a given conference, so that I can have a selected view according to what I'm looking for.
+As a user, I want to be able to search all the profiles for a given conference, so that I can have a selected view according to what I'm looking for.
 
 _User interface mockups_
 
@@ -1000,37 +1071,26 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Search profiles
-Given I’m logged-in and I have joined a conference,
+Given I’m logged in and I have joined a conference
 When I click on the "Profiles" button located at the bottom of the screen
 Then the app shows me all profiles for this conference
-When I click on the "Search bar" and insert a string,
-Then the app shows me all profiles matching the string
-```
-
-```gherkin
-Scenario: Filter profiles
-Given I’m logged-in and I have joined a conference,
-When I click on the "Profiles" button located at the bottom of the screen
-Then the app shows me all profiles for this conference
-When I click on the "Filter button"
-Then the app shows me all filters
-When I click "Filter"
-Then the app shows me all profiles matching the applied filters
-When I click on a profile,
-Then the system sends me to the person’s profile
+When I click on the "Search" button
+Then the app shows me a page with a search bar
+When I click on th "Search bar" and insert a string containing a name, interest, occupation or location
+Then the app shows me all profiles with fields that match the string
 ```
 
 _Value/Effort_
 
 Value: Could Have
 
-Effort: L/XL
+Effort: XL
 
 ---
 
 ### **Story 21: Search for active conferences**
 
-As a conference attendee, I want to be able to search for a specific conference by name, so that I can easily find what I'm looking for.
+As a conference attendee, I want to be able to search for a specific conference by name or interests, so that I can easily find what I'm looking for.
 
 _User interface mockups_
 
@@ -1041,33 +1101,25 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Searching for conferences
-Given I’m logged-in
-When I click the button to search for conferences to join
+Given I’m logged in
+When I click the button to search for active conferences to join
 Then the app shows me a page with a search bar
-When I click on the "Search bar" and insert a string,
-Then the app shows me all conferences matching the string
+When I click on the "Search bar" and insert a string to search for either the conference name or interests,
+Then the app shows me all active conferences matching the string if any
 ```
 
-```gherkin
-Scenario: Searching for conferences
-Given I’m logged-in
-When I click the button to search for conferences to join
-Then the app shows me a page with a search bar
-When I input the name of a conference that does not exist
-Then I expect to see no results
-```
 
 _Value/Effort_
 
 Value: Could Have
 
-Effort: S/M
+Effort: L
 
 ---
 
 ### **Story 22: Delete account**
 
-As an user, I want to be able to delete my account, so that I no longer can use this app.
+As a user, I want to be able to delete my account, so that I no longer can use this app.
 
 _User interface mockups_
 
@@ -1078,24 +1130,46 @@ _Acceptance Tests_
 
 ```gherkin
 Scenario: Deleting account
-Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
 Then the app shows me my account
-When I click on "Delete Account" button
-Then the app shows me an alert dialog that asks for my confirmation
+When I click on the "Delete Account" button
+Then the app shows me an alert dialog that asks for my confirmation and password
 When I press the "Delete" button
-Then the app deletes my account and all my information
+Then the app deletes my account and all my information (photos, likes, etc.)
 ```
 
 ```gherkin
 Scenario: Deleting account
-Given I’m logged-in and I'm in the conferences list page
-When I click on "Account settings" button of the drawer menu
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
 Then the app shows me my account
-When I click on "Delete Account" button
+When I click on the "Delete Account" button
+Then the app shows me an alert dialog that asks for my confirmation and password
+When I press the "Delete" button and the password is not correct or empty
+Then the app does not allow me to delete my account and shows me an error telling me why
+```
+
+```gherkin
+Scenario: Deleting account
+Given I’m logged in and I'm on the conferences list page
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account
+When I click on the "Delete Account" button
 Then the app shows me an alert dialog that asks for my confirmation
-When I press the "Delete" button
+When I press the "Cancel" button
 Then I expect the system to remain the same
+```
+
+```gherkin
+Scenario: Deleting account
+Given I’m logged in and I'm on the conferences list page and I'm staff in some conferences
+When I open the app drawer and I click on the "Account settings" button
+Then the app shows me my account
+When I click on the "Delete Account" button
+Then the app shows me an alert dialog that asks for my confirmation and password
+When I press the "Delete" button
+Then the app deletes my account and all my information (photos, likes, etc.) and also all the conferences I've created and all the information corresponding to these conferences
 ```
 
 _Value/Effort_
@@ -1110,7 +1184,7 @@ Effort: S
 
 ![Domain Model](./img/domain_model.png)
 
-The users of our app can either be attendees or staff. A staff is the person who creates the conference (1 - *). When users join a conference, they have to create a profile (1 - 1), that will be their profile in that conference (\* - 1) . Attendees can like other attendees (1 - *) and if the like is mutual they match (1 - *).
+The users of our app can either be attendees or staff. Staff is the person who creates the conference (1 - \*). When users join a conference, they have to create a profile (1 - 1), that will be their profile in that conference (\* - 1). Attendees can like other attendees (1 - \*) and if the like is mutual they match (1 - *).
 
 ---
 
@@ -1124,44 +1198,135 @@ The following topics refer to the logical and physical architecture, which will 
 
 ![Logical architecture](./img/logical_architecture.png)
 
-We decided to use the MVC architecture pattern which splits the code in three parts keeping the view, model and controller independent of each other.
+We decided to use the MVC architecture pattern which splits the code into three parts keeping the view, model, and controller independent of each other.
 
 * The **Model** only contains the data such as the information about the conferences, user data, etc.
 
 * The **View** displays this data, collects and sends user interactions to the Controller.
 
-* The **Controller** is the brain of the app. It determinates how data in the Model is changed accordingly to the actions reported by the View.
+* The **Controller** is the brain of the app. It determines how data in the Model has changed accordingly to the actions reported by the View.
 
 ### Package diagram
 
 ![Package diagram](./img/package-diagram.png)
 
-TO DO : adicionar textinho
+Our application has three big packages, corresponding to the MVC architecture parts. We also divided the view package into smaller, more manageable, sub-packages, divided by functionality.
+
+The meetix-widgets package contains widgets implementing custom elements that are reused in the other packages.
 
 ---
 
 ## Physical architecture
 
+In this subsection, it is documented the high-level physical structure decisions made in our software system (machines, connections, software components installed, and their dependencies).
+
+Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice since it was recommended by the professors and is one of the most prominent mobile development frameworks.
+
+The following diagram details the physical architecture of our project:
+
 ![Physical architecture](./img/physical_architecture.png)
 
-Before starting to implement the application, we needed to decide the programming language: Flutter was the obvious choice, since it was recommended by the professors and is one of the most prominent mobile development frameworks.
+For the backend, we chose Firebase as it is simple to set up and easy to integrate with Flutter. To avoid large data processing workloads in the app, we offloaded some logic to the backend using Cloud Functions - namely the interest matching algorithm. We also use it to ensure data integrity, using functions as database triggers.
 
-For the database server we chose Firebase as it is simple to setup and easy to integrate with Flutter.
+To allow the user to search through the database information, we connected to the Algolia server, a full-text search provider. This allows us to avoid heavy workloads on the device and provide more comprehensive search results.
+
+Communication with these services uses HTTPS requests. Therefore, to use our app, the user needs an internet connection.
 
 ---
 
 ## Prototype
 
-To help on validating all the architectural, design and technological decisions made, we implemented a vertical prototype, a thin vertical slice of the system.
+To help on validating all the architectural, design, and technological decisions made, we implemented a vertical prototype, a thin vertical slice of the system.
 
-The prototype's role in our development proccess was about testing if the tool Flutter was adequate to do what we aimed to do and also about advancing the development of the app itself.
+The prototype's role in our development process was about testing if the tool Flutter was adequate to do what we aimed to do and also about advancing the development of the app itself.
 
-For the prototype the main story was #4 which states that 'As a conference attendee, I want to be able to see the profiles that have matched with me'. The other ones serve as base for the app.
+Our prototype implemented a simplified version of [user story 17](#story-17-see-all-profiles), showing a list of names on a page. We later integrated this with firebase to also test if the backend solution would be adequate.
 
 # Implementation
 
+Changelogs for the 4 different product increments can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/releases)
+
 # Test
+
+To ensure the application works as intended, we implemented automated tests using flutter's testing framework and the [flutter_gherkin](https://pub.dev/packages/flutter_gherkin) package.
+
+## Test Plan
+
+### Flutter Widget Tests
+
+We did not implement true unit tests, since our application offloads the bulk of the data processing needs to Firebase's Cloud Functions. Therefore, the unit tests we could implement in flutter, wouldn't be very meaningful, testing only getters for our model classes.
+
+We opted instead to use flutter's widget tests framework to test how elements are displayed and laid out.  These are component tests that provide more meaningful results since they allow us to know if the information we get from both Cloud Firestore and Cloud Functions requests is being handled properly by the app.
+
+The features to be tested are the following:
+
+- Displaying a list of profiles
+- Displaying a profile
+- Displaying a list of conferences
+
+We decided to test these features because they cover the bulk of the user's activities when using the app. They also provide good coverage of the occasions where we are displaying data from the aforementioned cloud services.
+
+### Flutter Gherkin Tests
+
+We used the [flutter_gherkin](https://pub.dev/packages/flutter_gherkin) package to automate some of our acceptance tests.
+
+The features to be tested are the following:
+
+- Logging into the app
+- Logging out of the app
+- Signing up for the app
+
+We decided to test these features not necessarily because they are the most crucial to test, but because of the instability and limitations of the testing API. These were chosen as a good proof-of-concept for automating acceptance tests since, while simple, they require user interaction through both taps and text input.
+
+In order to succesfully run these tests the user must be logged out, open the terminal in the *test_driver* folder and run `dart test_config.dart` in the terminal. 
+
+### Manual Tests
+
+During the development of our app, every time a new feature was added, its robustness was checked using its acceptance tests. At the end of each product iteration, we would also perform more in-depth testing, checking that all the new features worked well together.
+
+## Test Case Specification
+
+### Flutter Widget Tests
+
+#### Displaying a list of profiles
+
+These tests verify that when given a list of mock profiles, the app correctly displays their information. We achieve this by verifying if the app generates the correct text and icon elements for the given profiles. We also check that if the profile list is empty, the app displays the correct error.
+
+#### Displaying a profile
+
+These tests verify that when given a mock profile, the app correctly displays its information. We achieve this by verifying if the app generates the correct text and icon elements for the given profile. We also check that if the profile has some fields with null values, the app does not display unwanted tags.
+
+#### Displaying a list of conferences
+
+These tests verify that when given a list of mock conferences, the app correctly displays their information. We achieve this by verifying if the app generates the correct text and icon elements for the given conferences. We also check that if the conference list is empty, the app displays the correct error.
+
+### Flutter Gherkin Tests
+
+#### Logging into the app
+
+These tests verify that when the user is logged out and in the "Sign In" page, they can log in successfully.
+We achieve this by verifying that when a valid email and password combination is inserted, the app logs in the user and redirected them to a page that lists available conferences. We also check that if this combination is invalid, the app displays the correct warning message and stays on the "Sign In" page.
+
+#### Logging out of the app
+
+These tests verify that when the user is logged in and on a page that lists conferences, they can log out successfully. We achieved this by verifying that when the "Logout" button of the app drawer is pressed, the app redirects the user to the "Sign In" page.
+
+#### Signing up for the app
+
+These tests verify that when the user tries to create an account with an invalid email, the account is not created. We achieved this by verifying that when the user inserts an email that is already associated with an existing account or inserts a badly formatted email, the app stays on the "Sign Up" page and the respective warning message is shown.
+
+### Manual Tests
+
+These tests verify if the workflow of our app is as intended. We achieved this by trying to do both valid and invalid actions and testing edge cases. We tested the features individually but also, when applicable, the way they affected other parts of the app that depended on, or interacted with, them. Anytime a feature was added, we also tested the full current flow of the app.
 
 # Configuration and change management
 
+To control and maintain the integrity of our project's components(code, models, documents), configuration, and change management are key activities.
+
+To manage feature requests, bug fixes, and improvements, we used GitHub issues, following the GitHub flow.
+
 # Project management
+
+The planning and management of our project were made using the Github Projects tool: https://github.com/FEUP-ESOF-2020-21/open-cx-t7g5-5-estrelinhas/projects/1.
+
+Here we registered our tasks, assigned them to the team members, added estimations to tasks, and monitored their progress. This tool showed itself to be suitable for keeping track of our project.

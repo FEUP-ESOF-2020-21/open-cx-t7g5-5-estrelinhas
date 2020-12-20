@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/EditProfilePage.dart';
-import 'package:meetix/view/ViewProfileDetailsPage.dart';
-
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
-import 'MyWidgets.dart';
+import 'package:meetix/model/Conference.dart';
+import '../meetix_widgets/MyWidgets.dart';
 
 class AllProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
@@ -35,7 +31,7 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
       stream: widget._firestore.getConferenceProfiles(conference),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.docs.isEmpty)
+          if (snapshot.data.size == 0)
             return Center(child: Text("No profiles"));
           else
             return ProfileListView(widget._firestore, widget._storage, widget._conference, widget.hasProfile, snapshot.data.docs, fromQuery: false,);

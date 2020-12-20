@@ -1,69 +1,90 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meetix/controller/AuthController.dart';
 import 'package:flutter/material.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/MyWidgets.dart';
-import 'package:provider/provider.dart';
+import 'package:meetix/model/Conference.dart';
+import 'package:meetix/view/meetix_widgets/MyWidgets.dart';
 
-import '../controller/FirestoreController.dart';
 
-class CreateConferencePage extends StatefulWidget {
+class EditConferencePage extends StatefulWidget {
   final FirestoreController _firestore;
   final StorageController _storage;
   final FunctionsController _functions;
+  final Conference _conference;
 
-  CreateConferencePage(this._firestore, this._storage,  this._functions);
+  EditConferencePage(this._firestore, this._storage,  this._functions, this._conference);
 
   @override
-  _CreateConferencePageState createState() => _CreateConferencePageState();
+  _EditConferencePageState createState() => _EditConferencePageState(_conference);
 }
 
-class _CreateConferencePageState extends State<CreateConferencePage> {
+class _EditConferencePageState extends State<EditConferencePage> {
+  Conference _conference;
+
+  _EditConferencePageState(this._conference);
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _startDateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
   TextEditingController _interestsController = TextEditingController();
 
+
   bool _nameValid = true;
   bool _startDateValid = true;
   bool _endDateValid = true;
   bool _interestsValid = true;
-  DateTime _startDate = DateTime.now(), _endDate;
   String profileImgUrl = 'default-conference.png';
   File profileImg;
+  DateTime _startDate, _endDate;
 
-  String _readableDate(DateTime date) {
-    DateTime local = date.toLocal();
-    return "${local.day}/${local.month}/${local.year}";
+  Map updates = Map<String,dynamic>();
+
+  @override
+  initState(){
+    super.initState();
+
+    profileImgUrl = _conference.img;
+    _startDate = _conference.start_date;
+    _endDate = _conference.end_date;
   }
 
-  submitForm() async {
+  String _readableDate(DateTime date) {
+    return "${date.toLocal().day}/${date.toLocal().month}/${date.toLocal().year}";
+  }
+
+  submitForm() {
     setState(() {
-      (_nameController.text.isEmpty || _nameController.text.length < 3)? _nameValid = false : _nameValid = true;
-      (_startDateController.text.isEmpty || _startDate.isAfter(_endDate))? _startDateValid = false : _startDateValid = true;
-      (_endDateController.text.isEmpty || _endDate.isBefore(_startDate))? _endDateValid = false : _endDateValid = true;
-      (_interestsController.text.isEmpty)? _interestsValid = false : _interestsValid = true;
+      _nameController.text = _nameController.text.trim();
+      _endDate = _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
+
+      _nameValid = _nameController.text.isEmpty || _nameController.text.length >= 3;
+      _startDateValid = _startDate.isBefore(_endDate);
+      _endDateValid = _endDate.isAfter(_startDate);
     });
 
     if (_nameValid && _startDateValid && _endDateValid && _interestsValid) {
-      DocumentReference docRef = await widget._firestore.getConferenceCollection().add({'uid':context.read<AuthController>().currentUser.uid,
-        'name':_nameController.text,
-        'img': profileImgUrl,
-        'interests': _interestsController.text.split(",").map((e) => e.trim()).toSet().where((e) => e.isNotEmpty).toList(),
-        'start_date': Timestamp.fromDate(_startDate),
-        'end_date': Timestamp.fromDate(_endDate),
+      if(profileImg != null){
+        profileImgUrl = 'conferences/' + _conference.reference.id + '/conference_img';
+      }
+
+      if(profileImgUrl != _conference.img)
+        updates['img'] = profileImgUrl;
+      if(_nameController.text.isNotEmpty && _nameController.text != _conference.name)
+        updates['name'] = _nameController.text;
+      if(_startDateController.text.isNotEmpty && _startDateController.text.isNotEmpty)
+        updates['start_date'] = Timestamp.fromDate(_startDate);
+      if(_endDateController.text.isNotEmpty && _endDateController.text.isNotEmpty)
+        updates['end_date'] = Timestamp.fromDate(_endDate);
+      if(_interestsController.text.isNotEmpty && _interestsController.text != _conference.interests.join(", "))
+        updates['interests'] = _interestsController.text.split(",").map((e) => e.trim()).toSet().where((e) => e.isNotEmpty).toList();
+
+      _conference.reference.update(updates).then((value) async {
+        if(profileImg != null) await widget._storage.uploadFile(profileImgUrl, profileImg);
       });
 
-      if(profileImg != null){
-        profileImgUrl = 'conferences/' + docRef.id + '/conference_img';
-        await widget._storage.uploadFile(profileImgUrl, profileImg);
-        Map updates = Map<String,dynamic>();
-        updates['img'] = profileImgUrl;
-        await docRef.update(updates);
-      }
       Navigator.pop(context);
     }
   }
@@ -71,7 +92,7 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Conference")),
+      appBar: AppBar(title: Text("Edit Conference")),
       body: _buildBody(context),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
@@ -79,17 +100,23 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel", style: TextStyle(color: Colors.grey),)
+              ),
               SizedBox(width: 20,),
               RaisedButton(
                 onPressed: (){submitForm();},
-                child: Text("Create", style: TextStyle(color: Colors.white),), color: Theme.of(context).accentColor,
+                child: Text("Save changes", style: TextStyle(color: Colors.white),), color: Color.fromRGBO(255, 153, 102, 1),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
+        ),
+      );
+    }
 
   Widget _buildBody(BuildContext context) {
     return Container(
@@ -108,9 +135,10 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             SizedBox(height: 35),
             TextFieldWidget(
               labelText: "Name",
-              hintText: "Conference Name",
+              hintText: _conference.name,
               controller: _nameController,
               isValid: _nameValid,
+              defaultValue: _conference.name,
               errorText: "Name must be at least 3 characters long",
             ),
             SizedBox(height: 10),
@@ -120,9 +148,10 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
             SizedBox(height: 10),
             TextFieldWidget(
               labelText: "Interests",
-              hintText: "AI, media, ... (separated by , )",
+              hintText: "Interests",
               controller: _interestsController,
               isValid: _interestsValid,
+              defaultValue: _conference.interests.join(", "),
               errorText: "You must add at least one interest",
             ),
           ],
@@ -133,11 +162,11 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
 
   _selectDate(BuildContext context, TextEditingController destination, bool start) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: (start || _endDate == null)? _startDate : _endDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-        helpText: (start)? "Select start date" : "Select end date",
+      context: context,
+      initialDate: (start || _endDate == null)? _startDate : _endDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      helpText: (start)? "Select start date" : "Select end date",
     );
     if (picked != null)
       setState(() {
@@ -164,7 +193,8 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
         child: IgnorePointer(
           child: TextFieldWidget(
             labelText: (start)? "Start Date" : "End Date",
-            hintText: "Select date",
+            hintText: (start)? _readableDate(_startDate) : _readableDate(_endDate),
+            hintWeight: FontWeight.w400,
             controller: (start)? _startDateController : _endDateController,
             isValid: (start)? _startDateValid : _endDateValid,
             errorText: (start)? "Start date must be before end date" : "End date must be after start date",
@@ -174,3 +204,5 @@ class _CreateConferencePageState extends State<CreateConferencePage> {
     );
   }
 }
+
+

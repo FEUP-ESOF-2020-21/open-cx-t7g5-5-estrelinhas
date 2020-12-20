@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
 import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/FunctionsController.dart';
+import 'package:meetix/controller/SearchController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/view/AuthPage.dart';
-import 'view/ConferenceListPage.dart';
+import 'package:meetix/view/auth/AuthPage.dart';
+import 'package:meetix/view/conferences/ConferenceListPage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -38,7 +39,9 @@ class StartApp extends StatelessWidget {
 
         // Otherwise, show something whilst waiting for initialization to complete
         return Container(
-          decoration: BoxDecoration(color: Colors.deepPurple),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(255, 153, 102, 1),
+          ),
         );
       },
     );
@@ -50,6 +53,7 @@ class MeetixApp extends StatelessWidget {
   final StorageController storage = StorageController();
   final FunctionsController functions = FunctionsController();
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -59,12 +63,58 @@ class MeetixApp extends StatelessWidget {
         ),
         StreamProvider(
             create: (context) => context.read<AuthController>().authStateChanges,
-        )
+        ),
+        Provider(
+            create: (context) => SearchController(),
+        ),
+        Provider(
+            create: (context) => firestore,
+        ),
+        Provider(
+            create: (context) => storage,
+        ),
+        Provider(
+            create: (context) => functions,
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Meetix',
         home: LandingPage(firestore, storage, functions),
+        themeMode: ThemeMode.system,
+        theme: ThemeData(
+          // Define the default brightness and colors.
+          brightness: Brightness.light,
+          primaryColor: Color.fromRGBO(255, 153, 102, 1),
+          accentColor: Color.fromRGBO(255, 153, 102, 1),
+
+          appBarTheme: AppBarTheme(
+            color:Color.fromRGBO(255, 153, 102, 1),
+            iconTheme: IconThemeData(
+              color: Color.fromRGBO(64, 90, 125, 1),
+            ),
+            textTheme: TextTheme(
+              title: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.white,
+          ),
+
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Color.fromRGBO(255, 153, 102, 1),
+            selectedItemColor: Color.fromRGBO(255, 153, 102, 1),
+            selectedLabelStyle: TextStyle(color:Color.fromRGBO(255, 153, 102, 1),),
+            unselectedItemColor: Colors.grey,
+          ),
+          dividerTheme: DividerThemeData(
+            color:  Color.fromRGBO(255, 153, 102, 1),
+          ),
+        ),
       ),
     );
   }

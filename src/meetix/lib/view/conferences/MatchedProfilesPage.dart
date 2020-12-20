@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meetix/controller/AuthController.dart';
+import 'package:meetix/controller/FirestoreController.dart';
 import 'package:meetix/controller/StorageController.dart';
-import 'package:meetix/model/Profile.dart';
-import 'package:meetix/view/ViewProfileDetailsPage.dart';
+import 'package:meetix/model/Conference.dart';
 import 'package:provider/provider.dart';
-
-import '../model/Conference.dart';
-import '../controller/FirestoreController.dart';
-import 'MyWidgets.dart';
+import '../meetix_widgets/MyWidgets.dart';
 
 class MatchedProfilesPage extends StatefulWidget {
   final FirestoreController _firestore;
